@@ -82,7 +82,7 @@ uk_pop_2001_to_2020 <- mutate(uk_pop_2001_to_2020, name = str_to_title(name))
 uk_pop_1991_to_2020 <-
   uk_pop_2001_to_2020 %>%
   inner_join(uk_pop_1991_2000 , by = "name") %>%
-  select(-code.y)
+  select(-code.y, code = code.x)
 
 ```
 
