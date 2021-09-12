@@ -16,13 +16,45 @@ library(sf)
 library(jsonlite)
 
 #load geojson from url
-uk_region_boundaries <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
+uk_region_boundaries_raw <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
+
+uk_regions_boundaries <- uk_region_boundaries_raw %>% rename(name = nuts118nm) %>% mutate(name = str_remove(name , " \\(England\\)"), name = str_to_title(name))
+
+mapview::mapview(uk_regions_boundaries)
 
 ```
 
 ### Download ONS Population Time Series
 ```{r}
 
-region_pop_raw <- read_csv("https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/populationestimatestimeseriesdataset/current/pop.csv")
+pop_1991_to_2020_raw <- read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/outputs/uk_pop_1991_to_2020.csv")
+
+uk_pop_region_1991_to_2020 <- 
+  pop_1991_to_2020_raw %>% 
+  filter(geography == "Region") %>%
+  pivot_longer(cols = `1991`:`2020`, names_to = "year" , values_to = "population")
 
 ```
+
+##### Merging for Maps
+```{r}
+
+uk_geopop_1991_to_2020 <- 
+uk_regions_boundaries %>%
+  inner_join(uk_pop_region_1991_to_2020 , by = "name")
+
+```
+
+
+##### Mapping
+```{r}
+
+uk_geopop_1991_to_2020 %>%
+  ggplot() +
+  geom_sf(aes(fill = population), color = "white") +
+  coord_sf() +
+  facet_wrap(~year, nrow = 3) +
+  ggthemes::theme_map()
+
+```
+
