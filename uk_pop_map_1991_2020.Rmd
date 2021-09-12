@@ -1,0 +1,28 @@
+---
+title: "UK lvl 1 Region - Population Over Time"
+author: "NearAndDistant"
+date: "12/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Download Region JSON from ONS Boundaries
+```{r}
+library(tidyverse)
+library(sf)
+library(jsonlite)
+
+#load geojson from url
+uk_region_boundaries <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
+
+```
+
+### Download ONS Population Time Series
+```{r}
+
+region_pop_raw <- read_csv("https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/populationestimatestimeseriesdataset/current/pop.csv")
+
+```

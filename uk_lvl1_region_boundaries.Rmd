@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+The regions, formerly known as the government office regions, are the highest tier of sub-national division in England, established in 1994. Between 1994 and 2011, nine regions had officially devolved functions within government. While they no longer fulfil this role, they continue to be used for statistical and some administrative purposes. While the UK was a member of the European Union, they defined areas (constituencies) for the purposes of elections to the European Parliament. Eurostat also used them to demarcate first level Nomenclature of Territorial Units for Statistics (NUTS) regions ("NUTS 1 regions") within the European Union. The regions generally follow the boundaries of the former standard regions, established in the 1940s for statistical purposes. (https://en.wikipedia.org/wiki/Regions_of_England)
+
 ### Download Region JSON from ONS Boundaries
 ```{r}
 library(tidyverse)
@@ -16,9 +18,7 @@ library(sf)
 library(jsonlite)
 
 #load geojson from url
-data <- 
-  st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
-  jsonlite::parse_json(simplifyVector = FALSE)
+data <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
 
 ```
 
@@ -37,7 +37,5 @@ data %>%
   ggthemes::theme_map()
 
 ```
-
-
 
 
