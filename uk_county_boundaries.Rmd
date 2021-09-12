@@ -9,4 +9,34 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(sf)
+library(jsonlite)
+
+#load geojson from url
+data <- 
+  st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
+  jsonlite::parse_json(simplifyVector = FALSE)
+
+```
+
+##### Interactive View
+```{r}
+mapview::mapview(data)
+```
+
+##### Explore
+```{r}
+
+data %>%
+  ggplot() +
+  geom_sf() +
+  coord_sf() +
+  ggthemes::theme_map()
+
+```
+
+
+
 

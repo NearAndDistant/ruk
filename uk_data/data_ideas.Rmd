@@ -1,0 +1,41 @@
+---
+title: "UK Data Ideas"
+author: "NearAndDistant"
+date: "12/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## References
+
+### Data is Plural - Structured Archive
+https://docs.google.com/spreadsheets/d/1wZhPLMCHKJvwOkP4juclhjFgqIY8fQFMemwKL2c64vk/edit#gid=0
+
+# United Kingdom
+
+###### Three centuries of UK macroeconomic data.
+The Bank of England publishes a spreadsheet of historical economic data going back, in some cases, to the late 1600s. The country’s GDP in 1700 was £11.7 billion in 2013 prices. That’s about 1/157th the size of the UK’s GDP in 2015. And in November 1694, monthly short-term interest rates were roughly 6%.
+
+https://www.bankofengland.co.uk/quarterly-bulletin/2010/q4/the-uk-recession-in-context-what-do-three-centuries-of-data-tell-us
+
+##### A century of UK coastal flooding.
+Earlier this year, the researchers behind SurgeWatch.org published an updated version of their their database of UK coastal floods. They combined tidal gauge data with reports from scientific journals, newspapers, and social media to identify 329 “coastal flooding events” that occurred between 1915 to 2016. For each event, the dataset includes the date, region, and severity level, which ranges from 1 (“nuisance”) to 6 (“disaster,” applied to only one event — the North Sea flood of 1953).
+
+https://www.surgewatch.org/
+https://www.bodc.ac.uk/data/published_data_library/catalogue/10.5285/481720c2-35bd-6c10-e053-6c86abc06bb3/
+https://www.nature.com/articles/sdata2017100
+https://en.wikipedia.org/wiki/North_Sea_flood_of_1953
+
+# Scotland
+
+###### The Survey of Scottish Witchcraft
+The University of Edinburgh hosts an incredibly detailed, and deeply documented database of more than 3,000 accused witches in Scotland. The mania reached its quantitative peak in 1662, when, according to the database, 402 people were accused of witchcraft.
+
+http://www.shca.ed.ac.uk/Research/witches/
+http://webdb.ucs.ed.ac.uk/witches/index.cfm?fuseaction=home.graph2
+
+
+
