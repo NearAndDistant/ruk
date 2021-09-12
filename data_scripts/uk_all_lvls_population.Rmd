@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #### Downloading Data from ONS
 
 ###### 2001 to 2020
-```{r}
+```{r include=FALSE}
 library(tidyverse)
 
 # readxl does not currently support downloading from url (as of H2 2021) therefore downloading using temp
@@ -24,10 +24,16 @@ download.file(
   url = "https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2fpopulationestimatesforukenglandandwalesscotlandandnorthernireland%2fmid2020/ukpopestimatesmid2020on2021geography.xls",
   destfile = temp_ons_01_20)
 
+# read xls
+uk_pop_2001_to_2020 <- readxl::read_xls(temp_ons_01_20, sheet = "MYE4", skip = 7) %>% 
+  janitor::clean_names()
+
+colnames(uk_pop_2001_to_2020) <- str_remove(colnames(uk_pop_2001_to_2020), "mid_")
+
 ```
 
 ###### 1991 to 2000
-```{r}
+```{r include=FALSE}
 
 temp_ons_91_00 <- tempfile(fileext = ".zip")
 
@@ -36,9 +42,13 @@ download.file(
   destfile = temp_ons_91_00)
 
 
-# due to the data from 1991 to 2000 being in separate xls files in a zip file, extra step to unzip, extract each year and merge
+# due to the data from 1991 to 2000 being in separate xls files in a zip file, extra step to: 
+# (1) unzip 
+# (2) extract each year, then 
+# (3) merge to one tibble
 
 # {} indicate the dynamic year which glue to stitch together for us
+temp_xls   <- tempfile(fileext = ".xls")
 unzip_path <- "mid-{unzip_year}-unformatted-data-file.xls"
 sheet      <- "Mid-{unzip_year} Persons"
 
@@ -48,10 +58,10 @@ uk_pop_1991_2000 <- tibble(code = as.character(),
 
 for(i in 1991:2000){
   
-unzip_year <- as.character(i) # changing variable that will be glued to 'unzip path' to extract each year
+unzip_year <- as.character(i) # changing variable that will be glued to 'unzip path' {} to extract each year
 
 unzip_read <- 
-  readxl::read_xls(unzip(temp_ons_91_00 , files = glue::glue(unzip_path)), 
+  readxl::read_xls(unzip(temp_ons_91_00 , files = glue::glue(unzip_path), exdir = temp_xls), # exdir: we don't save to disc
                    sheet = glue::glue(sheet), range = cellranger::cell_cols("A:C")) %>%
   janitor::clean_names()
 
@@ -62,12 +72,35 @@ uk_pop_1991_2000 <- left_join(unzip_read, uk_pop_1991_2000)
 
 ```
 
+###### Merge
+```{r include=FALSE}
 
+# correct names to consistent title format
+uk_pop_1991_2000    <- mutate(uk_pop_1991_2000, name = str_to_title(name))
+uk_pop_2001_to_2020 <- mutate(uk_pop_2001_to_2020, name = str_to_title(name))
 
-###### Reading in XLS Files
+uk_pop_1991_to_2020 <-
+  uk_pop_2001_to_2020 %>%
+  inner_join(uk_pop_1991_2000 , by = "name") %>%
+  select(-code.y)
+
+```
+
+##### Outputs
 ```{r}
 
-uk_pop_2001_to_2020 <- readxl::read_xls(temp_ons, sheet = "MYE4", skip = 7)
+head(uk_pop_1991_to_2020)
+
+uk_pop_2001_to_2020 %>% count(geography)
+
+```
+
+#### Saving Outputs
+```{r}
+
+dir.create(here::here("data_scripts/outputs"))
+
+write_csv(uk_pop_1991_to_2020 , here::here("data_scripts/outputs/uk_pop_1991_to_2020.csv"))
 
 ```
 
