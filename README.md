@@ -1,3 +1,3 @@
-# UK Geospatial Repository for R
+# RUK
 
-Working repository for UK geospatial data scripts
+Working repository for UK data & geospatial data scripts
