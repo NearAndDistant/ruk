@@ -1,5 +1,5 @@
 ---
-title: "UK County Boundaries"
+title: "UK Region Boundaries"
 author: "NearAndDistant"
 date: "12/09/2021"
 output: html_document
@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+### Download Region JSON from ONS Boundaries
 ```{r}
 library(tidyverse)
 library(sf)
