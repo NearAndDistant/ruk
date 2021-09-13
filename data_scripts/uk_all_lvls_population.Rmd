@@ -76,7 +76,11 @@ uk_pop_1991_2000 <- left_join(unzip_read, uk_pop_1991_2000)
 ```{r include=FALSE}
 
 # correct names to consistent title format
-uk_pop_1991_2000    <- mutate(uk_pop_1991_2000, name = str_to_title(name)) %>% mutate(name = if_else(name == "Eastern", "East", name)) %>% filter(name != "Wales" | !is.na(code)) 
+uk_pop_1991_2000    <- mutate(uk_pop_1991_2000, name = str_to_title(name)) %>% 
+  mutate(name = if_else(name == "Eastern", "East", name)) %>% 
+  filter(name != "Wales" | !is.na(code)) %>%
+  filter(name != "West Midlands" | !is.na(code))
+
 uk_pop_2001_to_2020 <- mutate(uk_pop_2001_to_2020, name = str_to_title(name))
 
 uk_pop_1991_to_2020 <-
