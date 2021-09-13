@@ -1,0 +1,44 @@
+---
+title: "Regional Disposable Income (UK)"
+author: "NearAndDistant"
+date: "13/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Gross disposable household income (GDHI) is the amount of money that all of the individuals in the household sector have available for spending or saving after they have paid direct and indirect taxes and received any direct benefits. GDHI is a concept that is seen to reflect the “material welfare” of the household sector.
+
+It should be noted that these estimates relate to totals for all individuals within the household sector for a region rather than to an average household or family unit. GDHI per head are estimates of values for each person, not each household.
+
+For further information on the methodological changes that have led to revisions in each year, please see the regional gross disposable household income statistical bulletin that is published each year. The bulletin will usually include a section that describes any changes to data and methods and their impact on the statistics. 
+
+#### Downloading Data from ONS
+
+###### 1997 to 2018
+```{r include=FALSE}
+library(tidyverse)
+
+# readxl does not currently support downloading from url (as of H2 2021) therefore downloading using temp
+temp_ons_97_to_18 <- tempfile(fileext = ".xls")
+
+download.file(
+  url = "https://www.ons.gov.uk/file?uri=%2feconomy%2fregionalaccounts%2fgrossdisposablehouseholdincome%2fdatasets%2fregionalgrossdisposablehouseholdincomegdhi%2f1997to2018/regionalgrossdisposablehouseholdincomeallnutslevelregions.xls",
+  destfile = temp_ons_97_to_18)
+
+# read xls
+uk_dis_income <- readxl::read_xls(temp_ons_97_to_18, sheet = "Table 1", skip = 1) %>% rename(`2018` = `20182`)
+
+```
+
+##### Write to csv
+```{r}
+
+dir.create(here::here("data_scripts/ons_gross_income_1997_to_2018"))
+
+write_csv(uk_dis_income , here::here("data_scripts/ons_gross_income_1997_to_2018/ons_gross_income_1997_to_2018.csv"))
+
+```
+
