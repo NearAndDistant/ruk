@@ -32,12 +32,22 @@ mapview::mapview(uk_regions_boundaries)
 ### Download ONS Population Time Series
 ```{r}
 
-pop_1991_to_2020_raw <- read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/outputs/uk_pop_1991_to_2020.csv")
+uk_pop_1991_to_2020_raw <-
+read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/outputs/uk_pop_1991_to_2020.csv")
+
+uk_pop_timeseries <- 
+uk_pop_1991_to_2020_raw[which(uk_pop_1991_to_2020_raw$name == "United Kingdom"),-1:-3] %>%
+pivot_longer(cols = everything(), values_to = "uk_population" , names_to = "year")
 
 uk_pop_region_1991_to_2020 <- 
-  pop_1991_to_2020_raw %>% 
+  uk_pop_1991_to_2020_raw %>% 
   filter(geography == "Region" | name == "Scotland" | name == "Northern Ireland" | name == "Wales") %>%
-  pivot_longer(cols = `1991`:`2020`, names_to = "year" , values_to = "population")
+  pivot_longer(cols = `1991`:`2020`, names_to = "year" , values_to = "population") %>%
+  inner_join(uk_pop_timeseries , by = "year") %>%
+  group_by(year) %>%
+  mutate(tot_pop       = sum(population, na.rm = TRUE),
+         pc_population = population / tot_pop,
+         label         = paste(year , " " ,round(uk_population / 1000000,2) , "m", sep = ""))
 
 ```
 
@@ -50,16 +60,31 @@ uk_regions_boundaries %>%
 
 ```
 
+###### Create UK Outline
+```{r}
+library(rnaturalearth)
+
+uk      <- ne_countries(scale = "medium", returnclass = "sf", country = "United Kingdom")
+ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland")
+
+```
+
 ##### Mapping
 ```{r}
+library(gganimate)
 
 uk_geopop_1991_to_2020 %>%
   ggplot() +
-  geom_sf(aes(fill = population), color = "white") +
+  geom_sf(data = ireland, fill = "white" , color = "grey80") +
+  geom_sf(aes(fill = pc_population), color = "white") +
   scale_fill_viridis_c(direction = -1) +
   coord_sf() +
-  facet_wrap(~year, nrow = 3) +
-  ggthemes::theme_map()
+  facet_wrap(~label, nrow = 3, strip.position = "bottom") +
+  labs(fill = "Population") +
+  ggthemes::theme_map() +
+  theme(legend.position = "bottom", 
+        strip.background = element_rect(fill = "white" , color = "white"),
+        strip.text = element_blank())
 
 ```
 
