@@ -72,19 +72,31 @@ ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland
 ```{r}
 library(gganimate)
 
+plot_uk_geomap_1991_to_2020 <- 
 uk_geopop_1991_to_2020 %>%
-  filter(year == 2001) %>%
+  filter(year %in% c(1991, seq(1995,2020,5))) %>%
   ggplot() +
   geom_sf(data = ireland, fill = "white" , color = "grey80") +
   geom_sf(aes(fill = pc_population), color = "white") +
-  scale_fill_viridis_c(labels = scales::percent , direction = -1) +
+  scale_fill_viridis_c(labels = scales::percent_format(accuracy = 1) , direction = -1) +
   coord_sf() +
-  facet_wrap(~label, nrow = 3, strip.position = "bottom") +
+  facet_wrap(~label, nrow = 1, strip.position = "bottom") +
   labs(fill = "Population") +
   ggthemes::theme_map() +
-  theme(legend.position = "bottom", 
+  theme(plot.background = element_rect(fill = "white" , color = "white"),
+        legend.position = "bottom", 
+        legend.title = element_text(size = 12, face = "bold" , vjust = 0.75),
+        legend.justification = c(0.5,0),
         strip.background = element_rect(fill = "white" , color = "white"),
-        strip.text = element_text(size = 12))
+        strip.text = element_text(size = 12 , face = "bold"))
+
+```
+
+##### Outputs
+```{r}
+library(usethis)
+
+ggsave(here::here("projects/uk_pop_map.png"), dpi = 360, height = 10, width = 15)
 
 ```
 

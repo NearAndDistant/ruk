@@ -1,3 +1,8 @@
-# RUK
 
-Working repository for UK data & geospatial data scripts in R
+# ruk
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of ruk is to ...
+
