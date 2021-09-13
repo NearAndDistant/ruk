@@ -33,7 +33,7 @@ uk_regions_boundaries <-
 uk_pop_1991_to_2020_raw <-
 read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/outputs/uk_pop_1991_to_2020.csv")
 
-uk_pop_timeseries <- 
+uk_pop_timeseries <- # headline uk figures cannot be replicated from bottom-up data therefore string these separate
 uk_pop_1991_to_2020_raw[which(uk_pop_1991_to_2020_raw$name == "United Kingdom"),-1:-3] %>%
 pivot_longer(cols = everything(), values_to = "uk_population" , names_to = "year")
 
@@ -44,7 +44,7 @@ uk_pop_region_1991_to_2020 <-
   inner_join(uk_pop_timeseries , by = "year") %>%
   group_by(year) %>%
   mutate(pc_population = population / uk_population,
-         label         = paste(year , " " ,round(uk_population / 1000000,2) , "m", sep = ""),
+         label         = paste(year , " (" ,round(uk_population / 1000000,2) , "m)", sep = ""),
          label         = factor(label)) %>%
   ungroup()
 
@@ -73,6 +73,7 @@ ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland
 library(gganimate)
 
 uk_geopop_1991_to_2020 %>%
+  filter(year == 2001) %>%
   ggplot() +
   geom_sf(data = ireland, fill = "white" , color = "grey80") +
   geom_sf(aes(fill = pc_population), color = "white") +
