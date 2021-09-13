@@ -18,7 +18,8 @@ library(jsonlite)
 #load geojson from url
 uk_region_boundaries_raw <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
 
-uk_regions_boundaries <- uk_region_boundaries_raw %>% rename(name = nuts118nm) %>% mutate(name = str_remove(name , " \\(England\\)"), name = str_to_title(name))
+uk_regions_boundaries <- uk_region_boundaries_raw %>% rename(name = nuts118nm) %>% mutate(name = str_remove(name , " \\(England\\)"), name = str_to_title(name),
+                                                                                          name = if_else(name == "East Of England" , "East" , name))
 
 mapview::mapview(uk_regions_boundaries)
 
@@ -52,6 +53,7 @@ uk_regions_boundaries %>%
 uk_geopop_1991_to_2020 %>%
   ggplot() +
   geom_sf(aes(fill = population), color = "white") +
+  scale_fill_viridis_c(direction = -1) +
   coord_sf() +
   facet_wrap(~year, nrow = 3) +
   ggthemes::theme_map()
