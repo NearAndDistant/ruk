@@ -21,7 +21,8 @@ uk_regions_boundaries <-
 st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
   rename(name = nuts118nm) %>% 
   mutate(name = str_remove(name , " \\(England\\)"), 
-         name = str_to_title(name))
+         name = str_to_title(name))  %>%
+  mutate(name = if_else(name == "Yorkshire And The Humber", "Yorkshire", name))
 
 ```
 
@@ -43,7 +44,8 @@ ons_gross_income_1997_to_2018 %>%
   pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "gross_income") %>%
   mutate(year = str_remove(year , "x"),
          year = as.numeric(year),
-         region_name = str_to_title(region_name))
+         region_name = str_to_title(region_name)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name))
 
 ```
 
@@ -52,8 +54,7 @@ ons_gross_income_1997_to_2018 %>%
 
 uk_gross_1997_to_2018 <- 
 uk_regions_boundaries %>%
-  inner_join(ons_gross_income_1997_to_2018_NUTS1 , by = c(name = "region_name")) %>%
-  mutate(name = if_else(name == "Yorkshire and The Humber", "Yorkshire", name))
+  inner_join(ons_gross_income_1997_to_2018_NUTS1 , by = c(name = "region_name"))
 
 ```
 
@@ -66,6 +67,49 @@ ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland
 
 ```
 
+##### Regional Rate of Change
+```{r}
+theme_set(theme_minimal())
+
+text <- 'GDHI is the amount of money that all individuals in an average regional household have available after they have paid direct and indirect taxes and received any direct benefits.\nGDHI is a concept that is seen to reflect the “material welfare” of the household. Regional estimates are produced in current prices (which include the effects of inflation).'
+
+scotland_y_coord <- 
+ons_gross_income_1997_to_2018_NUTS1$gross_income[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018 & ons_gross_income_1997_to_2018_NUTS1$region_name =="Scotland")]
+
+plot_region_gdhi_roc <-
+ons_gross_income_1997_to_2018_NUTS1 %>%
+mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
+  ggplot(aes(year , gross_income , color = gross_income, group = region_name)) +
+  geom_line(show.legend = TRUE , size = 1.5) +
+  geom_curve(x = 2018, y = scotland_y_coord + 50000, xend = 2018, yend = scotland_y_coord, arrow = arrow(length = unit(0.03, "npc")), color = "grey30") +
+  scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"), breaks = seq(0,250000,50000),
+                     sec.axis = dup_axis(breaks = ons_gross_income_1997_to_2018_NUTS1$gross_income[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
+                                         labels = ons_gross_income_1997_to_2018_NUTS1$region_name[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
+  coord_cartesian(clip = "off") +
+  labs(title = "ONS Regional Gross Disposable Household Income (GDHI) 1997 to 2018",
+       subtitle = text,
+       fill = NULL,
+       x = NULL,
+       y = NULL) +
+  theme(plot.background = element_rect(fill = "white" , color = "white"),
+        plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 6),
+        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 9),
+        legend.position = c(0.165,1),
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        legend.key.width = unit(2.5, "cm"),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.x = element_blank(), 
+        axis.title.y.right = element_blank(), 
+        axis.text.y.right = element_text(size = 9),
+        axis.text.x = element_blank(),
+        plot.margin = margin(2,1,14,1, unit = "cm"))
+
+```
+
 ##### Map
 ```{r}
 
@@ -74,48 +118,21 @@ uk_gross_1997_to_2018 %>%
   filter(year %in% c(1997,seq(2000,2015,5),2018)) %>%
   ggplot() +
   geom_sf(data = ireland, fill = "white" , color = "grey80") +
-  geom_sf(aes(fill = gross_income), color = "white") +
+  geom_sf(aes(fill = gross_income), color = "white" , show.legend = FALSE) +
   scale_fill_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£") , direction = -1) +
   coord_sf() +
-  facet_wrap(~year, nrow = 1, strip.position = "bottom") +
-  labs(title = "ONS Regional Average Gross Disposable Household Income (GDHI)" , 
-       subtitle = '  GDHI is the amount of money that all of the individuals in the household have available for spending or saving after they have paid direct and indirect taxes and received any direct benefits.\n GDHI is a concept that is seen to reflect the “material welfare” of the household. Regional estimates are produced in current prices (which include the effects of inflation).',
-       fill = "Average Gross Income") +
+  facet_wrap(~year, nrow = 1, strip.position = "top") +
   ggthemes::theme_map() +
   theme(plot.background = element_rect(fill = "white" , color = "white"),
-        plot.title = element_text(size = 24 , face = "bold" , hjust = 0.025, vjust = 2),
-        plot.subtitle = element_text(size = 12 , hjust = 0.025 , vjust = 1),
-        legend.position = c(0,0.85),
-        legend.direction = "horizontal",
-        legend.title = element_blank(),
-        legend.key.width = unit(2.5, "cm"),
+        #plot.title = element_text(size = 24 , face = "bold" , hjust = 0.025, vjust = 2),
+        #plot.subtitle = element_text(size = 12 , hjust = 0.025 , vjust = 1),
+        #legend.position = c(0,0.85),
+        #legend.direction = "horizontal",
+        #legend.title = element_blank(),
+        #legend.key.width = unit(2.5, "cm"),
         strip.background = element_rect(fill = "white" , color = "white"),
-        strip.text = element_text(size = 12 , face = "bold"),
-        plot.margin = margin(0.1,0,10,0.1, unit = "cm"))
-
-```
-
-##### Regional Rate of Change
-```{r}
-theme_set(theme_minimal())
-
-plot_region_gdhi_roc <-
-ons_gross_income_1997_to_2018_NUTS1 %>%
-  ggplot(aes(year , gross_income , color = gross_income, group = region_name)) +
-  geom_line(show.legend = FALSE , size = 1.5) +
-  scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
-  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"), breaks = seq(0,250000,50000),
-                     sec.axis = dup_axis(breaks = ons_gross_income_1997_to_2018_NUTS1$gross_income[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
-                                         labels = ons_gross_income_1997_to_2018_NUTS1$region_name[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
-                                         guide  = guide_axis(check.overlap = TRUE))) +
-  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
-  labs(x = NULL , y = NULL) +
-  theme(panel.grid.minor = element_blank(), 
-        panel.grid.major.x = element_blank(), 
-        axis.title.y.right = element_blank(), 
-        axis.text.y.right = element_text(face = "bold"),
-        axis.text.x = element_blank(),
-        plot.margin = margin(0,0,0,2, unit = "cm"))
+        strip.text = element_text(size = 14 , face = "bold"),
+        plot.margin = margin(-1,0,-3,0, unit = "cm"))
 
 ```
 
@@ -124,18 +141,18 @@ ons_gross_income_1997_to_2018_NUTS1 %>%
 library(cowplot)
 
 ons_region_gdhi_1997_2018 <-
-ggdraw(plot_uk_gdhi_1997_2018) +
-  draw_plot(plot_region_gdhi_roc , height = 0.40) +
+ggdraw(plot_region_gdhi_roc) +
+  draw_plot(plot_uk_gdhi_1997_2018, height = 0.6) +
+  draw_text("North West" , size = 9 , hjust = 0 , x = 0.923 , y = 0.665) +
+  draw_text("Scotland" ,   size = 9 , hjust = 0 , x = 0.923 , y = 0.705) +
+  draw_text("Data: ONS | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.36 , y = 0.86) +
   theme(plot.background = element_rect(fill = "white" , color = "white"))
 
-```
-
-##### Saving
-```{r}
+# Saving
 
 dir.create(here::here("projects/ons_region_gdhi_1997_2018"))
 
-ggsave(here::here("ons_region_gdhi_1997_2018.png"), dpi = 360, height = 10, width = 15)
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/ons_region_gdhi_1997_2018.png"), dpi = 360, height = 11, width = 17 , plot = ons_region_gdhi_1997_2018)
 
 ```
 
