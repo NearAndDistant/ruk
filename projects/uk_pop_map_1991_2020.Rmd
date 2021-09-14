@@ -70,7 +70,6 @@ ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland
 
 ##### Mapping
 ```{r}
-library(gganimate)
 
 plot_uk_geomap_1991_to_2020 <- 
 uk_geopop_1991_to_2020 %>%
