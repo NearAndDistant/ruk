@@ -11,10 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Grab Boundaries from ONS
 ```{r}
-
 library(tidyverse)
 library(sf)
-library(jsonlite)
 
 #load geojson from url
 uk_regions_boundaries <-
@@ -29,6 +27,7 @@ st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3
 #### Grab ONS Gross Data from GitHub (Script in Repository)
 ```{r}
 
+# you can see the primary script to grab this at https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gross_income_1997_to_2018/
 ons_gross_income_1997_to_2018 <-
 read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gross_income_1997_to_2018/ons_gross_income_1997_to_2018.csv")
 
@@ -45,7 +44,12 @@ ons_gross_income_1997_to_2018 %>%
   mutate(year = str_remove(year , "x"),
          year = as.numeric(year),
          region_name = str_to_title(region_name)) %>%
-  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name))
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
+  # rate of change summary for sec_axis_labels 
+  group_by(region_name) %>%
+  mutate(region_ror = (last(gross_income) - first(gross_income)) / first(gross_income)) %>%
+  mutate(sec_axis_labels = paste0(region_name, " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
+  ungroup()
 
 ```
 
@@ -67,7 +71,7 @@ ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland
 
 ```
 
-##### Regional Rate of Change
+##### Plot Regional Rate of Change 
 ```{r}
 theme_set(theme_minimal())
 
@@ -85,7 +89,7 @@ mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshi
   scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
   scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"), breaks = seq(0,250000,50000),
                      sec.axis = dup_axis(breaks = ons_gross_income_1997_to_2018_NUTS1$gross_income[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
-                                         labels = ons_gross_income_1997_to_2018_NUTS1$region_name[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
+                                         labels = ons_gross_income_1997_to_2018_NUTS1$sec_axis_labels[which(ons_gross_income_1997_to_2018_NUTS1$year == 2018)],
                                          guide  = guide_axis(check.overlap = TRUE))) +
   scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
   coord_cartesian(clip = "off") +
@@ -97,7 +101,7 @@ mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshi
   theme(plot.background = element_rect(fill = "white" , color = "white"),
         plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 6),
         plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 9),
-        legend.position = c(0.165,1),
+        legend.position = c(0.17,1),
         legend.direction = "horizontal",
         legend.title = element_blank(),
         legend.key.width = unit(2.5, "cm"),
@@ -106,11 +110,11 @@ mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshi
         axis.title.y.right = element_blank(), 
         axis.text.y.right = element_text(size = 9),
         axis.text.x = element_blank(),
-        plot.margin = margin(2,1,14,1, unit = "cm"))
+        plot.margin = margin(2,0.5,14,1, unit = "cm"))
 
 ```
 
-##### Map
+##### Plot Map Regional Change
 ```{r}
 
 plot_uk_gdhi_1997_2018 <-
@@ -143,12 +147,14 @@ library(cowplot)
 ons_region_gdhi_1997_2018 <-
 ggdraw(plot_region_gdhi_roc) +
   draw_plot(plot_uk_gdhi_1997_2018, height = 0.6) +
-  draw_text("North West" , size = 9 , hjust = 0 , x = 0.923 , y = 0.665) +
-  draw_text("Scotland" ,   size = 9 , hjust = 0 , x = 0.923 , y = 0.705) +
-  draw_text("Data: ONS | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.36 , y = 0.86) +
+  draw_text(ons_gross_income_1997_to_2018_NUTS1$sec_axis_labels[which(ons_gross_income_1997_to_2018_NUTS1$region_name == "North West")] ,
+            size = 9 , hjust = 0 , x = 0.905 , y = 0.665, color = "grey50") +
+  draw_text(ons_gross_income_1997_to_2018_NUTS1$sec_axis_labels[which(ons_gross_income_1997_to_2018_NUTS1$region_name == "Scotland")] , 
+            size = 9 , hjust = 0 , x = 0.905 , y = 0.705, color = "grey50") +
+  draw_text("Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.36 , y = 0.86) +
   theme(plot.background = element_rect(fill = "white" , color = "white"))
 
-# Saving
+# Create Directory and Save
 
 dir.create(here::here("projects/ons_region_gdhi_1997_2018"))
 
