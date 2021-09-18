@@ -1,0 +1,79 @@
+---
+title: "ons_per_head_gdhi_1997-2018"
+author: "NearAndDistant"
+date: "18/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Grab ONS Gross Data from GitHub (Script in Repository)
+```{r}
+
+# you can see the primary script to grab this at https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gross_income_1997_to_2018/
+ons_perhead_gdhi_1997_to_2018 <-
+read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv")
+
+```
+
+##### Grabs NUTS1
+```{r}
+
+ons_perhead_gdhi_1997_to_2018_NUTS1 <-
+ons_perhead_gdhi_1997_to_2018 %>%
+  filter(`NUTS level` == "NUTS1") %>%
+  janitor::clean_names(numerals = "left") %>%
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "gross_income") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year),
+         region_name = str_to_title(region_name)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
+  # divide by 12 for monthly income
+  mutate(monthly_income = gross_income / 12) %>%
+  # rate of change summary for sec_axis_labels 
+  group_by(region_name) %>%
+  mutate(region_ror = (last(gross_income) - first(gross_income)) / first(gross_income)) %>%
+  mutate(sec_axis_labels = paste0(region_name, " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
+  ungroup()
+```
+
+##### Plot Regional Rate of Change 
+```{r}
+theme_set(theme_minimal())
+
+text <- 'GDHI is the amount of money that all individuals in an average regional household have available after they have paid direct and indirect taxes and received any direct benefits.\nGDHI is a concept that is seen to reflect the “material welfare” of the household. Regional estimates are produced in current prices (which include the effects of inflation).'
+
+
+plot_region_perhead_gdhi_roc <-
+ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
+  ggplot(aes(year , monthly_income , color = monthly_income, group = region_name)) +
+  geom_line(show.legend = TRUE , size = 1.5) +
+  scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
+                     sec.axis = dup_axis(breaks = ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
+                                         labels = ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
+  coord_cartesian(clip = "off") +
+  labs(title = "ONS Regional Gross Disposable Household Income (GDHI) Per Head 1997 to 2018",
+       subtitle = text,
+       fill = NULL,
+       x = NULL,
+       y = NULL) +
+  theme(plot.background = element_rect(fill = "white" , color = "white"),
+        plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 6),
+        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 9),
+        legend.position = c(0.195,1.015),
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        legend.key.width = unit(2.5, "cm"),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.x = element_blank(), 
+        axis.title.y.right = element_blank(), 
+        axis.text.y.right = element_text(size = 9),
+        axis.text.x = element_blank(),
+        plot.margin = margin(2,0.5,1,1, unit = "cm"))
+
+```
