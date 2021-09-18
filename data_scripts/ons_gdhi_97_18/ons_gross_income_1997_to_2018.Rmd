@@ -37,7 +37,7 @@ uk_household_gdhi_income <- readxl::read_xls(temp_ons_97_to_18, sheet = "Table 1
 
 dir.create(here::here("data_scripts/ons_gdhi_97_18"))
 
-write_csv(uk_dis_income , here::here("data_scripts/ons_gdhi_97_18/ons_household_gdhi_1997_to_2018.csv"))
+write_csv(uk_household_gdhi_income , here::here("data_scripts/ons_gdhi_97_18/ons_household_gdhi_1997_to_2018.csv"))
 
 ```
 
@@ -50,6 +50,7 @@ readxl::read_xls(temp_ons_97_to_18, sheet = "Table 2", skip = 1) %>% rename(`201
 
 dir.create(here::here("data_scripts/ons_gdhi_97_18"))
 
-write_csv(uk_dis_income , here::here("data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv"))
+write_csv(uk_gdhi_per_head , 
+here::here("data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv"))
 
 ```
