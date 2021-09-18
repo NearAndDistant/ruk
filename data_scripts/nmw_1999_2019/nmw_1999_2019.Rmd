@@ -1,0 +1,49 @@
+---
+title: "UK NMW"
+author: "NearAndDistant"
+date: "18/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###### UK NMW
+```{r include=FALSE}
+library(tidyverse)
+
+# readxl does not currently support downloading from url (as of H2 2021) therefore downloading using temp
+temp_ons <- tempfile(fileext = ".xlsx")
+
+download.file(
+  url = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/791049/20_years_of_the_National_Minimum_Wage_-_data.xlsx",
+  destfile = temp_ons)
+
+# read xls
+uk_nmw_1999_2019_raw <- readxl::read_xlsx(temp_ons, sheet = "Slide 10 (1)", skip = 1) %>% 
+  janitor::clean_names() %>%
+  drop_na(nominal_nmw_nlw_rates) %>%
+  mutate(month = openxlsx::convertToDate(month))
+  
+```
+
+```{r}
+
+uk_nmw_1999_2019 <-
+uk_nmw_1999_2019_raw %>%
+  filter(lubridate::month(month) == 4) %>%
+  mutate(work_week      = rpi_adjusted * 40,
+         annual_salary  = work_week * 52,
+         monthly_salary = annual_salary / 12)
+
+```
+
+#### Saving 
+```{r}
+
+dir.create(here::here("data_scripts/nmw_1999_2019"))
+
+write_csv(uk_nmw_1999_2019 , here::here("data_scripts/nmw_1999_2019/nmw_1999_2019.csv"))
+
+```
