@@ -17,10 +17,10 @@ library(sf)
 #load geojson from url
 uk_regions_boundaries <-
 st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
-  rename(name = nuts118nm) %>% 
-  mutate(name = str_remove(name , " \\(England\\)"), 
-         name = str_to_title(name))  %>%
-  mutate(name = if_else(name == "Yorkshire And The Humber", "Yorkshire", name))
+  rename(region_name = nuts118nm) %>% 
+  mutate(region_name = str_remove(region_name , " \\(England\\)"), 
+         region_name = str_to_title(region_name))  %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name))
 
 ```
 
@@ -58,7 +58,7 @@ ons_gross_income_1997_to_2018 %>%
 
 uk_gross_1997_to_2018 <- 
 uk_regions_boundaries %>%
-  inner_join(ons_gross_income_1997_to_2018_NUTS1 , by = c(name = "region_name"))
+  inner_join(ons_gross_income_1997_to_2018_NUTS1 , by = "region_name")
 
 ```
 
@@ -165,7 +165,7 @@ mdl_gdhi <- lm(gross_income ~ year * region_name + 0, data = ons_gross_income_19
 
 # Prediction method
 explanatory_var <-
-  expand_grid(year = c(1997 , seq(2000,2030,5)),
+  expand_grid(year = seq(1997,2030,1),
               region_name = unique(ons_gross_income_1997_to_2018_NUTS1$region_name))
 
 prediction_data <-
@@ -190,10 +190,17 @@ prediction_data %>%
 ##### Model Visualisation
 ```{r}
 
+text_mdl <- 'Each year the Office of National Statistics in the UK release GDHI figures. GDHI is the amount of money that all individuals in an average regional household have available\nafter they have paid direct and indirect taxes and received any direct benefits. Regional estimates are produced in current prices (which include the effects of inflation).\nUsing these figures we can create a linear model and project regional disposable income out to 2030.'
+
+scotland_y_coord_mdl <- 
+prediction_data$gross_income[which(prediction_data$year == 2030 & prediction_data$region_name =="Scotland")]
+
+plot_mdl_roc <- 
 prediction_data %>%
 mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
   ggplot(aes(year , gross_income , group = region_name)) +
   geom_line(color = "grey70" , alpha = 0.5) +
+  geom_curve(x = 2030, y = scotland_y_coord_mdl + 70000, xend = 2030, yend = scotland_y_coord_mdl, arrow = arrow(length = unit(0.03, "npc")), color = "grey30") +
   geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.1) +
   geom_line(data = ons_gross_income_1997_to_2018_NUTS1 , aes(color = gross_income), show.legend = TRUE , size = 2) +
   scale_x_continuous(breaks = c(1997,seq(2000,2030,5)), limits = c(1997,2030), expand = c(0,0)) +
@@ -201,11 +208,15 @@ mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshi
                      sec.axis = dup_axis(breaks = prediction_data$gross_income[which(prediction_data$year == last(prediction_data$year))],
                                          labels = prediction_data$sec_axis_labels[which(prediction_data$year == last(prediction_data$year))],
                                          guide  = guide_axis(check.overlap = TRUE))) +
-  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
+  scale_color_viridis_c(option = "cividis", labels = scales::comma_format(accuracy = 1 , prefix = "£"), begin = 1, end = 0.35) +
   coord_cartesian(clip = "off") +
-  labs(x = NULL , y = NULL , color = NULL) +
-  theme(
-        legend.position = c(0.21,1),
+  labs(title = "Regional Gross Disposable Household Income (GDHI) 1997-2030 - Projections",
+       subtitle = text_mdl,
+       x = NULL , y = NULL , color = NULL) +
+  theme(plot.background = element_rect(fill = "white" , color = "white"),
+        plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 8),
+        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 11),
+        legend.position = c(0.17,1.025),
         legend.direction = "horizontal",
         legend.title = element_blank(),
         legend.key.width = unit(2.5, "cm"),
@@ -213,9 +224,46 @@ mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshi
         panel.grid.major.x = element_blank(), 
         axis.title.y.right = element_blank(), 
         axis.text.y.right = element_text(size = 9),
-        plot.margin = margin(2,2,2,1, unit = "cm")
-  )
+        axis.text.x = element_blank(),
+        plot.margin = margin(2,0.5,13,1, unit = "cm"))
   
+```
+
+```{r}
+
+plot_mdl_map_roc <- 
+prediction_data %>%
+  inner_join(uk_regions_boundaries , by = "region_name") %>%
+  filter(year %in% c(1997,2000,2010,2018,2025,2030)) %>%
+  ggplot() +
+  geom_sf(data = ireland, fill = "white" , color = "grey80") +
+  geom_sf(aes(fill = gross_income , geometry = geometry), color = "white" , show.legend = FALSE) +
+  scale_fill_viridis_c(option = "cividis" , labels = scales::comma_format(accuracy = 1 , prefix = "£") , direction = -1) +
+  coord_sf() +
+  facet_wrap(~year, nrow = 1, strip.position = "top") +
+  ggthemes::theme_map() +
+  theme(plot.background = element_rect(fill = "white" , color = "white"),
+        strip.background = element_rect(fill = "white" , color = "white"),
+        strip.text = element_text(size = 14 , face = "bold"),
+        plot.margin = margin(-2,1,-6,0, unit = "cm"))
 
 ```
 
+##### Panel
+```{r}
+library(cowplot)
+
+mdl_region_gdhi_1997_2030 <-
+ggdraw(plot_mdl_roc) +
+  draw_plot(plot_mdl_map_roc, height = 0.6) +
+  draw_text(ons_gross_income_1997_to_2018_NUTS1$sec_axis_labels[which(ons_gross_income_1997_to_2018_NUTS1$region_name == "North West")] ,
+            size = 9 , hjust = 0 , x = 0.905 , y = 0.63, color = "grey50") +
+  draw_text(ons_gross_income_1997_to_2018_NUTS1$sec_axis_labels[which(ons_gross_income_1997_to_2018_NUTS1$region_name == "Scotland")] , 
+            size = 9 , hjust = 0 , x = 0.905 , y = 0.68, color = "grey50") +
+  draw_text("Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.36 , y = 0.85) +
+  theme(plot.background = element_rect(fill = "white" , color = "white"))
+
+# Saving
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/mdl_gdhi_1997_2030.png"), dpi = 360, height = 11, width = 17 , plot = mdl_region_gdhi_1997_2030)
+
+```
