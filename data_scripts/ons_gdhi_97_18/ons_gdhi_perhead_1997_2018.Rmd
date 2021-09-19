@@ -16,6 +16,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ons_perhead_gdhi_1997_to_2018 <-
 read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv")
 
+uk_nmw_1999_2019 <-
+  read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/nmw_1999_2019/nmw_1999_2019.csv") %>%
+  mutate(month = lubridate::year(month))
+
 ```
 
 ##### Grabs NUTS1
@@ -29,10 +33,10 @@ ons_perhead_gdhi_1997_to_2018 %>%
   mutate(year = str_remove(year , "x"),
          year = as.numeric(year),
          region_name = str_to_title(region_name)) %>%
-  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
   # divide by 12 for monthly income
   mutate(monthly_income = gross_income / 12) %>%
   # rate of change summary for sec_axis_labels 
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
   group_by(region_name) %>%
   mutate(region_ror = (last(gross_income) - first(gross_income)) / first(gross_income)) %>%
   mutate(sec_axis_labels = paste0(region_name, " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
@@ -43,29 +47,36 @@ ons_perhead_gdhi_1997_to_2018 %>%
 ```{r}
 theme_set(theme_minimal())
 
-text <- 'GDHI is the amount of money that all individuals in an average regional household have available after they have paid direct and indirect taxes and received any direct benefits.\nGDHI is a concept that is seen to reflect the “material welfare” of the household. Regional estimates are produced in current prices (which include the effects of inflation).'
+text <- 'GDHI Per Head is the amount of money that a typical individual in an average regional household has available after they have paid\ndirect and indirect taxes and received any direct benefits. GDHI is a concept that is seen to reflect the “material welfare”. Regional\nestimates are produced in current prices (which include the effects of inflation).'
 
+east_midlands_coord <-
+ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018 & ons_perhead_gdhi_1997_to_2018_NUTS1$region_name =="East Midlands")]
+
+west_midlands_coord <-
+ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018 & ons_perhead_gdhi_1997_to_2018_NUTS1$region_name =="West Midlands")]
 
 plot_region_perhead_gdhi_roc <-
 ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
-  ggplot(aes(year , monthly_income , color = monthly_income, group = region_name)) +
-  geom_line(show.legend = TRUE , size = 1.5) +
+  ggplot() +
+  geom_line(aes(year , monthly_income , color = monthly_income, group = region_name), show.legend = TRUE , size = 1.5) +
+  geom_line(data = uk_nmw_1999_2019 , aes(month , monthly_salary), color = "black") +
   scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
   scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
                      sec.axis = dup_axis(breaks = ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
                                          labels = ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
                                          guide  = guide_axis(check.overlap = TRUE))) +
   scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
+  geom_curve(x = 2018, y = west_midlands_coord - 300, xend = 2018, yend = west_midlands_coord, curvature = -0.4 , arrow = arrow( length = unit(0.01, "npc")), color = "grey30") +
+  geom_curve(x = 2018, y = east_midlands_coord + 50, xend = 2018, yend = east_midlands_coord, arrow = arrow(length = unit(0.01, "npc")), color = "grey30") +
   coord_cartesian(clip = "off") +
   labs(title = "ONS Regional Gross Disposable Household Income (GDHI) Per Head 1997 to 2018",
        subtitle = text,
        fill = NULL,
        x = NULL,
        y = NULL) +
-  theme(plot.background = element_rect(fill = "white" , color = "white"),
-        plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 6),
-        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 9),
-        legend.position = c(0.195,1.015),
+  theme(plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 7),
+        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 10),
+        legend.position = c(0.18,1.02),
         legend.direction = "horizontal",
         legend.title = element_blank(),
         legend.key.width = unit(2.5, "cm"),
@@ -73,7 +84,77 @@ ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
         panel.grid.major.x = element_blank(), 
         axis.title.y.right = element_blank(), 
         axis.text.y.right = element_text(size = 9),
-        axis.text.x = element_blank(),
+        axis.text.x = element_text(size = 14),
         plot.margin = margin(2,0.5,1,1, unit = "cm"))
 
+# write to directory as png
+dir.create(here::here("projects/ons_region_gdhi_1997_2018/ouputs"))
+
+ggsave(plot = plot_region_perhead_gdhi_roc, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_plot.png"), dpi = 360, height = 10, width = 16)
+
 ```
+
+#### Map
+```{r}
+library(sf)
+
+# Load geojson from url
+uk_regions_boundaries <-
+st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
+  rename(region_name = nuts118nm) %>% 
+  mutate(region_name = str_remove(region_name , " \\(England\\)"), 
+         region_name = str_to_title(region_name))  %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name))
+
+# Merge for map
+geo_gdhi_perhead_1997_2018 <- 
+uk_regions_boundaries %>%
+  inner_join(ons_perhead_gdhi_1997_to_2018_NUTS1 , by = "region_name")
+
+# UK outline for map
+library(rnaturalearth)
+ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland")
+
+# Plot
+plot_map_ghdi_2018 <-
+geo_gdhi_perhead_1997_2018 %>%
+  filter(year == 2018) %>%
+  ggplot() +
+  geom_sf(data = ireland, fill = "white" , color = "grey80") +
+  geom_sf(aes(fill = monthly_income , geometry = geometry), color = "white" , show.legend = FALSE) +
+  scale_fill_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£") , direction = -1 , begin = 0 , end = 0.8 , alpha = 0.5) +
+  coord_sf() +
+  ggthemes::theme_map() +
+  theme(plot.margin = margin(0,0,0,0, unit = "cm"))
+
+# write to directory as png
+dir.create(here::here("projects/ons_region_gdhi_1997_2018/ouputs"))
+
+ggsave(plot = plot_map_ghdi_2018, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_map.png"), dpi = 360, height = 10, width = 8)
+
+```
+
+#### Panel
+```{r}
+library(cowplot)
+
+gdhi_perhead_monthly <-
+ggdraw() +
+draw_plot(plot_map_ghdi_2018 , x = 0.2) +
+draw_image(here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_plot.png")) +
+draw_text("Map Data: 2018 (current)" ,   size = 8 , hjust = 0 , x = 0.73 , y = 0.09, color = "grey60") +
+draw_text("Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.37 , y = 0.8425) +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "East Midlands")] , 
+          size = 9 , hjust = 0 , x = 0.9035 , y = 0.46, color = "grey40") +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "West Midlands")] , 
+          size = 9 , hjust = 0 , x = 0.9035 , y = 0.32, color = "grey40") +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "Wales")] , 
+          size = 9 , hjust = 0 , x = 0.9035 , y = 0.385, color = "grey40") +
+draw_text("NMW (RPI Adj)" , size = 9 , hjust = 0 , x = 0.9035 , y = 0.26, color = "grey40") +
+theme(plot.background = element_rect(fill = "white" , color = "white"))
+
+# Writing to File
+ggsave(plot = gdhi_perhead_monthly, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_panel.png"), dpi = 360, height = 10, width = 16)
+
+```
+
