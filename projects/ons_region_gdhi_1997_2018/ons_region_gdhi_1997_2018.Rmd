@@ -150,7 +150,7 @@ ggdraw(plot_region_gdhi_roc) +
 
 # Create Directory and Save
 
-dir.create(here::here("projects/ons_region_gdhi_1997_2018"))
+dir.create(here::here("projects/ons_region_gdhi_1997_2018/outputs"))
 
 ggsave(here::here("projects/ons_region_gdhi_1997_2018/ons_region_gdhi_1997_2018.png"), dpi = 360, height = 11, width = 17 , plot = ons_region_gdhi_1997_2018)
 
@@ -264,6 +264,6 @@ ggdraw(plot_mdl_roc) +
   theme(plot.background = element_rect(fill = "white" , color = "white"))
 
 # Saving
-ggsave(here::here("projects/ons_region_gdhi_1997_2018/mdl_gdhi_1997_2030.png"), dpi = 360, height = 11, width = 17 , plot = mdl_region_gdhi_1997_2030)
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/mdl_gdhi_1997_2030.png"), dpi = 360, height = 11, width = 17 , plot = mdl_region_gdhi_1997_2030)
 
 ```

@@ -21,11 +21,11 @@ For further information on the methodological changes that have led to revisions
 library(tidyverse)
 
 # readxl does not currently support downloading from url (as of H2 2021) therefore downloading using temp
-temp_ons_97_to_18 <- tempfile(fileext = ".xls")
+temp_ons_gdhi <- tempfile(fileext = ".xls")
 
 download.file(
   url = "https://www.ons.gov.uk/file?uri=%2feconomy%2fregionalaccounts%2fgrossdisposablehouseholdincome%2fdatasets%2fregionalgrossdisposablehouseholdincomegdhi%2f1997to2018/regionalgrossdisposablehouseholdincomeallnutslevelregions.xls",
-  destfile = temp_ons_97_to_18)
+  destfile = temp_ons_gdhi)
 
 ```
 
@@ -33,7 +33,7 @@ download.file(
 ```{r}
 
 # read xls
-uk_household_gdhi_income <- readxl::read_xls(temp_ons_97_to_18, sheet = "Table 1", skip = 1) %>% rename(`2018` = `20182`)
+uk_household_gdhi_income <- readxl::read_xls(temp_ons_gdhi, sheet = "Table 1", skip = 1) %>% rename(`2018` = `20182`)
 
 dir.create(here::here("data_scripts/ons_gdhi_97_18"))
 
@@ -46,11 +46,25 @@ write_csv(uk_household_gdhi_income , here::here("data_scripts/ons_gdhi_97_18/ons
 
 # read xls
 uk_gdhi_per_head <-
-readxl::read_xls(temp_ons_97_to_18, sheet = "Table 2", skip = 1) %>% rename(`2018` = `20181`)
+readxl::read_xls(temp_ons_gdhi, sheet = "Table 2", skip = 1) %>% rename(`2018` = `20181`)
 
 dir.create(here::here("data_scripts/ons_gdhi_97_18"))
 
 write_csv(uk_gdhi_per_head , 
 here::here("data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv"))
+
+```
+
+###### Distribution of Income
+```{r include=FALSE}
+
+# read xls
+ons_gdhi_components <-
+readxl::read_xls(temp_ons_gdhi, sheet = "Table 7", skip = 1) %>% rename(`2018` = `20181`)
+
+dir.create(here::here("data_scripts/ons_gdhi_components"))
+
+write_csv(ons_gdhi_components , 
+here::here("data_scripts/ons_gdhi_components/ons_gdhi_components_97_18.csv"))
 
 ```
