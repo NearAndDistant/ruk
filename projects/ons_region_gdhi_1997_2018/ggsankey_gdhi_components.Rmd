@@ -61,10 +61,10 @@ ons_gdhi_components_97_18_raw %>%
   mutate(value = if_else(transaction == "Gross Disposable Income" , NA_real_, value)) %>% # so we keep this as a flow node
   drop_na(transaction_code) %>% # NAs are just total rows in the ONS Excel file
   filter(year == 2018) %>%
-  filter(region_name == "North East" | region_name == "London") %>%
+  #filter(region_name == "North East" | region_name == "London") %>%
   select(-year, -nuts_level, -nuts_code, -transaction_code) %>%
   # balancing out financials: as the flow diagram needs to know what is left over after "secondary payments" are mad (taxes etc)
-  #we have to calculate their subtraction from Balance of Payments so that Gross Dispo
+  # we have to calculate their subtraction from Balance of Payments so that Gross Dispo
   pivot_wider(id_cols = c(region_name:transaction), names_from = "transaction", values_from = "value") %>%
   mutate(`Balance of primary incomes` = `Balance of primary incomes` - `Current taxes on income, wealth etc` - `Social contributions, paid` - `Other current transfers, paid`) %>%
   pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value")
@@ -93,12 +93,12 @@ transaction == "Other current transfers, paid"       ~ "Taxes",
 transaction == "Gross Disposable Income"             ~ "Disposable"),
 source = 
 case_when(
-transaction == "Operating surplus"                   ~ paste(sep = ", ",region_name, "Operating surplus"),
-transaction == "Mixed income"                        ~ paste(sep = ", ",region_name, "Mixed income"),
-transaction == "Compensation of employees"           ~ paste(sep = ", ",region_name, "Compensation of employees"),
-transaction == "Property income, received"           ~ paste(sep = ", ",region_name, "Property income, received"),
+transaction == "Operating surplus"                   ~ "Operating surplus",
+transaction == "Mixed income"                        ~ "Mixed income",
+transaction == "Compensation of employees"           ~ "Compensation of employees",
+transaction == "Property income, received"           ~ "Property income, received",
 transaction == "Primary resources total"             ~ "Primary resources total",
-transaction == "Property income, paid"               ~ "Primary resources total",
+transaction == "Property income, paid"               ~ "Balance of primary incomes",
 transaction == "Balance of primary incomes"          ~ "Balance of primary incomes",
 transaction == "Social benefits received"            ~ "Social benefits received",
 transaction == "Other current transfers, received"   ~ "Other current transfers, received",
@@ -115,8 +115,8 @@ transaction  == "Property income, received"           ~ "Primary resources total
 transaction  == "Primary resources total"             ~ "Balance of primary incomes",
 transaction  == "Property income, paid"               ~ "Property income, paid",
 transaction  == "Balance of primary incomes"          ~ "Gross Disposable Income",
-transaction  == "Social benefits received"            ~ "Gross Disposable Income",
-transaction  == "Other current transfers, received"   ~ "Gross Disposable Income",
+transaction  == "Social benefits received"            ~ "Balance of primary incomes",
+transaction  == "Other current transfers, received"   ~ "Balance of primary incomes",
 transaction  == "Current taxes on income, wealth etc" ~ "Current taxes on income, wealth etc",
 transaction  == "Social contributions, paid"          ~ "Social contributions, paid",
 transaction  == "Other current transfers, paid"       ~ "Other current transfers, paid",
@@ -130,7 +130,7 @@ prep_NUTS1$id <- paste0(group_indices(prep_NUTS1))
 indexed_NUTS1 <-
 prep_NUTS1 %>%
   group_by(region_name) %>%
-  mutate(id2 = str_pad(5:17, width = 2, pad = "0")) %>%
+  mutate(id2 = str_pad(6:18, width = 2, pad = "0")) %>%
   mutate(id = paste(id , id2, sep = ".")) %>%
   select(-id2) %>%
   select(id , everything()) %>%
@@ -143,17 +143,16 @@ prep_NUTS1 %>%
 ##### Adding Regions
 ```{r}
 
-income <- c("Operating surplus", "Mixed income" , "Compensation of employees" , "Property income, received")
-
 regions <- 
   tibble(
-    region_name = prep_NUTS1$region_name,
-    group  = "Region",
-    source = prep_NUTS1$region_name,
-    target = prep_NUTS1$source,
-    value  = prep_NUTS1$value) %>%
+    id          = indexed_NUTS1$id,
+    region_name = indexed_NUTS1$region_name,
+    group       = "Region",
+    source      = indexed_NUTS1$region_name,
+    target      = indexed_NUTS1$source,
+    value       = indexed_NUTS1$value) %>%
     group_by(source) %>%
-    slice_head(n = 4)
+    filter(str_detect(id, ".06|.07|.08|.09|.13|.14"))
 
 # group_indices
 regions$id <- group_indices(regions)
@@ -162,7 +161,7 @@ regions$id <- group_indices(regions)
 regions <- 
   regions %>% 
   group_by(region_name) %>%   
-  mutate(id2 = str_pad(1:4, width = 2, pad = "0")) %>%
+  mutate(id2 = str_pad(1:5, width = 2, pad = "0")) %>%
   mutate(id = paste(id , id2, sep = ".")) %>%
   select(-id2) %>%
   select(id , everything())
@@ -174,33 +173,90 @@ full_nuts1 <-
 
 ```
 
-#### {networkD3}
+Great reference on this by NHS-R (Lisa Cummmins), here:
+https://www.youtube.com/watch?v=3OvsW8OI1wo
+
+#### Create networkD3 links
 ```{r}
-library(networkD3)
 
 # Nodes
 nodes <- 
   full_nuts1 %>%
   select(source , target) %>%
-  pivot_longer(cols = c(source,target)) %>%
+  pivot_longer(cols = c(source,target), values_to = "table_link") %>%
   select(-name) %>%
-  distinct(value) %>%
-  mutate(id = )
+  distinct(table_link)
 
+```
+
+#### Create node links
+```{r}
+
+networkD3_table <-
+  full_nuts1 %>%
+  mutate(source_id  = match(source , nodes$table_link)-1) %>%
+  mutate(target_id = match(target , nodes$table_link)-1)
+
+```
+
+#### Node colors
+
+"Scotland"          = "Purple"          = "#e2d8f4"       
+"North East"        = "Orange"          = "#ffefd9"        
+"North West"        = "Blue"            = "#dff3f5"        
+"Yorkshire"         = "Brown"           = "#efead7"        
+"East Midlands"     = "Yellow"          = "#ffffbf"            
+"West Midlands"     = "Olive"           = "#bfc9ad"           
+"Wales"             = "Lime"            = "#d1ee70"        
+"South West"        = "Pink"            = "#ffc9c9"         
+"South East"        = "Grey"            = "#bfc9c7"         
+"London"            = "Pale Green"      = "#dff2bd"        
+"East Of England"   = "Dark Orange"     = "#fcc0a6"              
+"Northern Ireland"  = "Dark Green"      = "#076543"                               
+
+```{r}
+
+link_color <- 
+JS('d3.scaleOrdinal()
+    .domain(["Purple", "Orange",  "Blue",    "Brown",   "Yellow",  "Olive",   "Lime",    "Pink",    "Grey", "Pale Green","Dark Orange", "Dark Green" ])
+    .range(["#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#076543"])')
+
+networkD3_table <-
+networkD3_table %>%
+  mutate(
+    color_group = case_when(
+    region_name == "Scotland"         ~ "Purple"     ,
+    region_name == "North East"       ~ "Orange"     ,
+    region_name == "North West"       ~ "Blue"       ,
+    region_name == "Yorkshire"        ~ "Brown"      ,
+    region_name == "East Midlands"    ~ "Yellow"     ,
+    region_name == "West Midlands"    ~ "Olive"      ,
+    region_name == "Wales"            ~ "Lime"       ,
+    region_name == "South West"       ~ "Pink"       ,
+    region_name == "South East"       ~ "Grey"       ,
+    region_name == "London"           ~ "Pale Green" ,
+    region_name == "East Of England"  ~ "Dark Orange",
+    region_name == "Northern Ireland" ~ "Dark Green" ))
+
+```
+
+#### {networkD3}
+```{r}
+library(networkD3)
 
 nd3_gdhi <- 
 list(
-  nodes = data.frame(name   =        nodes$value),
-  links = data.frame(source =        full_nuts1$source,
-                     target =        full_nuts1$target,
-                     group  =        full_nuts1$region_name,
-                     value  =        full_nuts1$value))
+  nodes = data.frame(name   =        nodes$table_link,
+                     color  =       "white"),
+  links = data.frame(source =        networkD3_table$source_id,
+                     target =        networkD3_table$target_id,
+                     value  =        networkD3_table$value,
+                     group  =        networkD3_table$region_name,
+                     color  =        networkD3_table$color_group))
 
 
 sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes , 
-              Source = "source", Target = "target", Value = "value", NodeID = "name", NodeGroup = "group", LinkGroup = "group",
-              units = "£", fontSize = 12, nodeWidth = 30, sinksRight = FALSE, iterations = 0)
+              Source = "source", Target = "target", Value = "value", NodeID = "name", NodeGroup = "color",
+              units = "£", fontSize = 14, fontFamily = "Arial" , nodeWidth = 30, colourScale = link_color, LinkGroup = "color",
+              width = 1400 , height = 900 ,  sinksRight = FALSE, iterations = 0)
 ```
-
-
-
