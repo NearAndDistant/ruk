@@ -9,3 +9,199 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#### Grab ONS Gross Data from GitHub (Script in Repository)
+```{r}
+library(tidyverse)
+
+# you can see the primary script to grab this at https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gross_income_1997_to_2018/
+ons_gdhi_components_97_18 <-
+read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_components/ons_gdhi_components_97_18.csv")
+
+```
+
+##### Grabs NUTS1
+```{r}
+
+ons_gdhi_components_97_18_NUTS1 <-
+ons_gdhi_components_97_18 %>%
+  filter(`NUTS level` == "NUTS1") %>%
+  janitor::clean_names(numerals = "left") %>%
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  drop_na(transaction_code) %>% # NAs are just total rows in the ONS Excel file
+  filter(transaction != "Balance of primary incomes") %>% # not applicable as simple total rows in the ONS Excel file
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year),
+         region_name = str_to_title(region_name)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
+  select(year , everything())
+
+```
+
+#### Prepare Sankey
+
+##### Primary resources
+0: Operating surplus
+1: Mixed income
+2: Compensation of employees
+3: Property income, received
+
+##### Primary uses
+4: Property income, paid
+
+##### Secondary resources
+5: Social benefits received
+6: Other current transfers, received
+
+##### Secondary uses
+7: Current taxes on income, wealth etc
+8: Social contributions/Social benefits paid
+9: Other current transfers, paid
+
+##### GDHI
+10: Gross Disposable Income
+
+```{r}
+
+nd3_flow <- 
+tibble(
+ref   = 0:15,
+source = c(
+"Operating surplus",                      
+"Mixed income",              
+"Compensation of employees",                 
+"Property income, received",              
+"Property income, paid",  
+"Property income, paid",
+"Social benefits received",
+"Social benefits received",
+"Social benefits received",
+"Other current transfers, received",
+"Other current transfers, received",
+"Other current transfers, received",
+"Current taxes on income, wealth etc",      
+"Social contributions, paid",
+"Other current transfers, paid",
+"Gross Disposable Income"),
+target = c(
+"Property income, paid",
+"Property income, paid",
+"Property income, paid",
+"Property income, paid",
+"Social benefits received",
+"Other current transfers, received",
+"Current taxes on income, wealth etc",      
+"Social contributions, paid",
+"Other current transfers, paid",
+"Current taxes on income, wealth etc",      
+"Social contributions, paid",
+"Other current transfers, paid",
+"Gross Disposable Income",
+"Gross Disposable Income",
+"Gross Disposable Income",
+NA
+))
+
+nd3_flow <-
+tibble(
+  source = as.integer(c(0,1,2,3,4,4,5,5,5,6,6,6,7, 8, 9)),
+  target = as.integer(c(4,4,4,4,5,6,7,8,9,7,8,9,10,10,10))
+)
+
+```
+
+##### Gross Disposable Household Income (GDHI)
+
+```{r}
+library(ggsankey)
+
+gdhi_sankey_prep <-
+ons_gdhi_components_97_18_NUTS1 %>%
+  mutate(transaction = if_else(transaction == "Imputed social contributions/Social benefits received" , "Social benefits received", transaction)) %>%
+  mutate(transaction = if_else(transaction == "Social contributions/Social benefits paid" , "Social contributions, paid", transaction)) %>%
+  mutate(transaction_code = case_when(transaction == "Operating surplus"                             ~ "Primary Resources",
+                                      transaction == "Mixed income"                                  ~ "Primary Resources",
+                                      transaction == "Compensation of employees"                     ~ "Primary Resources",
+                                      transaction == "Property income, received"                     ~ "Primary Resources",
+                                      transaction == "Property income, paid"                         ~ "Primary Uses",
+                                      transaction == "Social benefits received"                      ~ "Secondary Resources",
+                                      transaction == "Other current transfers, received"             ~ "Secondary Resources",
+                                      transaction == "Current taxes on income, wealth etc"           ~ "Secondary Uses",
+                                      transaction == "Social contributions, paid"                    ~ "Secondary Uses",
+                                      transaction == "Other current transfers, paid"                 ~ "Secondary Uses",
+                                      transaction == "Gross Disposable Income"                       ~ "Gross Disposable Income")) %>%
+  mutate(source = nd3_flow$source[match(nd3_flow$source, gdhi_sankey_prep$transaction)]) %>%
+  mutate(target = nd3_flow$target[match(gdhi_sankey_prep$transaction, nd3_names$names)]) %>%
+  janitor::clean_names() %>%
+  select(-nuts_level , -nuts_code) %>%
+  filter(year == 2018 & region_name == "North East")
+
+
+```
+
+##### Example
+```{r}
+
+myDf <- 
+list(
+  nodes = data.frame(name   =            c( "A", "B", "C", "D", "E",
+                                            "V", "W", "X", "Y", "Z")),
+  links = data.frame(source = as.integer(c(0, 1, 2, 4, 3, 4, 4)),
+                     target = as.integer(c(7, 6, 5, 8, 5, 8, 9)),
+                     value  =            c(1, 4, 1, 5, 1, 5, 3))
+)
+
+sankeyNetwork(Links = myDf$links, Nodes = myDf$nodes, 
+              Source = "source", Target = "target", Value = "value", 
+              NodeID = "name", units = "TWh", fontSize = 25, nodeWidth = 30, 
+              fontFamily = "sans-serif", iterations = 0, sinksRight = FALSE)
+
+```
+
+#### {networkD3}
+```{r}
+library(networkD3)
+
+nd3_gdhi <- 
+list(
+  nodes = data.frame(name   = nd3_names$names),
+  links = data.frame(source = as.integer(c(0,1,2,3,4,4,5,5,5,6,6,6,7, 8, 9)),
+                     target = as.integer(c(4,4,4,4,5,6,7,8,9,7,8,9,10,10,10)),
+                     value  = gdhi_sankey_prep$value))
+
+
+sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes ,
+              Source = "source", Target = "target", Value = "value", NodeID = "name",
+              units = "£", fontSize = 12, nodeWidth = 30, iterations = 0, sinksRight = FALSE)
+```
+
+year == 2018 & region_name == "London"
+
+primary_resources, primary_uses, secondary_resources, secondary_uses, gross_disposable_income
+
+region_name , operating_surplus, mixed_income, compensation_of_employees, property_income_received, property_income_paid,
+            imputed_social_contributions_social_benefits_received, other_current_transfers_received, current_taxes_on_income_wealth_etc,
+            social_contributions_social_benefits_paid, other_current_transfers_paid, gross_disposable_income
+#### {ggsankey}
+```{r}
+library(ggsankey)
+theme_set(theme_minimal())
+
+# Make wide, make long, make Sankey all day long
+long_nuts1 <-
+make_long(wide_nuts1)
+
+# plot ggsankey
+nuts1_long %>%
+  ggplot(aes(x = x, 
+             next_x = next_x, 
+             node = node, 
+             next_node = next_node,
+             fill = factor(node),
+             label = node)) +
+  geom_sankey(show.legend = FALSE) +
+  geom_sankey_label(size = 3, color = "white", fill = "gray40") +
+  theme_sankey(base_size = 18)
+
+```
+
+
