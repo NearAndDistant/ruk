@@ -130,7 +130,7 @@ prep_NUTS1$id <- paste0(group_indices(prep_NUTS1))
 indexed_NUTS1 <-
 prep_NUTS1 %>%
   group_by(region_name) %>%
-  mutate(id2 = str_pad(6:18, width = 2, pad = "0")) %>%
+  mutate(id2 = str_pad(7:19, width = 2, pad = "0")) %>%
   mutate(id = paste(id , id2, sep = ".")) %>%
   select(-id2) %>%
   select(id , everything()) %>%
@@ -152,7 +152,7 @@ regions <-
     target      = indexed_NUTS1$source,
     value       = indexed_NUTS1$value) %>%
     group_by(source) %>%
-    filter(str_detect(id, ".06|.07|.08|.09|.13|.14"))
+    filter(str_detect(id, ".07|.08|.09|.10|.14|.15"))
 
 # group_indices
 regions$id <- group_indices(regions)
@@ -161,7 +161,7 @@ regions$id <- group_indices(regions)
 regions <- 
   regions %>% 
   group_by(region_name) %>%   
-  mutate(id2 = str_pad(1:5, width = 2, pad = "0")) %>%
+  mutate(id2 = str_pad(1:6, width = 2, pad = "0")) %>%
   mutate(id = paste(id , id2, sep = ".")) %>%
   select(-id2) %>%
   select(id , everything())
@@ -210,16 +210,22 @@ networkD3_table <-
 "Wales"             = "Lime"            = "#d1ee70"        
 "South West"        = "Pink"            = "#ffc9c9"         
 "South East"        = "Grey"            = "#bfc9c7"         
-"London"            = "Pale Green"      = "#dff2bd"        
-"East Of England"   = "Dark Orange"     = "#fcc0a6"              
-"Northern Ireland"  = "Dark Green"      = "#076543"                               
+"London"            = "Green"           = "#dff2bd"        
+"East Of England"   = "Tangerine"       = "#fcc0a6"              
+"Northern Ireland"  = "Clover"          = "#68B374"   
 
+##### Show colors
 ```{r}
 
-link_color <- 
-JS('d3.scaleOrdinal()
-    .domain(["Purple", "Orange",  "Blue",    "Brown",   "Yellow",  "Olive",   "Lime",    "Pink",    "Grey", "Pale Green","Dark Orange", "Dark Green" ])
-    .range(["#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#076543"])')
+nuts1_palette <- c("#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#68B374")
+
+scales::show_col(nuts1_palette)
+
+```
+
+For some reason JavaScript does not take spaces in it's characters indicating colors so use one word colors otherwise it will skip the color and place the next. Use one word, CamelCase or snake_case.
+
+```{r}
 
 networkD3_table <-
 networkD3_table %>%
@@ -234,9 +240,15 @@ networkD3_table %>%
     region_name == "Wales"            ~ "Lime"       ,
     region_name == "South West"       ~ "Pink"       ,
     region_name == "South East"       ~ "Grey"       ,
-    region_name == "London"           ~ "Pale Green" ,
-    region_name == "East Of England"  ~ "Dark Orange",
-    region_name == "Northern Ireland" ~ "Dark Green" ))
+    region_name == "London"           ~ "Green"      ,
+    region_name == "East Of England"  ~ "Tangerine"  ,
+    region_name == "Northern Ireland" ~ "Clover"))
+
+link_color <- 
+JS('d3.scaleOrdinal()
+    .domain(["Purple","Orange","Blue","Brown","Yellow","Olive","Lime","Pink","Grey","Green","Tangerine","Clover" ])
+    .range(["#e2d8f4","#ffefd9","#dff3f5","#efead7","#ffffbf","#bfc9ad","#d1ee70","#ffc9c9","#bfc9c7","#dff2bd","#fcc0a6","#68B374"])')
+
 
 ```
 
@@ -247,16 +259,15 @@ library(networkD3)
 nd3_gdhi <- 
 list(
   nodes = data.frame(name   =        nodes$table_link,
-                     color  =       "white"),
+                     color  =        NA),
   links = data.frame(source =        networkD3_table$source_id,
                      target =        networkD3_table$target_id,
                      value  =        networkD3_table$value,
-                     group  =        networkD3_table$region_name,
                      color  =        networkD3_table$color_group))
 
 
 sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes , 
               Source = "source", Target = "target", Value = "value", NodeID = "name", NodeGroup = "color",
-              units = "£", fontSize = 14, fontFamily = "Arial" , nodeWidth = 30, colourScale = link_color, LinkGroup = "color",
+              units = "£", fontSize = 14, fontFamily = "Arial" , nodeWidth = 30, LinkGroup = "color", colourScale = link_color, 
               width = 1400 , height = 900 ,  sinksRight = FALSE, iterations = 0)
 ```
