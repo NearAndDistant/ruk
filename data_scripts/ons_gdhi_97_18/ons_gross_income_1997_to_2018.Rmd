@@ -48,23 +48,31 @@ write_csv(uk_household_gdhi_income , here::here("data_scripts/ons_gdhi_97_18/ons
 uk_gdhi_per_head <-
 readxl::read_xls(temp_ons_gdhi, sheet = "Table 2", skip = 1) %>% rename(`2018` = `20181`)
 
-dir.create(here::here("data_scripts/ons_gdhi_97_18"))
-
 write_csv(uk_gdhi_per_head , 
 here::here("data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv"))
 
 ```
 
-###### Distribution of Income
+###### GDHI Components
+```{r include=FALSE}
+
+# read xls
+ons_gdhi_components <-
+readxl::read_xls(temp_ons_gdhi, sheet = "Table 6", skip = 1) %>% rename(`2018` = `20182`)
+
+write_csv(ons_gdhi_components , 
+here::here("data_scripts/ons_gdhi_97_18/ons_gdhi_components_97_18.csv"))
+
+```
+
+###### GDHI Components Per Head
 ```{r include=FALSE}
 
 # read xls
 ons_gdhi_components <-
 readxl::read_xls(temp_ons_gdhi, sheet = "Table 7", skip = 1) %>% rename(`2018` = `20181`)
 
-dir.create(here::here("data_scripts/ons_gdhi_components"))
-
 write_csv(ons_gdhi_components , 
-here::here("data_scripts/ons_gdhi_components/ons_gdhi_components_97_18.csv"))
+here::here("data_scripts/ons_gdhi_97_18/ons_gdhi_perhead_components_97_18.csv"))
 
 ```
