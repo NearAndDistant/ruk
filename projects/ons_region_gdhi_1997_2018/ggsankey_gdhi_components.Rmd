@@ -11,11 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Grab ONS Gross Data from GitHub (Script in Repository)
 
+Gross Disposable household Income is the amount of money that that all of the individuals in the household sector have available for spending or saving after income distribution measures (for example, taxes, social contributions and benefits) have taken effect. GDHI does not provide measures relating to actual households or family units. The figures cover regions, sub-regions and local areas of the UK. It consists of:
+
 ##### Primary resources
 0: Operating surplus
 1: Mixed income
 2: Compensation of employees
 3: Property income, received
+
+= Primary Resource total
 
 ##### Primary uses
 4: Property income, paid
@@ -24,13 +28,15 @@ knitr::opts_chunk$set(echo = TRUE)
 5: Social benefits received
 6: Other current transfers, received
 
+= Balance of Primary Income
+
 ##### Secondary uses
 7: Current taxes on income, wealth etc
 8: Social contributions, paid
 9: Other current transfers, paid
 
 ##### GDHI
-10: Gross Disposable Income
+= Gross Disposable Income
 
 ```{r}
 library(tidyverse)
@@ -269,5 +275,5 @@ list(
 sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes , 
               Source = "source", Target = "target", Value = "value", NodeID = "name", NodeGroup = "color",
               units = "£", fontSize = 14, fontFamily = "Arial" , nodeWidth = 30, LinkGroup = "color", colourScale = link_color, 
-              width = 1400 , height = 900 ,  sinksRight = FALSE, iterations = 0)
+              width = 1500 , height = 900 ,  sinksRight = FALSE, iterations = 0)
 ```
