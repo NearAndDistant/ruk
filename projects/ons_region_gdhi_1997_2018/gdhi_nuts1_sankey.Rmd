@@ -74,7 +74,9 @@ ons_gdhi_components_97_18_raw %>%
   # we have to calculate their subtraction from Balance of Payments so that Gross Dispo
   pivot_wider(id_cols = c(region_name:transaction), names_from = "transaction", values_from = "value") %>%
   mutate(`Balance of primary incomes` = `Balance of primary incomes` - `Current taxes on income, wealth etc` - `Social contributions, paid` - `Other current transfers, paid`) %>%
-  pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value")
+  pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value") %>%
+  mutate(transaction = if_else(transaction == "Balance of primary incomes" , "Secondary Resources Total", transaction)) %>% # aligning to the ONS figures on Secondary Income
+  mutate(transaction = str_to_title(transaction))
 
 ```
 
@@ -90,7 +92,7 @@ transaction == "Mixed income"                        ~ "Mixed income",
 transaction == "Compensation of employees"           ~ "Compensation of employees",
 transaction == "Property income, received"           ~ "Property income, received",
 transaction == "Primary resources total"             ~ "Primary resources total",
-transaction == "Property income, paid"               ~ "Balance of primary incomes",
+transaction == "Property income, paid"               ~ "Primary resources total",
 transaction == "Balance of primary incomes"          ~ "Balance of primary incomes",
 transaction == "Social benefits received"            ~ "Social benefits received",
 transaction == "Other current transfers, received"   ~ "Other current transfers, received",
@@ -278,7 +280,7 @@ networkD3_table %>%
 link_color <- 
 JS('d3.scaleOrdinal()
     .domain(["White", "Purple","Orange","Blue","Brown","Yellow","Olive","Lime","Pink","Grey","Green","Tangerine","Clover" ])
-    .range(["#FFFFFF", "#440154FF", "#482173FF", "#433E85FF", "#38598CFF", "#2D708EFF", "#25858EFF", "#1E9B8AFF", "#2BB07FFF", "#51C56AFF", "#85D54AFF", "#C2DF23FF", "#FDE725FF"])')
+    .range(["#FFFFFF", "#00204DFF", "#00306FFF", "#2A406CFF", "#48526BFF", "#5E626EFF", "#727374FF", "#878479FF", "#9E9677FF", "#B6A971FF", "#D0BE67FF", "#EAD357FF", "#FFEA46FF"])')
 
 ```
 
@@ -330,12 +332,28 @@ dir.create("projects/ons_region_gdhi_1997_2018/outputs/html")
 dir.create("projects/ons_region_gdhi_1997_2018/outputs/images")
 
 # save it as html
-saveNetwork(gdhi_nuts1_sankey, here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_blackviridis.html"))
+saveNetwork(gdhi_nuts1_sankey, here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_nuts1_sankey_cividis.html"))
 
 library(webshot2)
 # you convert it as png
-webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_blackviridis.html"),
-        here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_blackviridis.png"),
-        vwidth = 1500, vheight = 750)
+webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_nuts1_sankey_cividis.html"),
+        here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_nuts1_sankey_cividis.png"),
+        vwidth = 1500, vheight = 800)
 
 ```
+
+#### Annotation
+```{r}
+library(cowplot)
+
+ggdraw() +
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_nuts1_sankey_cividis.png")) +
+  draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.375 , y = 0.05,
+            family = "Arial", color = "white", size = 20) +
+  draw_text("Data: ONS | Graphic: @NearAndDistant" , hjust = 0 , x = 0.48 , y = 0.19,
+            family = "Arial", color = "white", size = 12)
+
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_cividis.png"), dpi = 360, height = 9.5, width = 15)
+
+```
+
