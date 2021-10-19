@@ -1,6 +1,8 @@
 # ruk
 
-Working repository for UK data & geospatial scripts in R.
+Working repository for UK data & geospatial scripts in R. 
+
+[ONS UK Geography Guide](https://github.com/NearAndDistant/ruk/blob/main/a-beginners-guide-to-uk-geography-2020-v1.0.pdf)
 
 ## UK Geography Guide
 
