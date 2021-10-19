@@ -75,8 +75,7 @@ ons_gdhi_components_97_18_raw %>%
   pivot_wider(id_cols = c(region_name:transaction), names_from = "transaction", values_from = "value") %>%
   mutate(`Balance of primary incomes` = `Balance of primary incomes` - `Current taxes on income, wealth etc` - `Social contributions, paid` - `Other current transfers, paid`) %>%
   pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value") %>%
-  mutate(transaction = if_else(transaction == "Balance of primary incomes" , "Secondary Resources Total", transaction)) %>% # aligning to the ONS figures on Secondary Income
-  mutate(transaction = str_to_title(transaction))
+  mutate(transaction = if_else(transaction == "Balance of primary incomes" , "Secondary resources total", transaction)) # aligning to the ONS figures on Secondary Income
 
 ```
 
@@ -93,24 +92,24 @@ transaction == "Compensation of employees"           ~ "Compensation of employee
 transaction == "Property income, received"           ~ "Property income, received",
 transaction == "Primary resources total"             ~ "Primary resources total",
 transaction == "Property income, paid"               ~ "Primary resources total",
-transaction == "Balance of primary incomes"          ~ "Balance of primary incomes",
+transaction == "Secondary resources total"           ~ "Secondary resources total",
 transaction == "Social benefits received"            ~ "Social benefits received",
 transaction == "Other current transfers, received"   ~ "Other current transfers, received",
-transaction == "Current taxes on income, wealth etc" ~ "Balance of primary incomes",
-transaction == "Social contributions, paid"          ~ "Balance of primary incomes",
-transaction == "Other current transfers, paid"       ~ "Balance of primary incomes",
-transaction == "Gross Disposable Income"             ~ "Balance of primary incomes"),
+transaction == "Current taxes on income, wealth etc" ~ "Secondary resources total",
+transaction == "Social contributions, paid"          ~ "Secondary resources total",
+transaction == "Other current transfers, paid"       ~ "Secondary resources total",
+transaction == "Gross Disposable Income"             ~ "Secondary resources total"),
 target = 
 case_when(
 transaction  == "Operating surplus"                   ~ "Primary resources total",
 transaction  == "Mixed income"                        ~ "Primary resources total",
 transaction  == "Compensation of employees"           ~ "Primary resources total",
 transaction  == "Property income, received"           ~ "Primary resources total",
-transaction  == "Primary resources total"             ~ "Balance of primary incomes",
+transaction  == "Primary resources total"             ~ "Secondary resources total",
 transaction  == "Property income, paid"               ~ "Property income, paid",
-transaction  == "Balance of primary incomes"          ~ "Gross Disposable Income",
-transaction  == "Social benefits received"            ~ "Balance of primary incomes",
-transaction  == "Other current transfers, received"   ~ "Balance of primary incomes",
+transaction  == "Secondary resources total"          ~ "Gross Disposable Income",
+transaction  == "Social benefits received"            ~ "Secondary resources total",
+transaction  == "Other current transfers, received"   ~ "Secondary resources total",
 transaction  == "Current taxes on income, wealth etc" ~ "Current taxes on income, wealth etc",
 transaction  == "Social contributions, paid"          ~ "Social contributions, paid",
 transaction  == "Other current transfers, paid"       ~ "Other current transfers, paid",
@@ -128,7 +127,6 @@ prep_NUTS1 %>%
 
 ```
 
-##### Adding Regions
 ```{r}
 
 regions <- 
@@ -171,19 +169,20 @@ arrange(id)
 
 ```
 
+#### Create networkD3 links
+
 Great reference on this by NHS-R (Lisa Cummmins), here:
 https://www.youtube.com/watch?v=3OvsW8OI1wo
 
-#### Create networkD3 links
 ```{r}
 
-# Nodes
+# Nodes all
 nodes <- 
   indexed_NUTS1 %>%
   select(source , target) %>%
   pivot_longer(cols = c(source,target), values_to = "table_link") %>%
   select(-name) %>%
-  distinct(table_link)
+  distinct(table_link, .keep_all = TRUE)
 
 # regions *in order* bind
 regions_ordered <-
@@ -192,18 +191,17 @@ regions_ordered <-
   unique(full_nuts1$region_name))
 
 # join for all sources giving all nodes and region nodes in order
-nodes <-
-  rbind(regions_ordered, nodes)
+nodes_all <- rbind(regions_ordered, nodes)
 
 ```
 
-#### Create node links
+#### Create node links - All Regions
 ```{r}
 
 networkD3_table <-
   full_nuts1 %>%
-  mutate(source_id  = match(source , nodes$table_link)-1) %>%
-  mutate(target_id = match(target , nodes$table_link)-1)
+  mutate(source_id  = match(source , nodes_all$table_link)-1) %>%
+  mutate(target_id = match(target ,  nodes_all$table_link)-1)
 
 ```
 
@@ -252,14 +250,18 @@ Cividis
 "#FFFFFF", "#00204DFF", "#00306FFF", "#2A406CFF", "#48526BFF", "#5E626EFF", "#727374FF", "#878479FF", "#9E9677FF", "#B6A971FF", "#D0BE67FF", "#EAD357FF", "#FFEA46FF"
 
 ```{r}
-
 # color scales
-
 ## viridis
 
 scales::show_col(viridis::cividis(n = 12))
 viridis::cividis(n = 12) # return string of hex colors to create palette
 
+link_color_ne <- 
+JS('d3.scaleOrdinal()
+    .domain(["White", Orange"])
+    .range(["#FFFFFF", "#00306FFF"])')
+
+# All Regions
 networkD3_table <-
 networkD3_table %>%
   mutate(
@@ -284,13 +286,13 @@ JS('d3.scaleOrdinal()
 
 ```
 
-#### {networkD3}
+#### {networkD3} All Regions
 ```{r}
 library(networkD3)
 
 nd3_gdhi <- 
 list(
-  nodes = data.frame(name   =        nodes$table_link,
+  nodes = data.frame(name   =        nodes_all$table_link,
                      color  =        "will pick first color i.e. white"),
   links = data.frame(source =        networkD3_table$source_id,
                      target =        networkD3_table$target_id,
@@ -303,7 +305,7 @@ sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes ,
               Source = "source", Target = "target", Value = "value", 
               LinkGroup = "color", colourScale = link_color,
               NodeID = "name", NodeGroup = "color", nodeWidth = 30,
-              units = "(£m)", fontSize = 15, fontFamily = "Arial" ,
+              units = "(£m)", fontSize = 16, fontFamily = "Arial" ,
               width = 1700 , height = 900 ,  sinksRight = FALSE, iterations = 0,
               margin = list(right = 100, left = 100))
 
@@ -314,9 +316,11 @@ htmlwidgets::onRender(gdhi_nuts1_sankey,
   'function(el, x) {
     d3.selectAll(".node text").attr("fill", "white");
     d3.selectAll(".node text").attr("text-anchor", "end").attr("x", -10);
-    d3.select("body").style("background-color", "#373737"); 
+    d3.select("body").style("background-color", "#818380"); 
   }'
 )
+
+# Shadow: #373737
 
 gdhi_nuts1_sankey
 
@@ -350,10 +354,9 @@ ggdraw() +
   draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_nuts1_sankey_cividis.png")) +
   draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.375 , y = 0.05,
             family = "Arial", color = "white", size = 20) +
-  draw_text("Data: ONS | Graphic: @NearAndDistant" , hjust = 0 , x = 0.48 , y = 0.19,
+  draw_text("Data: ONS\nGraphic: @NearAndDistant" , hjust = 0 , x = 0.72 , y = 0.19,
             family = "Arial", color = "white", size = 12)
 
 ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_cividis.png"), dpi = 360, height = 9.5, width = 15)
 
 ```
-
