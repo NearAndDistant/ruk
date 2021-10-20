@@ -62,6 +62,7 @@ ons_gdhi_components_97_18_raw %>%
   mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
   mutate(transaction = if_else(transaction == "Imputed social contributions/Social benefits received" , "Social benefits received", transaction)) %>%
   mutate(transaction = if_else(transaction == "Social contributions/Social benefits paid" , "Social contributions, paid", transaction)) %>%
+    mutate(transaction = if_else(transaction == "Current taxes on income, wealth etc" , "Current taxes", transaction)) %>%
   # filter out unecessary transactions i.e. totals or balances
   mutate(transaction_code = if_else(transaction == "Primary resources total" , "PRT", transaction_code)) %>% # so we keep this as a flow node
   mutate(value = if_else(transaction == "Gross Disposable Income" , NA_real_, value)) %>% # so we keep this as a flow node
@@ -73,7 +74,7 @@ ons_gdhi_components_97_18_raw %>%
   # balancing out financials: as the flow diagram needs to know what is left over after "secondary payments" are mad (taxes etc)
   # we have to calculate their subtraction from Balance of Payments so that Gross Dispo
   pivot_wider(id_cols = c(region_name:transaction), names_from = "transaction", values_from = "value") %>%
-  mutate(`Balance of primary incomes` = `Balance of primary incomes` - `Current taxes on income, wealth etc` - `Social contributions, paid` - `Other current transfers, paid`) %>%
+  mutate(`Balance of primary incomes` = `Balance of primary incomes` - `Current taxes` - `Social contributions, paid` - `Other current transfers, paid`) %>%
   pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value") %>%
   mutate(transaction = if_else(transaction == "Balance of primary incomes" , "Secondary resources total", transaction)) # aligning to the ONS figures on Secondary Income
 
@@ -95,7 +96,7 @@ transaction == "Property income, paid"               ~ "Primary resources total"
 transaction == "Secondary resources total"           ~ "Secondary resources total",
 transaction == "Social benefits received"            ~ "Social benefits received",
 transaction == "Other current transfers, received"   ~ "Other current transfers, received",
-transaction == "Current taxes on income, wealth etc" ~ "Secondary resources total",
+transaction == "Current taxes"                       ~ "Secondary resources total",
 transaction == "Social contributions, paid"          ~ "Secondary resources total",
 transaction == "Other current transfers, paid"       ~ "Secondary resources total",
 transaction == "Gross Disposable Income"             ~ "Secondary resources total"),
@@ -107,10 +108,10 @@ transaction  == "Compensation of employees"           ~ "Primary resources total
 transaction  == "Property income, received"           ~ "Primary resources total",
 transaction  == "Primary resources total"             ~ "Secondary resources total",
 transaction  == "Property income, paid"               ~ "Property income, paid",
-transaction  == "Secondary resources total"          ~ "Gross Disposable Income",
+transaction  == "Secondary resources total"           ~ "Gross Disposable Income",
 transaction  == "Social benefits received"            ~ "Secondary resources total",
 transaction  == "Other current transfers, received"   ~ "Secondary resources total",
-transaction  == "Current taxes on income, wealth etc" ~ "Current taxes on income, wealth etc",
+transaction  == "Current taxes"                       ~ "Current taxes",
 transaction  == "Social contributions, paid"          ~ "Social contributions, paid",
 transaction  == "Other current transfers, paid"       ~ "Other current transfers, paid",
 transaction  == "Gross Disposable Income"             ~ "Gross Disposable Income")) %>%
@@ -256,11 +257,6 @@ Cividis
 scales::show_col(viridis::cividis(n = 12))
 viridis::cividis(n = 12) # return string of hex colors to create palette
 
-link_color_ne <- 
-JS('d3.scaleOrdinal()
-    .domain(["White", Orange"])
-    .range(["#FFFFFF", "#00306FFF"])')
-
 # All Regions
 networkD3_table <-
 networkD3_table %>%
@@ -280,9 +276,9 @@ networkD3_table %>%
     region_name == "Northern Ireland" ~ "Clover"))
 
 link_color <- 
-JS('d3.scaleOrdinal()
+htmlwidgets::JS('d3.scaleOrdinal()
     .domain(["White", "Purple","Orange","Blue","Brown","Yellow","Olive","Lime","Pink","Grey","Green","Tangerine","Clover" ])
-    .range(["#FFFFFF", "#00204DFF", "#00306FFF", "#2A406CFF", "#48526BFF", "#5E626EFF", "#727374FF", "#878479FF", "#9E9677FF", "#B6A971FF", "#D0BE67FF", "#EAD357FF", "#FFEA46FF"])')
+    .range(["#FFFFFF" , "#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#68B374"])')
 
 ```
 
@@ -307,18 +303,18 @@ sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes ,
               NodeID = "name", NodeGroup = "color", nodeWidth = 30,
               units = "(£m)", fontSize = 16, fontFamily = "Arial" ,
               width = 1700 , height = 900 ,  sinksRight = FALSE, iterations = 0,
-              margin = list(right = 100, left = 100))
+              margin = list(right = -40, left = 250))
 
 # render with JavaScript to change characteristics (#858b97)
 # render with js
 gdhi_nuts1_sankey <- 
 htmlwidgets::onRender(gdhi_nuts1_sankey,
   'function(el, x) {
-    d3.selectAll(".node text").attr("fill", "white");
+    d3.selectAll(".node text").attr("fill", "black");
     d3.selectAll(".node text").attr("text-anchor", "end").attr("x", -10);
-    d3.select("body").style("background-color", "#818380"); 
+    d3.select("body").style("background-color", "#FFFFFF"); 
   }'
-)
+) # #818380
 
 # Shadow: #373737
 
@@ -336,13 +332,19 @@ dir.create("projects/ons_region_gdhi_1997_2018/outputs/html")
 dir.create("projects/ons_region_gdhi_1997_2018/outputs/images")
 
 # save it as html
-saveNetwork(gdhi_nuts1_sankey, here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_nuts1_sankey_cividis.html"))
+saveNetwork(gdhi_nuts1_sankey, here::here("outputs/html/gdhi_nuts1_sankey.html"))
 
-library(webshot2)
-# you convert it as png
-webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_nuts1_sankey_cividis.html"),
-        here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_nuts1_sankey_cividis.png"),
-        vwidth = 1500, vheight = 800)
+# convert it as png
+webshot2::webshot(here::here("outputs/html/gdhi_nuts1_sankey.html"),
+                  here::here("outputs/images/gdhi_nuts1_sankey.png"),
+                  vwidth = 1500, vheight = 800)
+
+```
+
+#### Map Legend
+```{r}
+
+
 
 ```
 
@@ -351,11 +353,11 @@ webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_nuts1_s
 library(cowplot)
 
 ggdraw() +
-  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_nuts1_sankey_cividis.png")) +
-  draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.375 , y = 0.05,
-            family = "Arial", color = "white", size = 20) +
-  draw_text("Data: ONS\nGraphic: @NearAndDistant" , hjust = 0 , x = 0.72 , y = 0.19,
-            family = "Arial", color = "white", size = 12)
+  draw_image(here::here("outputs/images/gdhi_nuts1_sankey.png"), height = 0.95, width = 1.5, x = -0.25, y = 0.07) +
+  draw_image(here::here("Map-of-NUTS-1-regions-in-the-UK-3.png"), height = 0.35, x = 0.37) +
+  draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.03 , y = 0.04, family = "Arial", color = "black", size = 20) +
+  draw_text("Data: ONS | Graphic: @NearAndDistant" , hjust = 0 , x = 0.03 , y = 0.07, family = "Arial", color = "black", size = 12)
+
 
 ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_cividis.png"), dpi = 360, height = 9.5, width = 15)
 
