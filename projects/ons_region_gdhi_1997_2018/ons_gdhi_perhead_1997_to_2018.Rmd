@@ -251,3 +251,18 @@ webshot(here::here("outputs/html/gdhi_region_sankey.html"),
 
 ```
 
+#### Annotation
+```{r}
+library(cowplot)
+
+ggdraw() +
+  draw_image(here::here("outputs/images/gdhi_region_sankey.png")) +
+  draw_text("Gross Disposable Household Income (GDHI), Per Head\nNorth East Region, 2018" , hjust = 0 , x = 0.10 , y = 0.12,
+            family = "Arial", color = "black", size = 20) +
+  draw_text("Data: ONS\nGraphic: @NearAndDistant" , hjust = 0 , x = 0.10 , y = 0.05,
+            family = "Arial", color = "black", size = 12)
+
+ggsave(here::here("outputs/gdhi_region_sankey_annotated.png"), dpi = 360, height = 9.5, width = 15)
+
+```
+
