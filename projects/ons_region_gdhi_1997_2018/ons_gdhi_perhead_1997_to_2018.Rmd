@@ -185,7 +185,7 @@ networkD3_table_ne <-
   mutate(color_group = "Group")
 
 link_color_region <- 
-JS('d3.scaleOrdinal()
+htmlwidgets::JS('d3.scaleOrdinal()
     .domain(["White", "Group"])
     .range(["#FFFFFF", "#529Ecc"])') # #00306FFF
 

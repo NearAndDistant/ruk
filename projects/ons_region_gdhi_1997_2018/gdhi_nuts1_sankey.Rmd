@@ -206,39 +206,31 @@ networkD3_table <-
 
 ```
 
-#### Node colors
+#### Palette
 
-"Scotland"          = "Purple"          = "#e2d8f4"       
-"North East"        = "Orange"          = "#ffefd9"        
-"North West"        = "Blue"            = "#dff3f5"        
-"Yorkshire"         = "Brown"           = "#efead7"        
-"East Midlands"     = "Yellow"          = "#ffffbf"            
-"West Midlands"     = "Olive"           = "#bfc9ad"           
-"Wales"             = "Lime"            = "#d1ee70"        
-"South West"        = "Pink"            = "#ffc9c9"         
-"South East"        = "Grey"            = "#bfc9c7"         
-"London"            = "Green"           = "#dff2bd"        
-"East Of England"   = "Tangerine"       = "#fcc0a6"              
-"Northern Ireland"  = "Clover"          = "#68B374"   
-
-##### Show colors
 ```{r}
+# color scales
+library(ggsci)
 
-nuts1_palette <- c("#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#68B374")
+scales::show_col(pal_rickandmorty()(12))
+pal_rickandmorty()(12)
 
-scales::show_col(nuts1_palette)
+scales::show_col(pal_futurama()(12))
+
+## viridis
+
+scales::show_col(viridis::cividis(n = 12))
+viridis::cividis(n = 12) # return string of hex colors to create palette
 
 ```
 
-For some reason JavaScript does not take spaces in it's characters indicating colors so use one word colors otherwise it will skip the color and place the next. Use one word, CamelCase or snake_case.
-
 NUTS1 Palette
-"#FFFFFF" , "#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#68B374"
+"#FFFFFF" , "#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#66e6d9", "#dff2bd", "#fcc0a6", "#68B374"
 
-Viridis Palette
+Viridis
 "#FFFFFF", "#440154FF", "#482173FF", "#433E85FF", "#38598CFF", "#2D708EFF", "#25858EFF", "#1E9B8AFF", "#2BB07FFF", "#51C56AFF", "#85D54AFF", "#C2DF23FF", "#FDE725FF"
 
-Plasma Palete
+Plasma
 "#FFFFFF", "#0D0887FF", "#3E049CFF", "#6300A7FF", "#8707A6FF", "#A62098FF", "#C03A83FF", "#D5546EFF", "#E76F5AFF", "#F58C46FF", "#FDAD32FF", "#FCD225FF", "#F0F921FF"
 
 Mako
@@ -251,11 +243,7 @@ Cividis
 "#FFFFFF", "#00204DFF", "#00306FFF", "#2A406CFF", "#48526BFF", "#5E626EFF", "#727374FF", "#878479FF", "#9E9677FF", "#B6A971FF", "#D0BE67FF", "#EAD357FF", "#FFEA46FF"
 
 ```{r}
-# color scales
-## viridis
-
-scales::show_col(viridis::cividis(n = 12))
-viridis::cividis(n = 12) # return string of hex colors to create palette
+# map colors to dataframe
 
 # All Regions
 networkD3_table <-
@@ -275,11 +263,14 @@ networkD3_table %>%
     region_name == "East Of England"  ~ "Tangerine"  ,
     region_name == "Northern Ireland" ~ "Clover"))
 
+# For some reason JavaScript does not take spaces in it's characters indicating colors so use one word colors otherwise it will skip the color and place the next. Use one word, CamelCase or snake_case.
+
 link_color <- 
 htmlwidgets::JS('d3.scaleOrdinal()
     .domain(["White", "Purple","Orange","Blue","Brown","Yellow","Olive","Lime","Pink","Grey","Green","Tangerine","Clover" ])
-    .range(["#FFFFFF" , "#e2d8f4", "#ffefd9", "#dff3f5", "#efead7", "#ffffbf", "#bfc9ad", "#d1ee70", "#ffc9c9", "#bfc9c7", "#dff2bd", "#fcc0a6", "#68B374"])')
+    .range(["#FFFFFF" , "#9E7B99", "#B7E4F9B3", "#24325F99", "#82491E99", "#FB646799", "#FF634899", "#ADE2D099", "#E8924299", "#FAE48B99", "#3F404199", "#917C5D99", "#526E2D99"])')
 
+# opacity of hex colors: https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4
 ```
 
 #### {networkD3} All Regions
@@ -305,18 +296,16 @@ sankeyNetwork(Links = nd3_gdhi$links, Nodes = nd3_gdhi$nodes ,
               width = 1700 , height = 900 ,  sinksRight = FALSE, iterations = 0,
               margin = list(right = -40, left = 250))
 
-# render with JavaScript to change characteristics (#858b97)
 # render with js
 gdhi_nuts1_sankey <- 
 htmlwidgets::onRender(gdhi_nuts1_sankey,
   'function(el, x) {
     d3.selectAll(".node text").attr("fill", "black");
     d3.selectAll(".node text").attr("text-anchor", "end").attr("x", -10);
+    d3.selectAll(".node text").attr("fill", "black");
     d3.select("body").style("background-color", "#FFFFFF"); 
   }'
-) # #818380
-
-# Shadow: #373737
+) 
 
 gdhi_nuts1_sankey
 
@@ -332,19 +321,64 @@ dir.create("projects/ons_region_gdhi_1997_2018/outputs/html")
 dir.create("projects/ons_region_gdhi_1997_2018/outputs/images")
 
 # save it as html
-saveNetwork(gdhi_nuts1_sankey, here::here("outputs/html/gdhi_nuts1_sankey.html"))
+saveNetwork(gdhi_nuts1_sankey, here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_sankey_ggsci.html"))
 
 # convert it as png
-webshot2::webshot(here::here("outputs/html/gdhi_nuts1_sankey.html"),
-                  here::here("outputs/images/gdhi_nuts1_sankey.png"),
+webshot2::webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_sankey_ggsci.html"),
+                  here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_sankey_ggsci.png"),
                   vwidth = 1500, vheight = 800)
 
 ```
 
 #### Map Legend
+
+###### Create UK Outline
 ```{r}
+#### grab national outline
+library(rnaturalearth)
 
+uk      <- ne_countries(scale = "medium", returnclass = "sf", country = "United Kingdom")
+ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland")
 
+# grab boundaries from ONS
+library(sf)
+
+# load geojson from url
+uk_regions_boundaries <-
+st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson') %>%
+  rename(region_name = nuts118nm) %>% 
+  mutate(region_name = str_remove(region_name , " \\(England\\)"), 
+         region_name = str_to_title(region_name))  %>%
+  mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name))
+
+# create tibble for colors
+nuts1_palette <- tibble(region_name = c("Scotland", "North East", "North West", "Yorkshire", "East Midlands", "West Midlands",
+                                   "Wales", "South West", "South East", "London", "East Of England", "Northern Ireland"),
+                        fill  = c("#9E7BB5", "#B7E4F9FF", "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF", 
+                                  "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF"))
+
+# join
+uk_regions_boundaries <-
+  uk_regions_boundaries %>%
+  left_join(nuts1_palette , by = "region_name")
+
+```
+
+##### Plot Map
+```{r}
+library(ggrepel)
+
+plot_region_legend <-
+uk_regions_boundaries %>%
+  ggplot() +
+  geom_sf(data = ireland, fill = "white" , color = "grey80") +
+  geom_sf(aes(fill = fill), alpha = 0.75 , color = "white" , show.legend = FALSE) +
+  geom_label_repel(aes(label = region_name, x = long, y = lat)) +
+  scale_fill_identity(guide = "legend") +
+  coord_sf() +
+  ggthemes::theme_map()
+
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/ggsci_palette.png"), dpi = 360, height = 9.5, width = 15)
 
 ```
 
@@ -353,12 +387,12 @@ webshot2::webshot(here::here("outputs/html/gdhi_nuts1_sankey.html"),
 library(cowplot)
 
 ggdraw() +
-  draw_image(here::here("outputs/images/gdhi_nuts1_sankey.png"), height = 0.95, width = 1.5, x = -0.25, y = 0.07) +
-  draw_image(here::here("Map-of-NUTS-1-regions-in-the-UK-3.png"), height = 0.35, x = 0.37) +
-  draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.03 , y = 0.04, family = "Arial", color = "black", size = 20) +
-  draw_text("Data: ONS | Graphic: @NearAndDistant" , hjust = 0 , x = 0.03 , y = 0.07, family = "Arial", color = "black", size = 12)
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_sankey_ggsci.png"), height = 0.95, width = 1.5, x = -0.27, y = 0.07) +
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/ggsci_palette.png"), height = 0.8, x = 0.34, y = -0.05) +
+  draw_text("UK Regional Gross Disposable Household Income (GDHI), 2018" , hjust = 0 , x = 0.01 , y = 0.04, family = "Arial", color = "black", size = 20) +
+  draw_text("Data: ONS | Graphic: @NearAndDistant" , hjust = 0 , x = 0.01 , y = 0.07, family = "Arial", color = "black", size = 12)
 
 
-ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_nuts1_sankey_cividis.png"), dpi = 360, height = 9.5, width = 15)
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/ggsci_palette.jpeg"), dpi = 300, height = 10, width = 16)
 
 ```

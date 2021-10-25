@@ -39,7 +39,7 @@ ons_perhead_gdhi_1997_to_2018 %>%
   mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
   group_by(region_name) %>%
   mutate(region_ror = (last(gross_income) - first(gross_income)) / first(gross_income)) %>%
-  mutate(sec_axis_labels = paste0(region_name, " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
+  mutate(sec_axis_labels = paste0(region_name, ", ", scales::comma(monthly_income, prefix = "£", accuracy = 1) , " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
   ungroup()
 ```
 
@@ -88,9 +88,9 @@ ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
         plot.margin = margin(2,0.5,1,1, unit = "cm"))
 
 # write to directory as png
-dir.create(here::here("projects/ons_region_gdhi_1997_2018/ouputs"))
+dir.create(here::here("projects/ons_region_gdhi_1997_2018/outputs"))
 
-ggsave(plot = plot_region_perhead_gdhi_roc, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_plot.png"), dpi = 360, height = 10, width = 16)
+ggsave(plot = plot_region_perhead_gdhi_roc, here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_gdhi_plot.png"), dpi = 360, height = 10, width = 16)
 
 ```
 
@@ -128,9 +128,9 @@ geo_gdhi_perhead_1997_2018 %>%
   theme(plot.margin = margin(0,0,0,0, unit = "cm"))
 
 # write to directory as png
-dir.create(here::here("projects/ons_region_gdhi_1997_2018/ouputs"))
+dir.create(here::here("projects/ons_region_gdhi_1997_2018/outputs"))
 
-ggsave(plot = plot_map_ghdi_2018, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_map.png"), dpi = 360, height = 10, width = 8)
+ggsave(plot = plot_map_ghdi_2018, here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_gdhi_map.png"), dpi = 360, height = 10, width = 8)
 
 ```
 
@@ -138,23 +138,79 @@ ggsave(plot = plot_map_ghdi_2018, here::here("projects/ons_region_gdhi_1997_2018
 ```{r}
 library(cowplot)
 
+x <- 0.875
+
 gdhi_perhead_monthly <-
 ggdraw() +
 draw_plot(plot_map_ghdi_2018 , x = 0.2) +
-draw_image(here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_plot.png")) +
+draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_gdhi_plot.png")) +
 draw_text("Map Data: 2018 (current)" ,   size = 8 , hjust = 0 , x = 0.73 , y = 0.09, color = "grey60") +
 draw_text("Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.37 , y = 0.8425) +
-draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "East Midlands")] , 
-          size = 9 , hjust = 0 , x = 0.9035 , y = 0.46, color = "grey40") +
-draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "West Midlands")] , 
-          size = 9 , hjust = 0 , x = 0.9035 , y = 0.32, color = "grey40") +
-draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "Wales")] , 
-          size = 9 , hjust = 0 , x = 0.9035 , y = 0.385, color = "grey40") +
-draw_text("NMW (RPI Adj)" , size = 9 , hjust = 0 , x = 0.9035 , y = 0.26, color = "grey40") +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "East Midlands" & 
+                                                                    ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)] , 
+          size = 9 , hjust = 0 , x = x , y = 0.46, color = "grey40") +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "West Midlands" & 
+                                                                    ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)] , 
+          size = 9 , hjust = 0 , x = x , y = 0.32, color = "grey40") +
+draw_text(ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$region_name == "Wales" & 
+                                                                    ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)] , 
+          size = 9 , hjust = 0 , x = x , y = 0.385, color = "grey40") +
+draw_text("NMW (RPI Adj)" , 
+          size = 9 , hjust = 0 , x = x , y = 0.26, color = "grey40") +
 theme(plot.background = element_rect(fill = "white" , color = "white"))
 
 # Writing to File
-ggsave(plot = gdhi_perhead_monthly, here::here("projects/ons_region_gdhi_1997_2018/ouputs/uk_gdhi_panel.png"), dpi = 360, height = 10, width = 16)
+ggsave(plot = gdhi_perhead_monthly, here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_gdhi_panel.png"), dpi = 360, height = 10, width = 16)
 
 ```
 
+#### Palette
+```{r}
+
+scales::show_col(viridis::viridis(12, direction = -1))
+
+palette <- viridis::viridis(6, direction = -1)
+
+```
+
+#### Table
+```{r}
+library(gt)
+library(gtExtras)
+
+table_gdhi <-
+ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
+  select(-c(nuts_level , nuts_code, gross_income, region_ror, sec_axis_labels), region = region_name) %>%
+  mutate(monthly_income = round(monthly_income)) %>%
+  group_by(region) %>%
+  mutate(trend = list(monthly_income)) %>%
+  ungroup() %>%
+    pivot_wider(id_cols = c(region, trend), names_from = year, values_from = monthly_income) %>%
+      gt() %>%
+      fmt_currency(columns = c(`1997`:`2018`), decimals = 0, currency = "GBP") %>%
+      gt_sparkline(trend, width = 25) %>%
+      #### color
+      data_color(columns = c(`1997`:`2018`),
+                 # custom defined values - notice that order matters!
+                 colors = scales::col_numeric(palette = palette, domain = NULL), alpha = 0.4, autocolor_text = FALSE) %>%
+      #### cell boarder format
+      tab_style(style = list(cell_borders(sides = "right", color = "black", weight = px(3))),
+                locations = list(cells_body(columns = trend))) %>%
+      tab_style(style = list(cell_borders(sides = "top", color = "grey60", weight = px(1))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(3))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_source_note("Data: ONS | Table: @NearAndDistant") %>%
+      tab_header(title = md("**Gross Disposable Household Income (1997 - 2018)**"),
+                 subtitle = "Monthly net disposable income across regions from 1997 to 2018") %>%
+      gt_theme_nytimes() 
+
+```
+
+```{r}
+
+# Writing to File
+gtsave_extra(data = table_gdhi, filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_gdhi_table.png"), 
+             zoom = 1.5 , vwidth = 1400, vheight = 500)
+
+```
