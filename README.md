@@ -33,6 +33,7 @@ English local authority districts (LAD) (both metropolitan and non-metropolitan)
 ### Nomenclature of Territorial Units for Statistics (NUTS)
 
 #### NUTS 1	
+12 regions - the nine English regions e.g. North East as well as Scotland, Wales and Northern Ireland; collectively referred to as regions
 Population: 3m - 7m
 
 North East, North West, Yorkshire and Humber, East Midlands, West Midlands, East of England, London, South East, South West, Wales, Scotland, Northern Ireland.
@@ -40,11 +41,15 @@ North East, North West, Yorkshire and Humber, East Midlands, West Midlands, East
 The regions, formerly known as the _government office regions_, are the highest tier of sub-national division in the UK established in 1994. While the UK was a member of the European Union, they defined areas (constituencies) for the purposes of elections to the European Parliament. Eurostat also used them to demarcate first level Nomenclature of Territorial Units for Statistics (NUTS) regions ("NUTS 1 regions") within the European Union. The regions generally follow the boundaries of the former standard regions, established in the 1940s for statistical purposes.
 
 #### NUTS 2
+41 sub-regions - mainly groups of counties and unitary authorities e.g. Northumberland and Tyne and Wear
 Population: 800k - 3m
 
 #### NUTS 3
+179 local areas - individual counties & authorities e.g. Tyneside
 Population: 150k - 800k
 
+#### LAU1
+400 local authority or local council areas
 
 ## ONS Regional Gross Disposable Household Income (GDHI) 1997 to 2018
 
