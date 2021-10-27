@@ -76,7 +76,8 @@ ons_gdhi_components_perhead_raw %>%
   mutate(`Balance of primary incomes` = `Primary resources total` - `Property income, paid` + `Social benefits received` + `Other current transfers, received`) %>%
   rename(`Secondary resources total` = `Balance of primary incomes`) %>% # aligning to the ONS figures on Secondary Income
   #   mutate(value = if_else(transaction == "Gross Disposable Income" , NA_real_, value)) %>% # so we keep this as a flow node
-  pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value")
+  pivot_longer(cols = c(`Operating surplus`:`Gross Disposable Income`), names_to = "transaction" , values_to = "value") %>%
+   mutate(value = round(value / 12, 0)) 
 
 ```
 
@@ -163,11 +164,11 @@ nodes_ne <-
   pivot_longer(cols = c(source,target), values_to = "table_link") %>%
   select(-name) %>%
   distinct(table_link, .keep_all = TRUE) %>%
-  mutate(value = case_when(table_link == "Primary resources total"   ~ 17818,
-                           table_link == "Secondary resources total" ~ 24195,
-                           table_link == "Gross Disposable Income"   ~ 16995,
+  mutate(value = case_when(table_link == "Primary resources total"   ~ round(18104/12,0),
+                           table_link == "Secondary resources total" ~ round(24195/12,0),
+                           table_link == "Gross Disposable Income"   ~ round(16995/12,0),
                            TRUE ~ value)) %>%
-  mutate(table_link_lab = c(paste0(table_link," (",scales::comma(value, prefix = "£"),")")),
+  mutate(table_link_lab = c(paste0(table_link," (",scales::comma(value, prefix = "£", accuracy = 1),")")),
          table_link_lab = ifelse(table_link == "North East", "North East, 2018", table_link_lab),
          table_link_lab = ifelse(table_link == "Current taxes on income, wealth etc", 
                                  paste0("Current taxes, paid (",scales::comma(value, prefix = "£"),")"), table_link_lab)) %>%
@@ -187,7 +188,7 @@ networkD3_table_ne <-
 link_color_region <- 
 htmlwidgets::JS('d3.scaleOrdinal()
     .domain(["White", "Group"])
-    .range(["#FFFFFF", "#529Ecc"])') # #00306FFF
+    .range(["#FFFFFF", "#B7E4F9FF"])') # #00306FFF
 
 ```
 
@@ -235,18 +236,18 @@ gdhi_ne_sankey_js
 ```{r}
 
 # create directory
-dir.create("outputs")
+dir.create("projects/ons_region_gdhi_1997_2018/outputs")
 
-dir.create("outputs/html")
-dir.create("outputs/images")
+dir.create("projects/ons_region_gdhi_1997_2018/outputs/html")
+dir.create("projects/ons_region_gdhi_1997_2018/outputs/images")
 
 # save it as html
-saveNetwork(gdhi_ne_sankey_js, here::here("outputs/html/gdhi_region_sankey.html"))
+saveNetwork(gdhi_ne_sankey_js, here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_region_sankey.html"))
 
 library(webshot2)
 # you convert it as png
-webshot(here::here("outputs/html/gdhi_region_sankey.html"),
-        here::here("outputs/images/gdhi_region_sankey.png"),
+webshot(here::here("projects/ons_region_gdhi_1997_2018/outputs/html/gdhi_region_sankey.html"),
+        here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_region_sankey.png"),
         vwidth = 1500, vheight = 800)
 
 ```
@@ -256,13 +257,13 @@ webshot(here::here("outputs/html/gdhi_region_sankey.html"),
 library(cowplot)
 
 ggdraw() +
-  draw_image(here::here("outputs/images/gdhi_region_sankey.png")) +
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/images/gdhi_region_sankey.png")) +
   draw_text("Gross Disposable Household Income (GDHI), Per Head\nNorth East Region, 2018" , hjust = 0 , x = 0.10 , y = 0.12,
             family = "Arial", color = "black", size = 20) +
   draw_text("Data: ONS\nGraphic: @NearAndDistant" , hjust = 0 , x = 0.10 , y = 0.05,
             family = "Arial", color = "black", size = 12)
 
-ggsave(here::here("outputs/gdhi_region_sankey_annotated.png"), dpi = 360, height = 9.5, width = 15)
+ggsave(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_region_sankey_annotated.png"), dpi = 360, height = 9.5, width = 15)
 
 ```
 

@@ -16,9 +16,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ons_perhead_gdhi_1997_to_2018 <-
 read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_perhead_gdhi_1997_2018.csv")
 
-uk_nmw_1999_2019 <-
-  read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/nmw_1999_2019/nmw_1999_2019.csv") %>%
-  mutate(month = lubridate::year(month))
+```
+
+##### Palette
+```{r}
+
+# create tibble for colours
+nuts1_palette <- tibble(region_name = c("Scotland", "North East", "North West", "Yorkshire", "East Midlands", "West Midlands",
+                                        "Wales", "South West", "South East", "London", "East Of England", "Northern Ireland"),
+                        fill        = c("#9E7BB5", "#B7E4F9FF", "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF", 
+                                        "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF"))
 
 ```
 
@@ -40,7 +47,10 @@ ons_perhead_gdhi_1997_to_2018 %>%
   group_by(region_name) %>%
   mutate(region_ror = (last(gross_income) - first(gross_income)) / first(gross_income)) %>%
   mutate(sec_axis_labels = paste0(region_name, ", ", scales::comma(monthly_income, prefix = "£", accuracy = 1) , " (+", scales::percent(region_ror, accuracy = 2),")")) %>%
-  ungroup()
+  ungroup() %>%
+  # join color palette
+  left_join(nuts1_palette)
+
 ```
 
 ##### Plot Regional Rate of Change 
@@ -49,28 +59,29 @@ theme_set(theme_minimal())
 
 text <- 'GDHI Per Head is the amount of money that a typical individual in an average regional household has available after they have paid\ndirect and indirect taxes and received any direct benefits. GDHI is a concept that is seen to reflect the “material welfare”. Regional\nestimates are produced in current prices (which include the effects of inflation).'
 
+#### secondary axis annotations
 east_midlands_coord <-
 ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018 & ons_perhead_gdhi_1997_to_2018_NUTS1$region_name =="East Midlands")]
 
 west_midlands_coord <-
 ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018 & ons_perhead_gdhi_1997_to_2018_NUTS1$region_name =="West Midlands")]
+####
 
 plot_region_perhead_gdhi_roc <-
 ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
   ggplot() +
-  geom_line(aes(year , monthly_income , color = monthly_income, group = region_name), show.legend = TRUE , size = 1.5) +
-  geom_line(data = uk_nmw_1999_2019 , aes(month , monthly_salary), color = "black") +
+  geom_line(aes(year , monthly_income , color = fill, group = region_name), show.legend = TRUE , size = 1.5) +
   scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
   scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
                      sec.axis = dup_axis(breaks = ons_perhead_gdhi_1997_to_2018_NUTS1$monthly_income[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
                                          labels = ons_perhead_gdhi_1997_to_2018_NUTS1$sec_axis_labels[which(ons_perhead_gdhi_1997_to_2018_NUTS1$year == 2018)],
                                          guide  = guide_axis(check.overlap = TRUE))) +
-  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) +
+  scale_color_viridis_c(labels = scales::comma_format(accuracy = 1 , prefix = "£"), direction = -1) + # format 1
   geom_curve(x = 2018, y = west_midlands_coord - 300, xend = 2018, yend = west_midlands_coord, curvature = -0.4 , arrow = arrow( length = unit(0.01, "npc")), color = "grey30") +
   geom_curve(x = 2018, y = east_midlands_coord + 50, xend = 2018, yend = east_midlands_coord, arrow = arrow(length = unit(0.01, "npc")), color = "grey30") +
   coord_cartesian(clip = "off") +
   labs(title = "ONS Regional Gross Disposable Household Income (GDHI) Per Head 1997 to 2018",
-       subtitle = text,
+       #subtitle = text, # format 1
        fill = NULL,
        x = NULL,
        y = NULL) +
@@ -86,6 +97,9 @@ ons_perhead_gdhi_1997_to_2018_NUTS1 %>%
         axis.text.y.right = element_text(size = 9),
         axis.text.x = element_text(size = 14),
         plot.margin = margin(2,0.5,1,1, unit = "cm"))
+
+# plot
+plot_region_perhead_gdhi_roc
 
 # write to directory as png
 dir.create(here::here("projects/ons_region_gdhi_1997_2018/outputs"))

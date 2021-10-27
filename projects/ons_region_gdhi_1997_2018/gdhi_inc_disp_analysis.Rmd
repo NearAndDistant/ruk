@@ -1,0 +1,289 @@
+---
+title: "Primary & Secondry Income"
+author: "NearAndDistant"
+date: "23/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Grab ONS Gross Data from GitHub (Script in Repository)
+
+Gross Disposable household Income is the amount of money that that all of the individuals in the household sector have available for spending or saving after income distribution measures (for example, taxes, social contributions and benefits) have taken effect. GDHI does not provide measures relating to actual households or family units. The figures cover regions, sub-regions and local areas of the UK. It consists of:
+
+##### Primary resources
+0: Operating surplus
+1: Mixed income
+2: Compensation of employees
+3: Property income, received
+
+= Primary Resource total
+
+##### Primary uses
+4: Property income, paid
+
+##### Secondary resources
+5: Social benefits received
+6: Other current transfers, received
+
+= Balance of Primary Income
+
+##### Secondary uses
+7: Current taxes on income, wealth etc
+8: Social contributions, paid
+9: Other current transfers, paid
+
+##### GDHI
+= Gross Disposable Income
+
+#### Importing
+```{r}
+library(tidyverse)
+
+# you can see the primary script to grab this at https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gross_income_1997_to_2018/
+ons_gdhi_components_perhead_raw <-
+read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_gdhi_perhead_components_97_18.csv")
+
+```
+
+##### Cleaning & Wrangle
+```{r}
+
+gdhi_comp <-
+  c( "Operating surplus", "Mixed income", "Compensation of employees", "Property income, received", "Primary resources total",
+     "Property income, paid", 
+     "Balance of primary incomes",
+     "Imputed social contributions/Social benefits received", "Other current transfers, received", 
+     "Current taxes on income, wealth etc", "Social contributions/Social benefits paid", "Other current transfers, paid",  
+     "Balance of secondary income", 
+     "Gross Disposable Income")
+
+```
+
+```{r}
+
+ons_gdhi_region <-
+ons_gdhi_components_perhead_raw %>%
+  janitor::clean_names(numerals = "left") %>%
+  filter(nuts_level == "NUTS1") %>% # NUTS1 level is regions
+  filter(transaction %in% gdhi_comp) %>% # filter all unecesssary transations (totals etc)
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  # mutate(region_name = if_else(region_name == "Yorkshire And The Humber", "Yorkshire", region_name)) %>%
+  mutate(transaction = if_else(transaction == "Imputed social contributions/Social benefits received" , "Social benefits received", transaction)) %>%
+  mutate(transaction = if_else(transaction == "Social contributions/Social benefits paid" , "Social contributions, paid", transaction)) %>%
+    mutate(transaction = if_else(transaction == "Current taxes on income, wealth etc" , "Current taxes, paid", transaction)) %>%
+  # rate of change summary for sec_axis_labels 
+  mutate(region_name = if_else(region_name == "Yorkshire and The Humber", "Yorkshire", region_name)) %>%
+  select(-nuts_level, -nuts_code, -transaction_code) %>%
+  # balancing out financials: as the flow diagram needs to know what is left over after "secondary payments" are made (taxes etc)
+  # we have to calculate their subtraction from Balance of Payments so that Gross Disposable can be shown
+  pivot_wider(id_cols = c(region_name:year), names_from = "transaction", values_from = "value") %>%
+  mutate(`Balance of primary incomes` = `Primary resources total` - `Property income, paid`) %>%
+  mutate(`Balance of secondary income` = `Balance of primary incomes` + `Social benefits received` + `Other current transfers, received`) %>%
+  mutate(`Total benefits` = `Social benefits received` + `Other current transfers, received`) %>%
+  mutate(`Total taxes`    = `Current taxes, paid` + `Social contributions, paid` + `Other current transfers, paid`) %>%
+  # reverse back to long form
+  pivot_longer(cols = c(`Operating surplus`:`Total taxes`), names_to = "transaction" , values_to = "value") %>%
+  mutate(value = round(value / 12, 1))
+
+```
+
+#### Palette
+```{r}
+
+palette <-
+c(
+"Scotland"           =  "#9E7B99"  ,
+"North East"         =  "#B7E4F9B3",
+"North West"         =  "#24325F99",
+"Yorkshire"          =  "#82491E99",
+"East Midlands"      =  "#FB646799",
+"West Midlands"      =  "#FF634899",
+"Wales"              =  "#ADE2D099",
+"South West"         =  "#E8924299",
+"South East"         =  "#FAE48B99",
+"London"             =  "#3F404199",
+"East of England"    =  "#917C5D99",
+"Northern Ireland"   =  "#526E2D99")
+
+sec_ann <- c(
+"South East",     
+"London"    ,     
+"East of England",
+"South West",
+"Scotland")
+
+```
+
+################################
+Outcomes: Primary Income & GDI 
+################################
+
+```{r}
+# filter for outcomes : primary total & disposable
+
+regional_inc_gdi <-
+  ons_gdhi_region %>%
+  filter(transaction %in% c("Primary resources total" , "Gross Disposable Income")) %>%
+  group_by(region_name, transaction) %>%
+  mutate(region_ror = (last(value) - first(value)) / first(value)) %>%
+  ungroup() %>%
+  mutate(sec_axis_labels = paste0(region_name, " (", scales::comma(value, prefix = "£", accuracy = 1),")"))
+
+```
+
+##### Primary Incomes
+
+```{r}
+
+plot_regional_inc <-
+regional_inc_gdi %>%
+  filter(transaction == "Primary resources total") %>%
+  mutate(transaction = str_to_title(transaction)) %>%
+  ggplot(aes(year , value , color = region_name, group = region_name)) +
+  geom_line(size = 1.5, show.legend = FALSE) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
+                     sec.axis = dup_axis(breaks = regional_inc_gdi$value[which(regional_inc_gdi$year == 2018 & 
+                                                                               regional_inc_gdi$transaction == "Primary resources total" &
+                                                                               regional_inc_gdi$region_name %in% sec_ann)],
+                                         labels = regional_inc_gdi$sec_axis_labels[which(regional_inc_gdi$year == 2018 & 
+                                                                                         regional_inc_gdi$transaction == "Primary resources total" &
+                                                                                         regional_inc_gdi$region_name %in% sec_ann)],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  expand_limits(y = 0) +
+  coord_cartesian(xlim = c(2010,2018)) +
+  scale_color_manual(values = palette) +
+  labs(x = NULL, y = NULL) +
+    theme(
+      plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 7),
+      plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 10),
+      legend.position = c(0.12,1.10),
+      legend.direction = "horizontal",
+      legend.title = element_blank(),
+      legend.key.width = unit(2.5, "cm"),
+      panel.grid.minor = element_blank(), 
+      panel.grid.major.x = element_blank(), 
+      axis.text.x = element_text(vjust = -4),
+      plot.margin = margin(2,0.5,1,1, unit = "cm"))
+
+# zoom 
+plot_regional_inc_zoom <-
+regional_inc_gdi %>%
+  filter(transaction == "Primary resources total") %>%
+  mutate(transaction = str_to_title(transaction)) %>%
+  ggplot(aes(year , value , color = region_name, group = region_name)) +
+  geom_line(size = 1.5, show.legend = FALSE) +
+  scale_x_continuous(expand = c(0,0), breaks = c(2016:2018)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
+                     sec.axis = dup_axis(breaks = regional_inc_gdi$value[which(regional_inc_gdi$year == 2018 & 
+                                                                               regional_inc_gdi$transaction == "Primary resources total")],
+                                         labels = regional_inc_gdi$sec_axis_labels[which(regional_inc_gdi$year == 2018 & 
+                                                                                         regional_inc_gdi$transaction == "Primary resources total")],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  expand_limits(y = 0) +
+  scale_color_manual(values = palette) +
+  labs(x = NULL, y = NULL) +
+  coord_cartesian(xlim = c(2017,2018), ylim = c(1450,1710)) +
+  theme(axis.text = element_text(size = 6), 
+        panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(), plot.background = element_rect(fill = "white", size = 1))
+
+```
+
+##### Gross Disposable Income
+
+```{r}
+
+plot_regional_gdi <-
+regional_inc_gdi %>%
+  filter(transaction == "Gross Disposable Income") %>%
+  mutate(transaction = str_to_title(transaction)) %>%
+  ggplot(aes(year , value , color = region_name, group = region_name)) +
+  geom_line(size = 1.5, show.legend = FALSE) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"), breaks = seq(0,3000,1000),
+                     sec.axis = dup_axis(breaks = regional_inc_gdi$value[which(regional_inc_gdi$year == 2018 & 
+                                                                               regional_inc_gdi$transaction == "Gross Disposable Income" &
+                                                                               regional_inc_gdi$region_name %in% sec_ann)],
+                                         labels = regional_inc_gdi$sec_axis_labels[which(regional_inc_gdi$year == 2018 & 
+                                                                                         regional_inc_gdi$transaction == "Gross Disposable Income" &
+                                                                                         regional_inc_gdi$region_name %in% sec_ann)],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  coord_cartesian(xlim = c(2010,2018), ylim = c(0,3150)) +
+  scale_color_manual(values = palette) +
+  labs(x = NULL, y = NULL) +
+    theme(
+      plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 7),
+      plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 10),
+      legend.position = c(0.12,1.10),
+      legend.direction = "horizontal",
+      legend.title = element_blank(),
+      legend.key.width = unit(2.5, "cm"),
+      panel.grid.minor = element_blank(), 
+      panel.grid.major.x = element_blank(), 
+      axis.text.x = element_text(vjust = -4),
+      plot.margin = margin(2,0.5,1,1, unit = "cm"))
+
+# zoom 
+plot_regional_gdi_zoom <-
+regional_inc_gdi %>%
+  filter(transaction == "Gross Disposable Income") %>%
+  mutate(transaction = str_to_title(transaction)) %>%
+  ggplot(aes(year , value , color = region_name, group = region_name)) +
+  geom_line(size = 1.5, show.legend = FALSE) +
+  coord_cartesian(xlim = c(2017,2018), ylim = c(1400,1540)) +
+  scale_x_continuous(expand = c(0,0), breaks = c(2016:2018)) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1 , prefix = "£"),
+                     sec.axis = dup_axis(breaks = regional_inc_gdi$value[which(regional_inc_gdi$year == 2018 & 
+                                                                               regional_inc_gdi$transaction == "Gross Disposable Income")],
+                                         labels = regional_inc_gdi$sec_axis_labels[which(regional_inc_gdi$year == 2018 & 
+                                                                                         regional_inc_gdi$transaction == "Gross Disposable Income")],
+                                         guide  = guide_axis(check.overlap = TRUE))) +
+  expand_limits(y = 0) +
+  scale_color_manual(values = palette) +
+  labs(x = NULL, y = NULL) +
+  theme(axis.text = element_text(size = 6),
+        panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(), plot.background = element_rect(fill = "white", size = 1))
+  
+```
+
+##########################################
+Final Panel: Taxable and Disposable Income
+##########################################
+
+```{r}
+
+panel_regional_gross_net_income <-
+ggdraw() +
+  # regional income
+  draw_plot(plot_regional_inc, width = 0.52) +
+  draw_plot(plot_regional_inc_zoom, width = 0.25, height = 0.27, x = 0.17, y = 0.12) +
+    # box
+    annotate("rect", xmin = 0.37, xmax = 0.42, ymin = 0.45, ymax = 0.53, color = "black", size = 0.5, fill = "grey95", alpha = 0.3) +
+    annotate("line", x = c(0.37, 0.17), y = c(0.45, 0.39),               color = "black", size = 0.5) +
+    annotate("line", x = c(0.42, 0.42), y = c(0.45, 0.39),               color = "black", size = 0.5) +
+  # regional disposable
+  draw_plot(plot_regional_gdi, width = 0.52, x = 0.48) +
+  draw_plot(plot_regional_gdi_zoom, width = 0.25, height = 0.27, x = 0.72, y = 0.12) +
+    annotate("rect", xmin = 0.85, xmax = 0.90, ymin = 0.43, ymax = 0.485, color = "black", size = 0.5, fill = "grey95", alpha = 0.3) +
+    annotate("line", x = c(0.85, 0.72), y = c(0.43, 0.39),               color = "black", size = 0.5) +
+    annotate("line", x = c(0.90, 0.97), y = c(0.43, 0.39),               color = "black", size = 0.5) +
+  # annotations: title
+  draw_text("UK Regional Average Monthly Gross & Net Income, 1997 - 2018", size = 26, x = 0.385, y = 0.96, fontface = "bold") +
+  draw_text("Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant" ,   size = 12 , hjust = 0 , x = 0.025 , y = 0.92) +
+  # annotations: subtitle
+  draw_text("Gross Income",          hjust = 0, size = 12, x = 0.06, y = 0.86 , fontface = "bold") +
+  draw_text("Net Disposable Income", hjust = 0, size = 12, x = 0.54, y = 0.855, fontface = "bold")
+
+```
+
+```{r}
+
+# Writing to File
+ggsave(plot = panel_regional_gross_net_income, here::here("projects/ons_region_gdhi_1997_2018/outputs/regional_gross_net_incomes.png"), dpi = 360, height = 10, width = 15)
+
+```

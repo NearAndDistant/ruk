@@ -76,3 +76,15 @@ write_csv(ons_gdhi_components ,
 here::here("data_scripts/ons_gdhi_97_18/ons_gdhi_perhead_components_97_18.csv"))
 
 ```
+
+###### GDHI Components Per Head as Indices
+```{r include=FALSE}
+
+# read xls
+gdhi_components_indices <-
+readxl::read_xls(temp_ons_gdhi, sheet = "Table 8", skip = 1) %>% rename(`2018` = `20181`)
+
+write_csv(gdhi_components_indices , 
+here::here("data_scripts/ons_gdhi_97_18/gdhi_perhead_components_indices.csv"))
+
+```
