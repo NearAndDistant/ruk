@@ -33,6 +33,7 @@ English local authority districts (LAD) (both metropolitan and non-metropolitan)
 ### Nomenclature of Territorial Units for Statistics (NUTS)
 
 #### NUTS 1	
+12 regions - the nine English regions e.g. North East as well as Scotland, Wales and Northern Ireland; collectively referred to as regions
 Population: 3m - 7m
 
 North East, North West, Yorkshire and Humber, East Midlands, West Midlands, East of England, London, South East, South West, Wales, Scotland, Northern Ireland.
@@ -40,14 +41,20 @@ North East, North West, Yorkshire and Humber, East Midlands, West Midlands, East
 The regions, formerly known as the _government office regions_, are the highest tier of sub-national division in the UK established in 1994. While the UK was a member of the European Union, they defined areas (constituencies) for the purposes of elections to the European Parliament. Eurostat also used them to demarcate first level Nomenclature of Territorial Units for Statistics (NUTS) regions ("NUTS 1 regions") within the European Union. The regions generally follow the boundaries of the former standard regions, established in the 1940s for statistical purposes.
 
 #### NUTS 2
+41 sub-regions - mainly groups of counties and unitary authorities e.g. Northumberland and Tyne and Wear
 Population: 800k - 3m
 
 #### NUTS 3
+179 local areas - individual counties & authorities e.g. Tyneside
 Population: 150k - 800k
 
+#### LAU1
+400 local authority or local council areas
 
 ## ONS Regional Gross Disposable Household Income (GDHI) 1997 to 2018
 
 GDHI is the amount of money that all individuals in an average regional household have available after they have paid direct and indirect taxes and received any direct benefits.\nGDHI is a concept that is seen to reflect the “material welfare” of the household. Regional estimates are produced in current prices (which include the effects of inflation). [Code](https://github.com/NearAndDistant/ruk/tree/main/projects/ons_region_gdhi_1997_2018)
+
+As with any average we are simplifying for informative purposes and we take on error in this simplification. For instance not everyone in the North East will receive property income, this is an error in our average model that we accept in order to understand a lot of information in a simple way. The fact is that we know if we multiplied that property income by the 2018 population of the North East we would get to a real figure for how much property income the North East generated in that year. Therein lies a disadvantage to GDHI i.e. that it does not inform us of the distribution across individuals. We would need to look at a different model to understand, for instance, if all property income was collected by one or a small group of individuals (which is probably more likely). This does not mean we don't use GDHI, it just means that what we can say is limited to certain constraints of averages.
 
 ![ons_region_gdhi_1997_2018](https://user-images.githubusercontent.com/79040885/133470064-bc47664a-cbc9-4fc9-a72d-12cc2320fff7.png)
