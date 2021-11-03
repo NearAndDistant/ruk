@@ -29,6 +29,10 @@ library(tidyverse)
 ons_gdhi_components_perhead_raw <-
 read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_gdhi_perhead_components_97_18.csv")
 
+gdhi_comp_indi_raw <-
+read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/gdhi_perhead_components_indices.csv")
+
+
 ```
 
 #### Palette
@@ -39,6 +43,21 @@ nuts1_palette <- tibble(region_name = c("Scotland", "North East", "North West", 
                                         "Wales", "South West", "South East", "London", "East of England", "Northern Ireland"),
                         fill        = c("#9E7BB5", "#B7E4F9FF", "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF", 
                                         "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF"))
+
+library(ggsci)
+
+region_palette <- c("#9E7BB5", "#B7E4F9FF" , "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF",
+                    "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF")
+
+scales::show_col(Redmonder::redmonder.pal(9, "sPBIBu"))
+
+palette       <- Redmonder::redmonder.pal(5, "sPBIBu")
+
+library(rcartocolor)
+
+scales::show_col(rev(carto_pal(7, "TealRose")))
+
+palette       <- rev(carto_pal(7, "TealRose"))
 
 ```
 
@@ -52,13 +71,86 @@ gdhi_income <- c("Operating surplus", "Mixed income", "Compensation of employees
 
 ```
 
+###########
+Table
+###########
+
 ```{r}
 
-gdhi_regional_inc <-
+gdhi_reg_inc_indi_cln <-
+gdhi_comp_indi_raw %>%
+  janitor::clean_names(numerals = "left") %>%
+  filter(nuts_level %in% c("NUTS1", "UK")) %>% # NUTS1 level is regions
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire and The Humber", "Yorkshire", region_name)) %>%
+  select(-nuts_level, -nuts_code, -transaction_code) %>%
+  left_join(nuts1_palette) %>%
+  mutate(region_name = as.factor(region_name),
+         region_name = factor(region_name, levels = c("United Kingdom", region_order)))
+
+
+gdhi_reg_inc_indi <-
+  gdhi_reg_inc_indi_cln %>%
+  filter(transaction %in% gdhi_income) # filter all unnecessary transactions for this analysis
+
+```
+
+```{r}
+library(gt)
+library(gtExtras)
+
+table_income_indices <-
+gdhi_reg_inc_indi %>%
+  filter(transaction == "Primary resources total") %>%
+  arrange(region_name) %>%
+  group_by(region_name) %>%
+  mutate(trend = list(value)) %>%
+  ungroup() %>%
+    pivot_wider(id_cols = c(region_name, trend), names_from = year, values_from = value) %>%
+      gt(rowname_col = "region_name") %>%
+      gt_sparkline(trend, width = 25) %>%
+      grand_summary_rows(columns = c(`1997`:`2018`), fns = list(Range = ~max(.) - min(.)), use_seps = TRUE, missing_text = "") %>%
+      #### color scale
+      data_color(columns = c(`1997`:`2018`),
+                 # custom defined values - notice that order matters!
+                 colors = scales::col_factor(palette = palette, domain = NULL), 
+                 alpha = 0.4, autocolor_text = FALSE) %>% 
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 1)) %>%
+      #### cell boarder format
+      tab_style(style = list(cell_borders(sides = "right", color = "black", weight = px(3))),
+                locations = list(cells_body(columns = trend))) %>%
+      tab_style(style = list(cell_borders(sides = "top", color = "grey60", weight = px(1))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(3))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_source_note("Data: ONS | Table: @NearAndDistant") %>%
+      tab_header(title = md("**Monthly Gross Income from 1997 to 2018 as Indices of UK Average; UK Average = 100**")) %>%
+      gt_theme_nytimes() 
+
+table_income_indices
+
+```
+
+```{r}
+
+# Writing to File
+gtsave_extra(data = table_income_indices, filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_income_table.png"), 
+             zoom = 1.5 , vwidth = 1400, vheight = 500)
+
+```
+
+#################################
+Income Analysis
+#################################
+
+```{r}
+
+gdhi_regional_inc_cln <-
 ons_gdhi_components_perhead_raw %>%
   janitor::clean_names(numerals = "left") %>%
-  filter(nuts_level == "NUTS1") %>% # NUTS1 level is regions
-  filter(transaction %in% gdhi_income) %>% # filter all unnecessary transactions for this analysis
+  filter(nuts_level %in% c("NUTS1" , "UK")) %>% # NUTS1 level is regions
   pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
   mutate(year = str_remove(year , "x"),
          year = as.numeric(year)) %>%
@@ -72,76 +164,13 @@ ons_gdhi_components_perhead_raw %>%
   ungroup() %>%
   left_join(nuts1_palette) %>%
   mutate(region_name = as.factor(region_name),
-         region_name = factor(region_name, levels = region_order))
+         region_name = factor(region_name, levels = c("United Kingdom" , region_order)))
+
+gdhi_regional_inc <-
+  gdhi_regional_inc %>%
+    filter(transaction %in% gdhi_income) # filter all unnecessary transactions for this analysis
 
 ```
-
-###########
-Table
-###########
-
-```{r}
-library(ggsci)
-
-region_palette <- c("#9E7BB5", "#B7E4F9FF" , "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF",
-                    "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF")
-
-scales::show_col(Redmonder::redmonder.pal(9, "sPBIBu"))
-
-palette       <- Redmonder::redmonder.pal(5, "sPBIBu")
-
-```
-
-```{r}
-library(gt)
-library(gtExtras)
-
-#table_income <-
-gdhi_regional_inc %>%
-  filter(transaction == "Primary resources total") %>%
-  select(-c(region_ror, sec_axis_labels), region = region_name) %>%
-  arrange(region) %>%
-  group_by(region) %>%
-  mutate(trend = list(monthly_value)) %>%
-  ungroup() %>%
-    pivot_wider(id_cols = c(region, trend), names_from = year, values_from = monthly_value) %>%
-      gt() %>%
-      fmt_currency(columns = c(`1997`:`2018`), decimals = 0, currency = "GBP") %>%
-      gt_sparkline(trend, width = 25) %>%
-      #### color region
-      data_color(columns = region,
-                 # custom defined values - notice that order matters!
-                 colors = scales::col_factor(palette = region_palette, domain = NULL), alpha = 0.6, autocolor_text = FALSE) %>%
-      #### color scale
-      data_color(columns = c(`1997`:`2018`),
-                 # custom defined values - notice that order matters!
-                 colors = scales::col_factor(palette = palette, domain = NULL), alpha = 0.5, autocolor_text = FALSE) %>% 
-      #### cell boarder format
-      tab_style(style = list(cell_borders(sides = "right", color = "black", weight = px(3))),
-                locations = list(cells_body(columns = trend))) %>%
-      tab_style(style = list(cell_borders(sides = "top", color = "grey60", weight = px(1))),
-                locations = list(cells_column_labels(columns = everything()))) %>%
-      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(3))),
-                locations = list(cells_column_labels(columns = everything()))) %>%
-      tab_source_note("Data: ONS | Table: @NearAndDistant") %>%
-      tab_header(title = md("**Average Monthly Gross Income Across Regions from 1997 to 2018**")) %>%
-      gt_theme_nytimes() 
-
-table_income
-
-```
-
-```{r}
-
-# Writing to File
-gtsave_extra(data = table_income, filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_income_table.png"), 
-             zoom = 1.5 , vwidth = 1400, vheight = 500)
-
-```
-
-#################################
-Income Analysis
-#################################
 
 ```{r}
 theme_set(theme_minimal())
@@ -156,6 +185,7 @@ gdhi_regional_inc$monthly_value[which(gdhi_regional_inc$year == 2018 & gdhi_regi
 
 plot_region_inc_timeseries <-
 gdhi_regional_inc %>%
+  filter(region_name != "United Kingdom") %>%
   filter(transaction == "Primary resources total") %>%
   ggplot() +
   geom_line(aes(year , monthly_value , color = fill, group = region_name), show.legend = TRUE , size = 1.5) +
@@ -218,7 +248,7 @@ library(rnaturalearth)
 ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland")
 
 # Plot
-#plot_map_income_2018 <-
+plot_map_income_2018 <-
 geo_gdhi_perhead_1997_2018 %>%
   filter(transaction == "Primary resources total") %>%
   filter(year == 2018) %>%
@@ -272,37 +302,318 @@ ggsave(plot = gdhi_ph_income_monthly, here::here("projects/ons_region_gdhi_1997_
 Primary Income Breakdown
 #########################
 
-```{r}
-library(ghibli)
+#################################
+Tables Indices (with/out London)
 
-plot_bar_income <-
-gdhi_regional_inc %>% 
-  filter(year %in% c(1997,2005,2010,2018)) %>%
-  filter(transaction != "Primary resources total") %>%
+###### With London
+```{r}
+library(gt)
+library(gtExtras)
+
+tbl_inc_type_indi <-
+gdhi_reg_inc_indi %>%
+  filter(transaction %in% gdhi_income,
+         transaction != "Primary resources total") %>%
+  filter(year == 2018) %>%
   mutate(transaction = case_when(transaction == "Compensation of employees" ~ "Compensation",
                                  transaction == "Property income, received" ~ "Property income",
                                  TRUE ~ transaction),
          transaction = str_to_title(transaction)) %>%
-  mutate(transaction = factor(transaction, levels = c("Mixed Income", "Property Income", "Operating Surplus", "Compensation"), ordered = TRUE)) %>%
   arrange(region_name) %>%
-  ggplot(aes(monthly_value , reorder(region_name, monthly_value), fill = transaction)) +
-  geom_col(alpha = 0.9) +
-  facet_wrap(~year, ncol = 1) +
-  scale_fill_ghibli_d("MarnieMedium2") +
-  scale_x_continuous(labels = scales::comma_format(prefix = "£")) +
-  labs(title = "UK Monthly Gross Incomes Across Regions (National Accounts Primary Stage)",
-       subtitle = "Data: ONS | Table: @NearAndDistant",
-       fill = NULL) +
-  theme(axis.title = element_blank(), panel.grid = element_blank(), panel.grid.major.x = element_line(size = 0.3, color = "grey85"),
-        legend.position = c(0.70,0.9), plot.margin = margin(1,0,0.5,1, unit = "cm"), axis.text.y = element_text(size = 11, margin = margin(0,-35,0,0)),
-        strip.text = element_text(size = 14, face = "bold", hjust = 0), plot.title = element_text(size = 24, face = "bold"), plot.subtitle = element_text(size = 10))
+    pivot_wider(id_cols = c(region_name), names_from = transaction, values_from = value)
 
+# add range - necessary to add into dataframe as {gt} cannot sum with missing values (i.e. London NA)
+table_inc_indi_rng <- tbl_inc_type_indi %>% add_row(tbl_inc_type_indi %>% summarise(across(`Operating Surplus`:last_col(), ~max(.x, na.rm = TRUE) - min(.x, na.rm = TRUE))) %>% mutate(region_name = "Range"))
+
+# actual table
+table_inc_type_indi <-
+table_inc_indi_rng %>%
+  gt() %>%
+      #### colour scale
+      data_color(columns = c(`Operating Surplus`:`Property Income`),
+                 # custom defined values - notice that order matters!
+                 colors = scales::col_factor(palette = palette, domain = NULL), 
+                 alpha = 0.4, autocolor_text = FALSE) %>% 
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 1)) %>%
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 14)) %>%
+      #### cell boarder format
+      cols_label(region_name = "") %>%
+      cols_align(align = "left", columns = region_name) %>%
+      cols_align(align = "center", columns = c(`Operating Surplus`:`Property Income`)) %>%
+      tab_options(table.font.size = 16) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(2))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "top", color = "black", weight = px(2))),
+                locations = list(cells_body(columns = everything(), rows = 14))) %>%
+      tab_style(style = list(cell_text(align = "right")), locations = cells_body(rows = region_name == "Range")) %>%
+      tab_source_note("Data: ONS (calculations own) | Table: @NearAndDistant") %>%
+      tab_header(title = md("**2018 Gross Income Types as Indices;  UK Average = 100**")) %>%
+      gt_theme_nytimes() 
+
+table_inc_type_indi
 
 ```
 
 ```{r}
 
 # Writing to File
-ggsave(plot = plot_bar_income, here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_inc_bar.png"), dpi = 360, height = 10, width = 16)
+gtsave_extra(data = table_inc_type_indi , 
+             filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_inc_table_indi.png"), 
+             zoom = 1.5 , vwidth = 700, vheight = 500)
+
+```
+
+###### Without London
+```{r}
+library(gt)
+library(gtExtras)
+
+tbl_inc_indi_wl <-
+gdhi_regional_inc %>% 
+  filter(transaction %in% gdhi_income,
+         transaction != "Primary resources total") %>%
+  filter(year == 2018) %>%
+  #filter(region_name != "London") %>% # removal of London for this analysis
+  mutate(transaction = case_when(transaction == "Compensation of employees" ~ "Compensation",
+                                 transaction == "Property income, received" ~ "Property income",
+                                 TRUE ~ transaction),
+         transaction = str_to_title(transaction)) %>%
+  arrange(region_name) %>%
+  select(c(-region_ror, -sec_axis_labels, -monthly_value)) %>%
+  # re-calculate indices without London
+  pivot_wider(id_cols = c(region_name:year), names_from = region_name, values_from = value) %>%
+  # Make London NA but keep in table
+  mutate(`London` = NA) %>%
+  rowwise() %>%
+  mutate(`United Kingdom` = round(mean(`Scotland`:`Northern Ireland`, na.rm = TRUE))) %>%
+  mutate(across(`Scotland`:`Northern Ireland`, ~ round(.x /`United Kingdom`,3)*100)) %>%
+  mutate(`United Kingdom` = 100) %>%
+  pivot_longer(cols = c(`United Kingdom`:`Northern Ireland`), names_to = "region_name") %>%
+  # table generation
+  pivot_wider(id_cols = region_name, names_from = transaction, values_from = value)
+
+# add range - necessary to add into dataframe as {gt} cannot sum with missing values (i.e. London NA)
+table_inc_indi_wl_rng <- tbl_inc_indi_wl %>% add_row(tbl_inc_indi_wl %>% summarise(across(`Operating Surplus`:last_col(), ~max(.x, na.rm = TRUE) - min(.x, na.rm = TRUE)))) %>% mutate(region_name = ifelse(is.na(region_name),"Range", region_name))
+
+# actual table
+table_inc_indi_wl <-
+  table_inc_indi_wl_rng %>%
+      gt() %>%
+      #### colour scale
+      data_color(columns = c(`Operating Surplus`:`Property Income`),
+                 # custom defined values - notice that order matters!
+                 colors = scales::col_factor(palette = palette, domain = NULL), 
+                 alpha = 0.4, autocolor_text = FALSE) %>% 
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 1)) %>%
+      # format missing London values
+      fmt_missing(columns = everything(), missing_text = "-") %>%
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 11)) %>%
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 14)) %>%
+      #### cell boarder format
+      tab_options(table.font.size = 16) %>%
+      cols_label(region_name = "") %>%
+      cols_align(align = "left", columns = region_name) %>%
+      cols_align(align = "center", columns = c(`Operating Surplus`:`Property Income`)) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(2))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "top", color = "black", weight = px(2))),
+                locations = list(cells_body(columns = everything(), rows = 14))) %>%
+      tab_style(style = list(cell_text(align = "right")), locations = cells_body(rows = region_name == "Range")) %>%
+      tab_source_note(md("**Note:** Indices calculates without London for comparison")) %>%
+      #tab_header(title = md("**2018 Gross Income Types as Indices of UK Average**")) %>%
+      gt_theme_nytimes() 
+
+table_inc_indi_wl
+
+```
+
+```{r}
+
+# Writing to File
+gtsave_extra(data = table_inc_indi_wl, 
+             filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_inc_table_indi_wo_london.png"), 
+             zoom = 1.5 , vwidth = 700, vheight = 500)
+
+```
+
+```{r}
+library(cowplot)
+
+panel_income_w_wo_lnd <-
+ggdraw() +
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_inc_table_indi.png"), 
+             height = 0.55 ,  width = 0.5 , x = 0.025, y = 0.2) +
+  draw_image(here::here("projects/ons_region_gdhi_1997_2018/outputs/gdhi_inc_table_indi_wo_london.png"),
+             height = 0.525 , width = 0.5 , x = 0.47, y = 0.1975) +
+  theme(plot.margin = margin(-4,-2,-4,-2, unit = "cm"))
+
+```
+
+```{r}
+
+# Writing to File
+ggsave(plot = panel_income_w_wo_lnd, here::here("projects/ons_region_gdhi_1997_2018/outputs/tbl_inc_w_wo_lnd.png"), dpi = 360, height = 6, width = 12)
+
+```
+
+
+#######################
+Income Type Range Plot
+#######################
+
+```{r}
+
+gdhi_inc_ind_range <-
+gdhi_reg_inc_indi %>% 
+  select(-fill) %>%
+  filter(transaction != "Primary resources total") %>%
+  group_by(year , transaction) %>%
+  summarise(range = (max(value) - min(value))/100) %>%
+  ungroup() %>%
+  group_by(transaction) %>%
+  mutate(range_ror = last(range) - first(range)) %>%
+  mutate(sec_axis_labels = paste0(transaction, " (+", scales::percent(range_ror, accuracy = 2),")"))
+
+# sec_axis
+sec_axis_range <-
+gdhi_inc_ind_range %>%
+  filter(year == 2018)
+
+# plot
+plot_inc_type_range <-
+gdhi_inc_ind_range %>%
+  ggplot(aes(year , range, color = transaction)) +
+  geom_line(size = 1.5, show.legend = FALSE) +
+  scale_x_continuous(breaks = c(1997,seq(2000,2015,5),2018), limits = c(1997,2018), expand = c(0,0)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     sec.axis = dup_axis(breaks = sec_axis_range$range,
+                                         labels = sec_axis_range$sec_axis_labels)) +
+  #ghibli::scale_fill_ghibli_d("MarnieLight1") +
+  #nord::scale_color_nord(palette = "baie_mouton") +
+  rcartocolor::scale_color_carto_d(palette = "Earth") +
+  #scale_color_viridis_d(option = "magma") +
+  #ochRe::scale_fill_ochre(palette = "dead_reef") +
+  expand_limits(y = 0) +
+  labs(x = NULL , y = NULL , color = NULL, title = "The Range Between Regions in the UK Across Different Income Types",
+       subtitle = "Data: ONS | Licence: Open Government Licence | Graphic: @NearAndDistant") +
+    theme(plot.title = element_text(size = 24 , face = "bold" , hjust = 0, vjust = 7),
+        plot.subtitle = element_text(size = 14 , hjust = 0 , vjust = 10),
+        legend.position = c(0.18,1.02),
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        legend.key.width = unit(2.5, "cm"),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.x = element_blank(), 
+        axis.title.y.right = element_blank(), 
+        axis.text.y = element_text(size = 12),
+        axis.text.x = element_text(size = 14, vjust = -2),
+        plot.margin = margin(2,1,1,1, unit = "cm"))
+  
+
+```
+
+```{r}
+
+# Writing to File
+ggsave(plot = plot_inc_type_range, here::here("projects/ons_region_gdhi_1997_2018/outputs/inc_type_range.png"), dpi = 360, height = 10, width = 16)
+
+```
+
+###########
+UK Divided
+###########
+
+```{r}
+
+# Plot
+map_uk_div <-
+cowplot::ggdraw(
+gdhi_comp_indi_raw %>% 
+  janitor::clean_names(numerals = "left") %>%
+  filter(nuts_level %in% c("NUTS1" , "UK")) %>% # NUTS1 level is regions
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire and The Humber", "Yorkshire", region_name)) %>%
+  select(-nuts_level, -nuts_code, -transaction_code) %>%
+  filter(transaction == "Gross Disposable Income") %>%
+  filter(year == 2018) %>%
+  left_join(uk_regions_boundaries, by = "region_name") %>%
+  mutate(labels = paste0(region_name, ", ", value)) %>%
+  mutate(value = value/100) %>%
+  ggplot() +
+  geom_sf(data = ireland, fill = "white" , color = "grey60", alpha = 0.5) +
+  geom_sf(aes(geometry = geometry, fill = value), color = "grey60" , show.legend = TRUE) +
+  ggrepel::geom_label_repel(aes(x = long, y = lat, label = labels), size = 3) +
+  scale_fill_viridis_c(option = "viridis" , direction = 1 , alpha = 0.8,
+                       breaks = seq(0.8,1.4,0.1), limits = c(0.8,1.4), labels=c("80%", "90%", "100% (UK Average)", "110%", "120%", "130%", "140%")) +
+  labs(fill = NULL) +
+  #ghibli::scale_fill_ghibli_c("PonyoMedium", direction = -1) +
+  #nord::scale_fill_nord(palette = "baie_mouton", discrete = FALSE, reverse = TRUE) +
+  #rcartocolor::scale_fill_carto_c(palette = "TealRose", direction = -1) +
+  #scale_color_viridis_d(option = "magma") +
+  #ochRe::scale_fill_ochre(palette = "galah", discrete = FALSE, ) +
+  coord_sf() +
+  ggthemes::theme_map() +
+  theme(plot.margin = margin(0,0,0,0, unit = "cm"),
+        legend.position = c(0.75,0.55),
+        legend.direction = "vertical",
+        legend.title = element_blank(),
+        legend.key.width = unit(1, "cm"))) +
+draw_text("2018 Regional Differences in\nDisposable Income, as Indices\nUK Average = 100",
+           x = 0.14, y = 0.13, hjust = 0 , size = 12, fontface = "bold") +
+draw_text("Data: ONS\nGraphic: @NearAndDistant",
+           x = 0.14, y = 0.06, hjust = 0 , size = 9)
+
+```
+
+```{r}
+
+# Writing to File
+ggsave(plot = map_uk_div, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_uk_div.png"), dpi = 360, height = 10, width = 8)
+
+```
+
+##############
+Housing Costs
+##############
+
+```{r}
+
+tbl_housing_costs <- 
+gdhi_reg_inc_indi_cln %>%
+  filter(transaction == "Property income, paid") %>%
+  arrange(region_name) %>%
+  group_by(region_name) %>%
+  mutate(trend = list(value)) %>%
+  ungroup() %>%
+    pivot_wider(id_cols = c(region_name, trend), names_from = year, values_from = value) %>%
+      gt(rowname_col = "region_name") %>%
+      gt_sparkline(trend, width = 25) %>%
+      grand_summary_rows(columns = c(`1997`:`2018`), fns = list(Range = ~max(.) - min(.)), use_seps = TRUE, missing_text = "") %>%
+      #### color scale
+      data_color(columns = c(`1997`:`2018`),
+                 # custom defined values - notice that order matters!
+                 colors = scales::col_factor(palette = rev(palette), domain = NULL), 
+                 alpha = 0.4, autocolor_text = FALSE) %>% 
+      tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 1)) %>%
+      #### cell boarder format
+      tab_style(style = list(cell_borders(sides = "right", color = "black", weight = px(3))),
+                locations = list(cells_body(columns = trend))) %>%
+      tab_style(style = list(cell_borders(sides = "top", color = "grey60", weight = px(1))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(3))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_source_note("Data: ONS | Table: @NearAndDistant") %>%
+      tab_header(title = md("**Property Payments (Rent & Mortgage) from 1997 to 2018 as Indices of UK Average; UK Average = 100**")) %>%
+      gt_theme_nytimes() 
+
+```
+
+```{r}
+
+# Writing to File
+gtsave_extra(data = tbl_housing_costs, filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/tbl_housing costs.png"), 
+             zoom = 1.5 , vwidth = 1400, vheight = 500)
 
 ```
