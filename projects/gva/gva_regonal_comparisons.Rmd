@@ -1,0 +1,144 @@
+---
+title: "Redistributive Piece"
+author: "NearAndDistant"
+date: "08/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+```
+
+# Importing data for table
+```{r}
+
+temp_xlsx <- tempfile(fileext = "xlsx")
+
+download.file("https://www.ons.gov.uk/file?uri=%2feconomy%2fgrossdomesticproductgdp%2fdatasets%2fregionalgrossdomesticproductallnutslevelregions%2f1998to2019/regionalgrossdomesticproductallitlregions.xlsx", destfile = temp_xlsx)
+
+# total figures
+uk_gva_raw         <- readxl::read_xlsx(temp_xlsx, sheet = "Table 1", skip = 1)
+
+uk_gva <- 
+  uk_gva_raw %>%
+  pivot_longer(c(`1998`:last_col()), names_to = "year", values_to = "gva") %>%
+  mutate(year = if_else(str_detect(year, "2019"), "2019", year),
+         year = as.numeric(year)) %>%
+  janitor::clean_names()
+
+# per head
+uk_gva_perhead_raw <- readxl::read_xlsx(temp_xlsx, sheet = "Table 7", skip = 1)
+
+uk_gva_perhead <- 
+  uk_gva_perhead_raw %>%
+  pivot_longer(c(`1998`:last_col()), names_to = "year", values_to = "gva") %>%
+  mutate(year = if_else(str_detect(year, "2019"), "2019", year),
+         year = as.numeric(year)) %>%
+  janitor::clean_names() %>%
+  rename(gva_perhead = "gva")
+
+# joining total & perhead
+# filter for last available year and correct geographical level
+uk_gva_2019 <-
+  uk_gva %>%
+  left_join(uk_gva_perhead) %>%
+  filter(year == 2019) %>%
+  filter(itl == "ITL1") %>%
+  mutate(gva_pc = gva/sum(gva)) %>%
+  mutate(gva_ratio = round(gva_perhead / min(gva_perhead), 2)) %>%
+  select(-itl,-itl_code, -year)
+  
+
+```
+
+# table
+```{r}
+library(gt)
+library(gtExtras)
+library(showtext); showtext_auto(); font_add_google("Prata", "prata")
+
+table_gva_2019 <-
+uk_gva_2019 %>%
+  mutate(gva_pc_bar = gva_pc) %>%
+  gt() %>%
+  tab_stubhead(label = "Region") %>%
+  cols_label(region_name = "Region",
+             gva         = "GVA (millions)", 
+             gva_pc      = "% GVA",
+             gva_pc_bar  = "Bar Plot*",
+             gva_perhead = "GVA Per Head",
+             gva_ratio   = "GVA Ratio**") %>%
+  cols_move(c(gva_perhead, gva_ratio), after = last_col()) %>%
+  fmt_percent(gva_pc) %>%
+  fmt_currency(c(gva, gva_perhead), currency = "GBP", decimals = 0) %>%
+  gt_color_rows(gva_pc, palette = "ggsci::blue_material") %>%
+  gt_plt_bar_pct(gva_pc_bar, scaled = FALSE, fill = "blue", background = "lightblue") %>%
+  #### cell format
+  tab_style(style = list(cell_borders(sides = "left",  color = "black",  weight = px(3))), locations = list(cells_body(columns = gva))) %>%
+  tab_style(style = list(cell_borders(sides = "top",    color = "grey60", weight = px(1))), locations = list(cells_column_labels(columns = everything()))) %>%
+  tab_style(style = list(cell_borders(sides = "bottom", color = "black",  weight = px(3))), locations = list(cells_column_labels(columns = everything()))) %>%
+  tab_style(style = list(cell_text(align = "right")), locations = list(cells_body(columns = 3), cells_column_labels())) %>%
+  cols_align("center", contains("scale")) %>%
+  cols_width(1 ~ px(200),
+             2 ~ px(90),
+             3 ~ px(90),
+             5 ~ px(80),
+             6 ~ px(100)) %>%
+  tab_source_note("* Bar plot scaled to London to show comparison of total GVA; London = 100%") %>%
+  tab_source_note("* Ratio shows GVA per head against lowest region; North East = 1") %>%
+  tab_source_note("Data: ONS (current prices include the effects of inflation) | Table: @NearAndDistant") %>%
+  tab_header(title = md("**2019 UK Regional Gross Value Added (GVA)**")) %>%
+  gt_theme_nytimes() 
+
+```
+
+```{r}
+
+gtsave(table_gva_2019, filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/2019_gva_table.png"))
+
+```
+
+#### Country and regional public sector finances net fiscal balance tables
+```{r}
+
+uk_net_fiscal_raw <-
+read_csv("https://www.ons.gov.uk/generator?uri=/economy/governmentpublicsectorandtaxes/publicsectorfinance/articles/countryandregionalpublicsectorfinances/financialyearending2020/00b31be7&format=csv", skip = 6) %>% 
+janitor::clean_names()
+
+library(showtext); showtext_auto(); font_add_google("Roboto", "roboto")
+library(cowplot)
+
+region_order <- unlist(uk_net_fiscal_raw %>% filter(region != "United Kingdom") %>% arrange(population_share) %>% select(region))
+
+plot_uk_net_fiscal <-
+ggdraw(
+uk_net_fiscal_raw %>%
+  mutate(region = if_else(region == "Yorkshire and the Humber", "Yorkshire", region)) %>%
+  mutate(fill = if_else(population_share < 0, "#0d47a1", "#dfdfe0")) %>%
+  mutate(region = factor(region, levels = region_order)) %>%
+  filter(!is.na(region)) %>%
+  ggplot(aes(population_share , region, fill = fill)) +
+  geom_col() +
+  scale_fill_identity() +
+  scale_x_continuous(labels = scales::comma_format(prefix = "£"), limits = c(-5500,5500), position = "top",
+                    minor_breaks = c(-6000,-4000,-2000,0,2000,4000,6000)) +
+  labs(x = NULL, y = NULL, caption = "Data: ONS | Graphic: @NearAndDistant") +
+  theme_minimal() +
+  coord_cartesian(clip = "off") +
+  theme(text = element_text(family = "roboto", size = 20),
+        plot.caption = element_text(hjust = 0, vjust = -1),
+        panel.grid   = element_blank(), 
+        axis.text.x  = element_text(colour = "grey40"),
+        axis.text.y  = element_text(hjust = 0, margin = margin(0,0,0,4, unit = "cm")),
+        plot.margin  = margin(2,3,1.5,-3, unit = "cm"))) +
+draw_text("Net fiscal balance per head 2019/20, £", x = 0.22 , y = 0.97, family = "roboto", size = 24, fontface = "bold") +
+annotate("segment" , x = 0.1, xend = 0.95, y = 0.08, yend = 0.08, color = "grey60")
+
+ggsave(plot = plot_uk_net_fiscal, here::here("projects/ons_region_gdhi_1997_2018/outputs/uk_net_fiscal_201920.jpeg"), 
+       dpi = 360, height = 10, width = 15)
+
+```
+

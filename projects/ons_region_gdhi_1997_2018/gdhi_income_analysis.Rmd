@@ -617,3 +617,15 @@ gtsave_extra(data = tbl_housing_costs, filename = here::here("projects/ons_regio
              zoom = 1.5 , vwidth = 1400, vheight = 500)
 
 ```
+
+
+#########################
+EU Comparison
+#########################
+
+```{r}
+
+
+
+```
+
