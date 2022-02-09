@@ -1,0 +1,2649 @@
+area_code,area_name,year,deaths,label
+E06000001,Hartlepool,2020,1,Hartlepool (1)
+E06000001,Hartlepool,2019,2,Hartlepool (2)
+E06000001,Hartlepool,2018,NA,NA
+E06000001,Hartlepool,2017,NA,NA
+E06000001,Hartlepool,2016,NA,NA
+E06000001,Hartlepool,2015,NA,NA
+E06000001,Hartlepool,2014,NA,NA
+E06000001,Hartlepool,2013,NA,NA
+E06000002,Middlesbrough,2020,NA,NA
+E06000002,Middlesbrough,2019,2,Middlesbrough (2)
+E06000002,Middlesbrough,2018,2,Middlesbrough (2)
+E06000002,Middlesbrough,2017,2,Middlesbrough (2)
+E06000002,Middlesbrough,2016,2,Middlesbrough (2)
+E06000002,Middlesbrough,2015,3,Middlesbrough (3)
+E06000002,Middlesbrough,2014,3,Middlesbrough (3)
+E06000002,Middlesbrough,2013,2,Middlesbrough (2)
+E06000003,Redcar and Cleveland,2020,NA,NA
+E06000003,Redcar and Cleveland,2019,NA,NA
+E06000003,Redcar and Cleveland,2018,NA,NA
+E06000003,Redcar and Cleveland,2017,NA,NA
+E06000003,Redcar and Cleveland,2016,NA,NA
+E06000003,Redcar and Cleveland,2015,NA,NA
+E06000003,Redcar and Cleveland,2014,NA,NA
+E06000003,Redcar and Cleveland,2013,1,Redcar and Cleveland (1)
+E06000004,Stockton-on-Tees,2020,2,Stockton-on-Tees (2)
+E06000004,Stockton-on-Tees,2019,NA,NA
+E06000004,Stockton-on-Tees,2018,1,Stockton-on-Tees (1)
+E06000004,Stockton-on-Tees,2017,2,Stockton-on-Tees (2)
+E06000004,Stockton-on-Tees,2016,2,Stockton-on-Tees (2)
+E06000004,Stockton-on-Tees,2015,1,Stockton-on-Tees (1)
+E06000004,Stockton-on-Tees,2014,1,Stockton-on-Tees (1)
+E06000004,Stockton-on-Tees,2013,1,Stockton-on-Tees (1)
+E06000005,Darlington,2020,1,Darlington (1)
+E06000005,Darlington,2019,NA,NA
+E06000005,Darlington,2018,1,Darlington (1)
+E06000005,Darlington,2017,1,Darlington (1)
+E06000005,Darlington,2016,1,Darlington (1)
+E06000005,Darlington,2015,NA,NA
+E06000005,Darlington,2014,3,Darlington (3)
+E06000005,Darlington,2013,NA,NA
+E06000006,Halton,2020,1,Halton (1)
+E06000006,Halton,2019,NA,NA
+E06000006,Halton,2018,NA,NA
+E06000006,Halton,2017,2,Halton (2)
+E06000006,Halton,2016,NA,NA
+E06000006,Halton,2015,1,Halton (1)
+E06000006,Halton,2014,NA,NA
+E06000006,Halton,2013,NA,NA
+E06000007,Warrington,2020,4,Warrington (4)
+E06000007,Warrington,2019,2,Warrington (2)
+E06000007,Warrington,2018,NA,NA
+E06000007,Warrington,2017,2,Warrington (2)
+E06000007,Warrington,2016,4,Warrington (4)
+E06000007,Warrington,2015,2,Warrington (2)
+E06000007,Warrington,2014,1,Warrington (1)
+E06000007,Warrington,2013,1,Warrington (1)
+E06000008,Blackburn with Darwen,2020,10,Blackburn with Darwen (10)
+E06000008,Blackburn with Darwen,2019,8,Blackburn with Darwen (8)
+E06000008,Blackburn with Darwen,2018,8,Blackburn with Darwen (8)
+E06000008,Blackburn with Darwen,2017,9,Blackburn with Darwen (9)
+E06000008,Blackburn with Darwen,2016,9,Blackburn with Darwen (9)
+E06000008,Blackburn with Darwen,2015,7,Blackburn with Darwen (7)
+E06000008,Blackburn with Darwen,2014,6,Blackburn with Darwen (6)
+E06000008,Blackburn with Darwen,2013,3,Blackburn with Darwen (3)
+E06000009,Blackpool,2020,3,Blackpool (3)
+E06000009,Blackpool,2019,3,Blackpool (3)
+E06000009,Blackpool,2018,5,Blackpool (5)
+E06000009,Blackpool,2017,1,Blackpool (1)
+E06000009,Blackpool,2016,3,Blackpool (3)
+E06000009,Blackpool,2015,3,Blackpool (3)
+E06000009,Blackpool,2014,2,Blackpool (2)
+E06000009,Blackpool,2013,NA,NA
+E06000010,"Kingston upon Hull, City of",2020,4,"Kingston upon Hull, City of (4)"
+E06000010,"Kingston upon Hull, City of",2019,9,"Kingston upon Hull, City of (9)"
+E06000010,"Kingston upon Hull, City of",2018,7,"Kingston upon Hull, City of (7)"
+E06000010,"Kingston upon Hull, City of",2017,10,"Kingston upon Hull, City of (10)"
+E06000010,"Kingston upon Hull, City of",2016,9,"Kingston upon Hull, City of (9)"
+E06000010,"Kingston upon Hull, City of",2015,5,"Kingston upon Hull, City of (5)"
+E06000010,"Kingston upon Hull, City of",2014,2,"Kingston upon Hull, City of (2)"
+E06000010,"Kingston upon Hull, City of",2013,3,"Kingston upon Hull, City of (3)"
+E06000011,East Riding of Yorkshire,2020,NA,NA
+E06000011,East Riding of Yorkshire,2019,2,East Riding of Yorkshire (2)
+E06000011,East Riding of Yorkshire,2018,1,East Riding of Yorkshire (1)
+E06000011,East Riding of Yorkshire,2017,NA,NA
+E06000011,East Riding of Yorkshire,2016,NA,NA
+E06000011,East Riding of Yorkshire,2015,2,East Riding of Yorkshire (2)
+E06000011,East Riding of Yorkshire,2014,2,East Riding of Yorkshire (2)
+E06000011,East Riding of Yorkshire,2013,1,East Riding of Yorkshire (1)
+E06000012,North East Lincolnshire,2020,3,North East Lincolnshire (3)
+E06000012,North East Lincolnshire,2019,NA,NA
+E06000012,North East Lincolnshire,2018,1,North East Lincolnshire (1)
+E06000012,North East Lincolnshire,2017,3,North East Lincolnshire (3)
+E06000012,North East Lincolnshire,2016,1,North East Lincolnshire (1)
+E06000012,North East Lincolnshire,2015,1,North East Lincolnshire (1)
+E06000012,North East Lincolnshire,2014,NA,NA
+E06000012,North East Lincolnshire,2013,NA,NA
+E06000013,North Lincolnshire,2020,2,North Lincolnshire (2)
+E06000013,North Lincolnshire,2019,NA,NA
+E06000013,North Lincolnshire,2018,2,North Lincolnshire (2)
+E06000013,North Lincolnshire,2017,NA,NA
+E06000013,North Lincolnshire,2016,1,North Lincolnshire (1)
+E06000013,North Lincolnshire,2015,NA,NA
+E06000013,North Lincolnshire,2014,NA,NA
+E06000013,North Lincolnshire,2013,NA,NA
+E06000014,York,2020,4,York (4)
+E06000014,York,2019,8,York (8)
+E06000014,York,2018,4,York (4)
+E06000014,York,2017,5,York (5)
+E06000014,York,2016,1,York (1)
+E06000014,York,2015,3,York (3)
+E06000014,York,2014,1,York (1)
+E06000014,York,2013,NA,NA
+E06000015,Derby,2020,8,Derby (8)
+E06000015,Derby,2019,3,Derby (3)
+E06000015,Derby,2018,5,Derby (5)
+E06000015,Derby,2017,4,Derby (4)
+E06000015,Derby,2016,2,Derby (2)
+E06000015,Derby,2015,3,Derby (3)
+E06000015,Derby,2014,5,Derby (5)
+E06000015,Derby,2013,2,Derby (2)
+E06000016,Leicester,2020,7,Leicester (7)
+E06000016,Leicester,2019,5,Leicester (5)
+E06000016,Leicester,2018,6,Leicester (6)
+E06000016,Leicester,2017,4,Leicester (4)
+E06000016,Leicester,2016,9,Leicester (9)
+E06000016,Leicester,2015,9,Leicester (9)
+E06000016,Leicester,2014,3,Leicester (3)
+E06000016,Leicester,2013,5,Leicester (5)
+E06000017,Rutland,2020,NA,NA
+E06000017,Rutland,2019,NA,NA
+E06000017,Rutland,2018,NA,NA
+E06000017,Rutland,2017,NA,NA
+E06000017,Rutland,2016,NA,NA
+E06000017,Rutland,2015,NA,NA
+E06000017,Rutland,2014,NA,NA
+E06000017,Rutland,2013,NA,NA
+E06000018,Nottingham,2020,2,Nottingham (2)
+E06000018,Nottingham,2019,6,Nottingham (6)
+E06000018,Nottingham,2018,6,Nottingham (6)
+E06000018,Nottingham,2017,1,Nottingham (1)
+E06000018,Nottingham,2016,3,Nottingham (3)
+E06000018,Nottingham,2015,4,Nottingham (4)
+E06000018,Nottingham,2014,NA,NA
+E06000018,Nottingham,2013,2,Nottingham (2)
+E06000019,"Herefordshire, County of",2020,1,"Herefordshire, County of (1)"
+E06000019,"Herefordshire, County of",2019,1,"Herefordshire, County of (1)"
+E06000019,"Herefordshire, County of",2018,1,"Herefordshire, County of (1)"
+E06000019,"Herefordshire, County of",2017,NA,NA
+E06000019,"Herefordshire, County of",2016,NA,NA
+E06000019,"Herefordshire, County of",2015,NA,NA
+E06000019,"Herefordshire, County of",2014,3,"Herefordshire, County of (3)"
+E06000019,"Herefordshire, County of",2013,1,"Herefordshire, County of (1)"
+E06000020,Telford and Wrekin,2020,NA,NA
+E06000020,Telford and Wrekin,2019,NA,NA
+E06000020,Telford and Wrekin,2018,NA,NA
+E06000020,Telford and Wrekin,2017,1,Telford and Wrekin (1)
+E06000020,Telford and Wrekin,2016,NA,NA
+E06000020,Telford and Wrekin,2015,1,Telford and Wrekin (1)
+E06000020,Telford and Wrekin,2014,2,Telford and Wrekin (2)
+E06000020,Telford and Wrekin,2013,NA,NA
+E06000021,Stoke-on-Trent,2020,8,Stoke-on-Trent (8)
+E06000021,Stoke-on-Trent,2019,7,Stoke-on-Trent (7)
+E06000021,Stoke-on-Trent,2018,6,Stoke-on-Trent (6)
+E06000021,Stoke-on-Trent,2017,4,Stoke-on-Trent (4)
+E06000021,Stoke-on-Trent,2016,2,Stoke-on-Trent (2)
+E06000021,Stoke-on-Trent,2015,2,Stoke-on-Trent (2)
+E06000021,Stoke-on-Trent,2014,4,Stoke-on-Trent (4)
+E06000021,Stoke-on-Trent,2013,3,Stoke-on-Trent (3)
+E06000022,Bath and North East Somerset,2020,2,Bath and North East Somerset (2)
+E06000022,Bath and North East Somerset,2019,5,Bath and North East Somerset (5)
+E06000022,Bath and North East Somerset,2018,2,Bath and North East Somerset (2)
+E06000022,Bath and North East Somerset,2017,2,Bath and North East Somerset (2)
+E06000022,Bath and North East Somerset,2016,1,Bath and North East Somerset (1)
+E06000022,Bath and North East Somerset,2015,NA,NA
+E06000022,Bath and North East Somerset,2014,1,Bath and North East Somerset (1)
+E06000022,Bath and North East Somerset,2013,1,Bath and North East Somerset (1)
+E06000023,"Bristol, City of",2020,14,"Bristol, City of (14)"
+E06000023,"Bristol, City of",2019,17,"Bristol, City of (17)"
+E06000023,"Bristol, City of",2018,13,"Bristol, City of (13)"
+E06000023,"Bristol, City of",2017,14,"Bristol, City of (14)"
+E06000023,"Bristol, City of",2016,8,"Bristol, City of (8)"
+E06000023,"Bristol, City of",2015,5,"Bristol, City of (5)"
+E06000023,"Bristol, City of",2014,11,"Bristol, City of (11)"
+E06000023,"Bristol, City of",2013,5,"Bristol, City of (5)"
+E06000024,North Somerset,2020,3,North Somerset (3)
+E06000024,North Somerset,2019,3,North Somerset (3)
+E06000024,North Somerset,2018,4,North Somerset (4)
+E06000024,North Somerset,2017,NA,NA
+E06000024,North Somerset,2016,NA,NA
+E06000024,North Somerset,2015,1,North Somerset (1)
+E06000024,North Somerset,2014,2,North Somerset (2)
+E06000024,North Somerset,2013,NA,NA
+E06000025,South Gloucestershire,2020,NA,NA
+E06000025,South Gloucestershire,2019,NA,NA
+E06000025,South Gloucestershire,2018,NA,NA
+E06000025,South Gloucestershire,2017,NA,NA
+E06000025,South Gloucestershire,2016,1,South Gloucestershire (1)
+E06000025,South Gloucestershire,2015,1,South Gloucestershire (1)
+E06000025,South Gloucestershire,2014,NA,NA
+E06000025,South Gloucestershire,2013,1,South Gloucestershire (1)
+E06000026,Plymouth,2020,5,Plymouth (5)
+E06000026,Plymouth,2019,2,Plymouth (2)
+E06000026,Plymouth,2018,9,Plymouth (9)
+E06000026,Plymouth,2017,2,Plymouth (2)
+E06000026,Plymouth,2016,9,Plymouth (9)
+E06000026,Plymouth,2015,2,Plymouth (2)
+E06000026,Plymouth,2014,3,Plymouth (3)
+E06000026,Plymouth,2013,3,Plymouth (3)
+E06000027,Torbay,2020,1,Torbay (1)
+E06000027,Torbay,2019,2,Torbay (2)
+E06000027,Torbay,2018,3,Torbay (3)
+E06000027,Torbay,2017,NA,NA
+E06000027,Torbay,2016,2,Torbay (2)
+E06000027,Torbay,2015,NA,NA
+E06000027,Torbay,2014,NA,NA
+E06000027,Torbay,2013,1,Torbay (1)
+E06000030,Swindon,2020,1,Swindon (1)
+E06000030,Swindon,2019,3,Swindon (3)
+E06000030,Swindon,2018,3,Swindon (3)
+E06000030,Swindon,2017,NA,NA
+E06000030,Swindon,2016,4,Swindon (4)
+E06000030,Swindon,2015,3,Swindon (3)
+E06000030,Swindon,2014,1,Swindon (1)
+E06000030,Swindon,2013,1,Swindon (1)
+E06000031,Peterborough,2020,2,Peterborough (2)
+E06000031,Peterborough,2019,6,Peterborough (6)
+E06000031,Peterborough,2018,4,Peterborough (4)
+E06000031,Peterborough,2017,3,Peterborough (3)
+E06000031,Peterborough,2016,1,Peterborough (1)
+E06000031,Peterborough,2015,2,Peterborough (2)
+E06000031,Peterborough,2014,NA,NA
+E06000031,Peterborough,2013,1,Peterborough (1)
+E06000032,Luton,2020,2,Luton (2)
+E06000032,Luton,2019,2,Luton (2)
+E06000032,Luton,2018,2,Luton (2)
+E06000032,Luton,2017,NA,NA
+E06000032,Luton,2016,NA,NA
+E06000032,Luton,2015,1,Luton (1)
+E06000032,Luton,2014,1,Luton (1)
+E06000032,Luton,2013,NA,NA
+E06000033,Southend-on-Sea,2020,1,Southend-on-Sea (1)
+E06000033,Southend-on-Sea,2019,NA,NA
+E06000033,Southend-on-Sea,2018,1,Southend-on-Sea (1)
+E06000033,Southend-on-Sea,2017,2,Southend-on-Sea (2)
+E06000033,Southend-on-Sea,2016,NA,NA
+E06000033,Southend-on-Sea,2015,1,Southend-on-Sea (1)
+E06000033,Southend-on-Sea,2014,1,Southend-on-Sea (1)
+E06000033,Southend-on-Sea,2013,1,Southend-on-Sea (1)
+E06000034,Thurrock,2020,NA,NA
+E06000034,Thurrock,2019,NA,NA
+E06000034,Thurrock,2018,NA,NA
+E06000034,Thurrock,2017,NA,NA
+E06000034,Thurrock,2016,NA,NA
+E06000034,Thurrock,2015,NA,NA
+E06000034,Thurrock,2014,NA,NA
+E06000034,Thurrock,2013,NA,NA
+E06000035,Medway,2020,NA,NA
+E06000035,Medway,2019,NA,NA
+E06000035,Medway,2018,NA,NA
+E06000035,Medway,2017,6,Medway (6)
+E06000035,Medway,2016,3,Medway (3)
+E06000035,Medway,2015,1,Medway (1)
+E06000035,Medway,2014,2,Medway (2)
+E06000035,Medway,2013,1,Medway (1)
+E06000036,Bracknell Forest,2020,NA,NA
+E06000036,Bracknell Forest,2019,NA,NA
+E06000036,Bracknell Forest,2018,NA,NA
+E06000036,Bracknell Forest,2017,NA,NA
+E06000036,Bracknell Forest,2016,1,Bracknell Forest (1)
+E06000036,Bracknell Forest,2015,NA,NA
+E06000036,Bracknell Forest,2014,NA,NA
+E06000036,Bracknell Forest,2013,NA,NA
+E06000037,West Berkshire,2020,1,West Berkshire (1)
+E06000037,West Berkshire,2019,NA,NA
+E06000037,West Berkshire,2018,NA,NA
+E06000037,West Berkshire,2017,1,West Berkshire (1)
+E06000037,West Berkshire,2016,3,West Berkshire (3)
+E06000037,West Berkshire,2015,4,West Berkshire (4)
+E06000037,West Berkshire,2014,1,West Berkshire (1)
+E06000037,West Berkshire,2013,1,West Berkshire (1)
+E06000038,Reading,2020,NA,NA
+E06000038,Reading,2019,3,Reading (3)
+E06000038,Reading,2018,3,Reading (3)
+E06000038,Reading,2017,2,Reading (2)
+E06000038,Reading,2016,4,Reading (4)
+E06000038,Reading,2015,7,Reading (7)
+E06000038,Reading,2014,1,Reading (1)
+E06000038,Reading,2013,3,Reading (3)
+E06000039,Slough,2020,1,Slough (1)
+E06000039,Slough,2019,2,Slough (2)
+E06000039,Slough,2018,NA,NA
+E06000039,Slough,2017,NA,NA
+E06000039,Slough,2016,2,Slough (2)
+E06000039,Slough,2015,1,Slough (1)
+E06000039,Slough,2014,3,Slough (3)
+E06000039,Slough,2013,4,Slough (4)
+E06000040,Windsor and Maidenhead,2020,1,Windsor and Maidenhead (1)
+E06000040,Windsor and Maidenhead,2019,1,Windsor and Maidenhead (1)
+E06000040,Windsor and Maidenhead,2018,NA,NA
+E06000040,Windsor and Maidenhead,2017,NA,NA
+E06000040,Windsor and Maidenhead,2016,1,Windsor and Maidenhead (1)
+E06000040,Windsor and Maidenhead,2015,NA,NA
+E06000040,Windsor and Maidenhead,2014,1,Windsor and Maidenhead (1)
+E06000040,Windsor and Maidenhead,2013,1,Windsor and Maidenhead (1)
+E06000041,Wokingham,2020,NA,NA
+E06000041,Wokingham,2019,2,Wokingham (2)
+E06000041,Wokingham,2018,2,Wokingham (2)
+E06000041,Wokingham,2017,NA,NA
+E06000041,Wokingham,2016,NA,NA
+E06000041,Wokingham,2015,NA,NA
+E06000041,Wokingham,2014,NA,NA
+E06000041,Wokingham,2013,NA,NA
+E06000042,Milton Keynes,2020,3,Milton Keynes (3)
+E06000042,Milton Keynes,2019,2,Milton Keynes (2)
+E06000042,Milton Keynes,2018,3,Milton Keynes (3)
+E06000042,Milton Keynes,2017,3,Milton Keynes (3)
+E06000042,Milton Keynes,2016,1,Milton Keynes (1)
+E06000042,Milton Keynes,2015,NA,NA
+E06000042,Milton Keynes,2014,1,Milton Keynes (1)
+E06000042,Milton Keynes,2013,2,Milton Keynes (2)
+E06000043,Brighton and Hove,2020,9,Brighton and Hove (9)
+E06000043,Brighton and Hove,2019,4,Brighton and Hove (4)
+E06000043,Brighton and Hove,2018,11,Brighton and Hove (11)
+E06000043,Brighton and Hove,2017,9,Brighton and Hove (9)
+E06000043,Brighton and Hove,2016,11,Brighton and Hove (11)
+E06000043,Brighton and Hove,2015,3,Brighton and Hove (3)
+E06000043,Brighton and Hove,2014,8,Brighton and Hove (8)
+E06000043,Brighton and Hove,2013,9,Brighton and Hove (9)
+E06000044,Portsmouth,2020,3,Portsmouth (3)
+E06000044,Portsmouth,2019,3,Portsmouth (3)
+E06000044,Portsmouth,2018,2,Portsmouth (2)
+E06000044,Portsmouth,2017,2,Portsmouth (2)
+E06000044,Portsmouth,2016,6,Portsmouth (6)
+E06000044,Portsmouth,2015,2,Portsmouth (2)
+E06000044,Portsmouth,2014,4,Portsmouth (4)
+E06000044,Portsmouth,2013,3,Portsmouth (3)
+E06000045,Southampton,2020,3,Southampton (3)
+E06000045,Southampton,2019,4,Southampton (4)
+E06000045,Southampton,2018,1,Southampton (1)
+E06000045,Southampton,2017,6,Southampton (6)
+E06000045,Southampton,2016,10,Southampton (10)
+E06000045,Southampton,2015,4,Southampton (4)
+E06000045,Southampton,2014,4,Southampton (4)
+E06000045,Southampton,2013,9,Southampton (9)
+E06000046,Isle of Wight,2020,1,Isle of Wight (1)
+E06000046,Isle of Wight,2019,NA,NA
+E06000046,Isle of Wight,2018,2,Isle of Wight (2)
+E06000046,Isle of Wight,2017,NA,NA
+E06000046,Isle of Wight,2016,1,Isle of Wight (1)
+E06000046,Isle of Wight,2015,NA,NA
+E06000046,Isle of Wight,2014,1,Isle of Wight (1)
+E06000046,Isle of Wight,2013,1,Isle of Wight (1)
+E06000047,County Durham,2020,2,County Durham (2)
+E06000047,County Durham,2019,1,County Durham (1)
+E06000047,County Durham,2018,1,County Durham (1)
+E06000047,County Durham,2017,2,County Durham (2)
+E06000047,County Durham,2016,2,County Durham (2)
+E06000047,County Durham,2015,1,County Durham (1)
+E06000047,County Durham,2014,2,County Durham (2)
+E06000047,County Durham,2013,2,County Durham (2)
+E06000049,Cheshire East,2020,3,Cheshire East (3)
+E06000049,Cheshire East,2019,2,Cheshire East (2)
+E06000049,Cheshire East,2018,1,Cheshire East (1)
+E06000049,Cheshire East,2017,7,Cheshire East (7)
+E06000049,Cheshire East,2016,2,Cheshire East (2)
+E06000049,Cheshire East,2015,2,Cheshire East (2)
+E06000049,Cheshire East,2014,2,Cheshire East (2)
+E06000049,Cheshire East,2013,NA,NA
+E06000050,Cheshire West and Chester,2020,3,Cheshire West and Chester (3)
+E06000050,Cheshire West and Chester,2019,2,Cheshire West and Chester (2)
+E06000050,Cheshire West and Chester,2018,2,Cheshire West and Chester (2)
+E06000050,Cheshire West and Chester,2017,3,Cheshire West and Chester (3)
+E06000050,Cheshire West and Chester,2016,1,Cheshire West and Chester (1)
+E06000050,Cheshire West and Chester,2015,NA,NA
+E06000050,Cheshire West and Chester,2014,1,Cheshire West and Chester (1)
+E06000050,Cheshire West and Chester,2013,4,Cheshire West and Chester (4)
+E06000051,Shropshire,2020,2,Shropshire (2)
+E06000051,Shropshire,2019,1,Shropshire (1)
+E06000051,Shropshire,2018,1,Shropshire (1)
+E06000051,Shropshire,2017,NA,NA
+E06000051,Shropshire,2016,NA,NA
+E06000051,Shropshire,2015,2,Shropshire (2)
+E06000051,Shropshire,2014,1,Shropshire (1)
+E06000051,Shropshire,2013,1,Shropshire (1)
+E06000052,Cornwall,2020,4,Cornwall (4)
+E06000052,Cornwall,2019,4,Cornwall (4)
+E06000052,Cornwall,2018,6,Cornwall (6)
+E06000052,Cornwall,2017,6,Cornwall (6)
+E06000052,Cornwall,2016,3,Cornwall (3)
+E06000052,Cornwall,2015,2,Cornwall (2)
+E06000052,Cornwall,2014,4,Cornwall (4)
+E06000052,Cornwall,2013,2,Cornwall (2)
+E06000053,Isles of Scilly,2020,NA,NA
+E06000053,Isles of Scilly,2019,NA,NA
+E06000053,Isles of Scilly,2018,NA,NA
+E06000053,Isles of Scilly,2017,NA,NA
+E06000053,Isles of Scilly,2016,NA,NA
+E06000053,Isles of Scilly,2015,NA,NA
+E06000053,Isles of Scilly,2014,NA,NA
+E06000053,Isles of Scilly,2013,1,Isles of Scilly (1)
+E06000054,Wiltshire,2020,3,Wiltshire (3)
+E06000054,Wiltshire,2019,5,Wiltshire (5)
+E06000054,Wiltshire,2018,4,Wiltshire (4)
+E06000054,Wiltshire,2017,3,Wiltshire (3)
+E06000054,Wiltshire,2016,2,Wiltshire (2)
+E06000054,Wiltshire,2015,NA,NA
+E06000054,Wiltshire,2014,NA,NA
+E06000054,Wiltshire,2013,3,Wiltshire (3)
+E06000055,Bedford,2020,1,Bedford (1)
+E06000055,Bedford,2019,1,Bedford (1)
+E06000055,Bedford,2018,1,Bedford (1)
+E06000055,Bedford,2017,1,Bedford (1)
+E06000055,Bedford,2016,1,Bedford (1)
+E06000055,Bedford,2015,1,Bedford (1)
+E06000055,Bedford,2014,1,Bedford (1)
+E06000055,Bedford,2013,2,Bedford (2)
+E06000056,Central Bedfordshire,2020,2,Central Bedfordshire (2)
+E06000056,Central Bedfordshire,2019,NA,NA
+E06000056,Central Bedfordshire,2018,NA,NA
+E06000056,Central Bedfordshire,2017,1,Central Bedfordshire (1)
+E06000056,Central Bedfordshire,2016,1,Central Bedfordshire (1)
+E06000056,Central Bedfordshire,2015,NA,NA
+E06000056,Central Bedfordshire,2014,NA,NA
+E06000056,Central Bedfordshire,2013,NA,NA
+E06000057,Northumberland,2020,1,Northumberland (1)
+E06000057,Northumberland,2019,NA,NA
+E06000057,Northumberland,2018,2,Northumberland (2)
+E06000057,Northumberland,2017,NA,NA
+E06000057,Northumberland,2016,2,Northumberland (2)
+E06000057,Northumberland,2015,1,Northumberland (1)
+E06000057,Northumberland,2014,2,Northumberland (2)
+E06000057,Northumberland,2013,NA,NA
+E06000058,"Bournemouth, Christchurch and Poole",2020,1,"Bournemouth, Christchurch and Poole (1)"
+E06000058,"Bournemouth, Christchurch and Poole",2019,5,"Bournemouth, Christchurch and Poole (5)"
+E06000058,"Bournemouth, Christchurch and Poole",2018,5,"Bournemouth, Christchurch and Poole (5)"
+E06000058,"Bournemouth, Christchurch and Poole",2017,8,"Bournemouth, Christchurch and Poole (8)"
+E06000058,"Bournemouth, Christchurch and Poole",2016,2,"Bournemouth, Christchurch and Poole (2)"
+E06000058,"Bournemouth, Christchurch and Poole",2015,7,"Bournemouth, Christchurch and Poole (7)"
+E06000058,"Bournemouth, Christchurch and Poole",2014,4,"Bournemouth, Christchurch and Poole (4)"
+E06000058,"Bournemouth, Christchurch and Poole",2013,10,"Bournemouth, Christchurch and Poole (10)"
+E06000059,Dorset,2020,NA,NA
+E06000059,Dorset,2019,4,Dorset (4)
+E06000059,Dorset,2018,4,Dorset (4)
+E06000059,Dorset,2017,1,Dorset (1)
+E06000059,Dorset,2016,NA,NA
+E06000059,Dorset,2015,3,Dorset (3)
+E06000059,Dorset,2014,3,Dorset (3)
+E06000059,Dorset,2013,2,Dorset (2)
+E06000060,Buckinghamshire,2020,1,Buckinghamshire (1)
+E06000060,Buckinghamshire,2019,4,Buckinghamshire (4)
+E06000060,Buckinghamshire,2018,3,Buckinghamshire (3)
+E06000060,Buckinghamshire,2017,4,Buckinghamshire (4)
+E06000060,Buckinghamshire,2016,2,Buckinghamshire (2)
+E06000060,Buckinghamshire,2015,NA,NA
+E06000060,Buckinghamshire,2014,NA,NA
+E06000060,Buckinghamshire,2013,4,Buckinghamshire (4)
+E06000061,North Northamptonshire,2020,3,North Northamptonshire (3)
+E06000061,North Northamptonshire,2019,5,North Northamptonshire (5)
+E06000061,North Northamptonshire,2018,NA,NA
+E06000061,North Northamptonshire,2017,NA,NA
+E06000061,North Northamptonshire,2016,1,North Northamptonshire (1)
+E06000061,North Northamptonshire,2015,2,North Northamptonshire (2)
+E06000061,North Northamptonshire,2014,1,North Northamptonshire (1)
+E06000061,North Northamptonshire,2013,2,North Northamptonshire (2)
+E06000062,West Northamptonshire ,2020,4,West Northamptonshire  (4)
+E06000062,West Northamptonshire ,2019,2,West Northamptonshire  (2)
+E06000062,West Northamptonshire ,2018,3,West Northamptonshire  (3)
+E06000062,West Northamptonshire ,2017,6,West Northamptonshire  (6)
+E06000062,West Northamptonshire ,2016,4,West Northamptonshire  (4)
+E06000062,West Northamptonshire ,2015,6,West Northamptonshire  (6)
+E06000062,West Northamptonshire ,2014,4,West Northamptonshire  (4)
+E06000062,West Northamptonshire ,2013,NA,NA
+E07000008,Cambridge,2020,1,Cambridge (1)
+E07000008,Cambridge,2019,3,Cambridge (3)
+E07000008,Cambridge,2018,2,Cambridge (2)
+E07000008,Cambridge,2017,1,Cambridge (1)
+E07000008,Cambridge,2016,4,Cambridge (4)
+E07000008,Cambridge,2015,2,Cambridge (2)
+E07000008,Cambridge,2014,3,Cambridge (3)
+E07000008,Cambridge,2013,1,Cambridge (1)
+E07000009,East Cambridgeshire,2020,NA,NA
+E07000009,East Cambridgeshire,2019,NA,NA
+E07000009,East Cambridgeshire,2018,1,East Cambridgeshire (1)
+E07000009,East Cambridgeshire,2017,NA,NA
+E07000009,East Cambridgeshire,2016,NA,NA
+E07000009,East Cambridgeshire,2015,NA,NA
+E07000009,East Cambridgeshire,2014,NA,NA
+E07000009,East Cambridgeshire,2013,1,East Cambridgeshire (1)
+E07000010,Fenland,2020,2,Fenland (2)
+E07000010,Fenland,2019,1,Fenland (1)
+E07000010,Fenland,2018,NA,NA
+E07000010,Fenland,2017,NA,NA
+E07000010,Fenland,2016,1,Fenland (1)
+E07000010,Fenland,2015,1,Fenland (1)
+E07000010,Fenland,2014,NA,NA
+E07000010,Fenland,2013,1,Fenland (1)
+E07000011,Huntingdonshire,2020,1,Huntingdonshire (1)
+E07000011,Huntingdonshire,2019,2,Huntingdonshire (2)
+E07000011,Huntingdonshire,2018,1,Huntingdonshire (1)
+E07000011,Huntingdonshire,2017,NA,NA
+E07000011,Huntingdonshire,2016,NA,NA
+E07000011,Huntingdonshire,2015,NA,NA
+E07000011,Huntingdonshire,2014,NA,NA
+E07000011,Huntingdonshire,2013,NA,NA
+E07000012,South Cambridgeshire,2020,1,South Cambridgeshire (1)
+E07000012,South Cambridgeshire,2019,NA,NA
+E07000012,South Cambridgeshire,2018,NA,NA
+E07000012,South Cambridgeshire,2017,1,South Cambridgeshire (1)
+E07000012,South Cambridgeshire,2016,NA,NA
+E07000012,South Cambridgeshire,2015,NA,NA
+E07000012,South Cambridgeshire,2014,NA,NA
+E07000012,South Cambridgeshire,2013,NA,NA
+E07000026,Allerdale,2020,1,Allerdale (1)
+E07000026,Allerdale,2019,NA,NA
+E07000026,Allerdale,2018,2,Allerdale (2)
+E07000026,Allerdale,2017,NA,NA
+E07000026,Allerdale,2016,1,Allerdale (1)
+E07000026,Allerdale,2015,2,Allerdale (2)
+E07000026,Allerdale,2014,NA,NA
+E07000026,Allerdale,2013,NA,NA
+E07000027,Barrow-in-Furness,2020,NA,NA
+E07000027,Barrow-in-Furness,2019,NA,NA
+E07000027,Barrow-in-Furness,2018,1,Barrow-in-Furness (1)
+E07000027,Barrow-in-Furness,2017,3,Barrow-in-Furness (3)
+E07000027,Barrow-in-Furness,2016,2,Barrow-in-Furness (2)
+E07000027,Barrow-in-Furness,2015,NA,NA
+E07000027,Barrow-in-Furness,2014,NA,NA
+E07000027,Barrow-in-Furness,2013,NA,NA
+E07000028,Carlisle,2020,NA,NA
+E07000028,Carlisle,2019,NA,NA
+E07000028,Carlisle,2018,1,Carlisle (1)
+E07000028,Carlisle,2017,NA,NA
+E07000028,Carlisle,2016,NA,NA
+E07000028,Carlisle,2015,NA,NA
+E07000028,Carlisle,2014,1,Carlisle (1)
+E07000028,Carlisle,2013,3,Carlisle (3)
+E07000029,Copeland,2020,NA,NA
+E07000029,Copeland,2019,1,Copeland (1)
+E07000029,Copeland,2018,NA,NA
+E07000029,Copeland,2017,1,Copeland (1)
+E07000029,Copeland,2016,NA,NA
+E07000029,Copeland,2015,NA,NA
+E07000029,Copeland,2014,NA,NA
+E07000029,Copeland,2013,2,Copeland (2)
+E07000030,Eden,2020,NA,NA
+E07000030,Eden,2019,1,Eden (1)
+E07000030,Eden,2018,NA,NA
+E07000030,Eden,2017,NA,NA
+E07000030,Eden,2016,1,Eden (1)
+E07000030,Eden,2015,NA,NA
+E07000030,Eden,2014,NA,NA
+E07000030,Eden,2013,1,Eden (1)
+E07000031,South Lakeland,2020,3,South Lakeland (3)
+E07000031,South Lakeland,2019,1,South Lakeland (1)
+E07000031,South Lakeland,2018,NA,NA
+E07000031,South Lakeland,2017,1,South Lakeland (1)
+E07000031,South Lakeland,2016,2,South Lakeland (2)
+E07000031,South Lakeland,2015,NA,NA
+E07000031,South Lakeland,2014,NA,NA
+E07000031,South Lakeland,2013,NA,NA
+E07000032,Amber Valley,2020,NA,NA
+E07000032,Amber Valley,2019,NA,NA
+E07000032,Amber Valley,2018,NA,NA
+E07000032,Amber Valley,2017,1,Amber Valley (1)
+E07000032,Amber Valley,2016,NA,NA
+E07000032,Amber Valley,2015,NA,NA
+E07000032,Amber Valley,2014,NA,NA
+E07000032,Amber Valley,2013,NA,NA
+E07000033,Bolsover,2020,NA,NA
+E07000033,Bolsover,2019,NA,NA
+E07000033,Bolsover,2018,NA,NA
+E07000033,Bolsover,2017,1,Bolsover (1)
+E07000033,Bolsover,2016,NA,NA
+E07000033,Bolsover,2015,NA,NA
+E07000033,Bolsover,2014,NA,NA
+E07000033,Bolsover,2013,1,Bolsover (1)
+E07000034,Chesterfield,2020,2,Chesterfield (2)
+E07000034,Chesterfield,2019,1,Chesterfield (1)
+E07000034,Chesterfield,2018,1,Chesterfield (1)
+E07000034,Chesterfield,2017,4,Chesterfield (4)
+E07000034,Chesterfield,2016,2,Chesterfield (2)
+E07000034,Chesterfield,2015,1,Chesterfield (1)
+E07000034,Chesterfield,2014,NA,NA
+E07000034,Chesterfield,2013,4,Chesterfield (4)
+E07000035,Derbyshire Dales,2020,1,Derbyshire Dales (1)
+E07000035,Derbyshire Dales,2019,1,Derbyshire Dales (1)
+E07000035,Derbyshire Dales,2018,NA,NA
+E07000035,Derbyshire Dales,2017,NA,NA
+E07000035,Derbyshire Dales,2016,NA,NA
+E07000035,Derbyshire Dales,2015,1,Derbyshire Dales (1)
+E07000035,Derbyshire Dales,2014,NA,NA
+E07000035,Derbyshire Dales,2013,NA,NA
+E07000036,Erewash,2020,NA,NA
+E07000036,Erewash,2019,NA,NA
+E07000036,Erewash,2018,1,Erewash (1)
+E07000036,Erewash,2017,1,Erewash (1)
+E07000036,Erewash,2016,NA,NA
+E07000036,Erewash,2015,NA,NA
+E07000036,Erewash,2014,1,Erewash (1)
+E07000036,Erewash,2013,NA,NA
+E07000037,High Peak,2020,NA,NA
+E07000037,High Peak,2019,NA,NA
+E07000037,High Peak,2018,NA,NA
+E07000037,High Peak,2017,NA,NA
+E07000037,High Peak,2016,NA,NA
+E07000037,High Peak,2015,NA,NA
+E07000037,High Peak,2014,NA,NA
+E07000037,High Peak,2013,NA,NA
+E07000038,North East Derbyshire,2020,NA,NA
+E07000038,North East Derbyshire,2019,NA,NA
+E07000038,North East Derbyshire,2018,NA,NA
+E07000038,North East Derbyshire,2017,NA,NA
+E07000038,North East Derbyshire,2016,NA,NA
+E07000038,North East Derbyshire,2015,NA,NA
+E07000038,North East Derbyshire,2014,NA,NA
+E07000038,North East Derbyshire,2013,NA,NA
+E07000039,South Derbyshire,2020,NA,NA
+E07000039,South Derbyshire,2019,NA,NA
+E07000039,South Derbyshire,2018,NA,NA
+E07000039,South Derbyshire,2017,NA,NA
+E07000039,South Derbyshire,2016,NA,NA
+E07000039,South Derbyshire,2015,NA,NA
+E07000039,South Derbyshire,2014,NA,NA
+E07000039,South Derbyshire,2013,NA,NA
+E07000040,East Devon,2020,NA,NA
+E07000040,East Devon,2019,1,East Devon (1)
+E07000040,East Devon,2018,NA,NA
+E07000040,East Devon,2017,NA,NA
+E07000040,East Devon,2016,1,East Devon (1)
+E07000040,East Devon,2015,1,East Devon (1)
+E07000040,East Devon,2014,1,East Devon (1)
+E07000040,East Devon,2013,NA,NA
+E07000041,Exeter,2020,4,Exeter (4)
+E07000041,Exeter,2019,5,Exeter (5)
+E07000041,Exeter,2018,2,Exeter (2)
+E07000041,Exeter,2017,NA,NA
+E07000041,Exeter,2016,3,Exeter (3)
+E07000041,Exeter,2015,1,Exeter (1)
+E07000041,Exeter,2014,4,Exeter (4)
+E07000041,Exeter,2013,NA,NA
+E07000042,Mid Devon,2020,NA,NA
+E07000042,Mid Devon,2019,NA,NA
+E07000042,Mid Devon,2018,1,Mid Devon (1)
+E07000042,Mid Devon,2017,NA,NA
+E07000042,Mid Devon,2016,NA,NA
+E07000042,Mid Devon,2015,2,Mid Devon (2)
+E07000042,Mid Devon,2014,NA,NA
+E07000042,Mid Devon,2013,NA,NA
+E07000043,North Devon,2020,NA,NA
+E07000043,North Devon,2019,2,North Devon (2)
+E07000043,North Devon,2018,1,North Devon (1)
+E07000043,North Devon,2017,NA,NA
+E07000043,North Devon,2016,1,North Devon (1)
+E07000043,North Devon,2015,4,North Devon (4)
+E07000043,North Devon,2014,NA,NA
+E07000043,North Devon,2013,NA,NA
+E07000044,South Hams,2020,NA,NA
+E07000044,South Hams,2019,NA,NA
+E07000044,South Hams,2018,NA,NA
+E07000044,South Hams,2017,NA,NA
+E07000044,South Hams,2016,NA,NA
+E07000044,South Hams,2015,1,South Hams (1)
+E07000044,South Hams,2014,NA,NA
+E07000044,South Hams,2013,1,South Hams (1)
+E07000045,Teignbridge,2020,NA,NA
+E07000045,Teignbridge,2019,NA,NA
+E07000045,Teignbridge,2018,NA,NA
+E07000045,Teignbridge,2017,NA,NA
+E07000045,Teignbridge,2016,2,Teignbridge (2)
+E07000045,Teignbridge,2015,NA,NA
+E07000045,Teignbridge,2014,2,Teignbridge (2)
+E07000045,Teignbridge,2013,1,Teignbridge (1)
+E07000046,Torridge,2020,NA,NA
+E07000046,Torridge,2019,NA,NA
+E07000046,Torridge,2018,NA,NA
+E07000046,Torridge,2017,NA,NA
+E07000046,Torridge,2016,NA,NA
+E07000046,Torridge,2015,NA,NA
+E07000046,Torridge,2014,1,Torridge (1)
+E07000046,Torridge,2013,NA,NA
+E07000047,West Devon,2020,NA,NA
+E07000047,West Devon,2019,NA,NA
+E07000047,West Devon,2018,NA,NA
+E07000047,West Devon,2017,NA,NA
+E07000047,West Devon,2016,NA,NA
+E07000047,West Devon,2015,NA,NA
+E07000047,West Devon,2014,NA,NA
+E07000047,West Devon,2013,NA,NA
+E07000061,Eastbourne,2020,1,Eastbourne (1)
+E07000061,Eastbourne,2019,NA,NA
+E07000061,Eastbourne,2018,2,Eastbourne (2)
+E07000061,Eastbourne,2017,4,Eastbourne (4)
+E07000061,Eastbourne,2016,3,Eastbourne (3)
+E07000061,Eastbourne,2015,NA,NA
+E07000061,Eastbourne,2014,NA,NA
+E07000061,Eastbourne,2013,1,Eastbourne (1)
+E07000062,Hastings,2020,1,Hastings (1)
+E07000062,Hastings,2019,2,Hastings (2)
+E07000062,Hastings,2018,1,Hastings (1)
+E07000062,Hastings,2017,NA,NA
+E07000062,Hastings,2016,1,Hastings (1)
+E07000062,Hastings,2015,1,Hastings (1)
+E07000062,Hastings,2014,1,Hastings (1)
+E07000062,Hastings,2013,1,Hastings (1)
+E07000063,Lewes,2020,NA,NA
+E07000063,Lewes,2019,NA,NA
+E07000063,Lewes,2018,1,Lewes (1)
+E07000063,Lewes,2017,NA,NA
+E07000063,Lewes,2016,NA,NA
+E07000063,Lewes,2015,NA,NA
+E07000063,Lewes,2014,NA,NA
+E07000063,Lewes,2013,NA,NA
+E07000064,Rother,2020,NA,NA
+E07000064,Rother,2019,NA,NA
+E07000064,Rother,2018,NA,NA
+E07000064,Rother,2017,NA,NA
+E07000064,Rother,2016,NA,NA
+E07000064,Rother,2015,NA,NA
+E07000064,Rother,2014,NA,NA
+E07000064,Rother,2013,NA,NA
+E07000065,Wealden,2020,NA,NA
+E07000065,Wealden,2019,NA,NA
+E07000065,Wealden,2018,1,Wealden (1)
+E07000065,Wealden,2017,NA,NA
+E07000065,Wealden,2016,NA,NA
+E07000065,Wealden,2015,1,Wealden (1)
+E07000065,Wealden,2014,1,Wealden (1)
+E07000065,Wealden,2013,NA,NA
+E07000066,Basildon,2020,1,Basildon (1)
+E07000066,Basildon,2019,NA,NA
+E07000066,Basildon,2018,1,Basildon (1)
+E07000066,Basildon,2017,NA,NA
+E07000066,Basildon,2016,1,Basildon (1)
+E07000066,Basildon,2015,NA,NA
+E07000066,Basildon,2014,NA,NA
+E07000066,Basildon,2013,NA,NA
+E07000067,Braintree,2020,NA,NA
+E07000067,Braintree,2019,NA,NA
+E07000067,Braintree,2018,1,Braintree (1)
+E07000067,Braintree,2017,NA,NA
+E07000067,Braintree,2016,NA,NA
+E07000067,Braintree,2015,NA,NA
+E07000067,Braintree,2014,NA,NA
+E07000067,Braintree,2013,NA,NA
+E07000068,Brentwood,2020,NA,NA
+E07000068,Brentwood,2019,1,Brentwood (1)
+E07000068,Brentwood,2018,NA,NA
+E07000068,Brentwood,2017,1,Brentwood (1)
+E07000068,Brentwood,2016,NA,NA
+E07000068,Brentwood,2015,1,Brentwood (1)
+E07000068,Brentwood,2014,NA,NA
+E07000068,Brentwood,2013,NA,NA
+E07000069,Castle Point,2020,NA,NA
+E07000069,Castle Point,2019,NA,NA
+E07000069,Castle Point,2018,NA,NA
+E07000069,Castle Point,2017,NA,NA
+E07000069,Castle Point,2016,NA,NA
+E07000069,Castle Point,2015,NA,NA
+E07000069,Castle Point,2014,2,Castle Point (2)
+E07000069,Castle Point,2013,NA,NA
+E07000070,Chelmsford,2020,1,Chelmsford (1)
+E07000070,Chelmsford,2019,1,Chelmsford (1)
+E07000070,Chelmsford,2018,1,Chelmsford (1)
+E07000070,Chelmsford,2017,NA,NA
+E07000070,Chelmsford,2016,NA,NA
+E07000070,Chelmsford,2015,NA,NA
+E07000070,Chelmsford,2014,NA,NA
+E07000070,Chelmsford,2013,2,Chelmsford (2)
+E07000071,Colchester,2020,3,Colchester (3)
+E07000071,Colchester,2019,3,Colchester (3)
+E07000071,Colchester,2018,2,Colchester (2)
+E07000071,Colchester,2017,1,Colchester (1)
+E07000071,Colchester,2016,NA,NA
+E07000071,Colchester,2015,1,Colchester (1)
+E07000071,Colchester,2014,1,Colchester (1)
+E07000071,Colchester,2013,NA,NA
+E07000072,Epping Forest,2020,NA,NA
+E07000072,Epping Forest,2019,NA,NA
+E07000072,Epping Forest,2018,NA,NA
+E07000072,Epping Forest,2017,NA,NA
+E07000072,Epping Forest,2016,NA,NA
+E07000072,Epping Forest,2015,NA,NA
+E07000072,Epping Forest,2014,1,Epping Forest (1)
+E07000072,Epping Forest,2013,2,Epping Forest (2)
+E07000073,Harlow,2020,NA,NA
+E07000073,Harlow,2019,NA,NA
+E07000073,Harlow,2018,1,Harlow (1)
+E07000073,Harlow,2017,NA,NA
+E07000073,Harlow,2016,NA,NA
+E07000073,Harlow,2015,NA,NA
+E07000073,Harlow,2014,2,Harlow (2)
+E07000073,Harlow,2013,NA,NA
+E07000074,Maldon,2020,NA,NA
+E07000074,Maldon,2019,NA,NA
+E07000074,Maldon,2018,NA,NA
+E07000074,Maldon,2017,NA,NA
+E07000074,Maldon,2016,NA,NA
+E07000074,Maldon,2015,NA,NA
+E07000074,Maldon,2014,1,Maldon (1)
+E07000074,Maldon,2013,NA,NA
+E07000075,Rochford,2020,NA,NA
+E07000075,Rochford,2019,1,Rochford (1)
+E07000075,Rochford,2018,NA,NA
+E07000075,Rochford,2017,NA,NA
+E07000075,Rochford,2016,NA,NA
+E07000075,Rochford,2015,NA,NA
+E07000075,Rochford,2014,NA,NA
+E07000075,Rochford,2013,NA,NA
+E07000076,Tendring,2020,NA,NA
+E07000076,Tendring,2019,1,Tendring (1)
+E07000076,Tendring,2018,NA,NA
+E07000076,Tendring,2017,NA,NA
+E07000076,Tendring,2016,1,Tendring (1)
+E07000076,Tendring,2015,1,Tendring (1)
+E07000076,Tendring,2014,1,Tendring (1)
+E07000076,Tendring,2013,NA,NA
+E07000077,Uttlesford,2020,NA,NA
+E07000077,Uttlesford,2019,NA,NA
+E07000077,Uttlesford,2018,NA,NA
+E07000077,Uttlesford,2017,NA,NA
+E07000077,Uttlesford,2016,NA,NA
+E07000077,Uttlesford,2015,NA,NA
+E07000077,Uttlesford,2014,NA,NA
+E07000077,Uttlesford,2013,NA,NA
+E07000078,Cheltenham,2020,2,Cheltenham (2)
+E07000078,Cheltenham,2019,2,Cheltenham (2)
+E07000078,Cheltenham,2018,3,Cheltenham (3)
+E07000078,Cheltenham,2017,1,Cheltenham (1)
+E07000078,Cheltenham,2016,2,Cheltenham (2)
+E07000078,Cheltenham,2015,NA,NA
+E07000078,Cheltenham,2014,NA,NA
+E07000078,Cheltenham,2013,1,Cheltenham (1)
+E07000079,Cotswold,2020,NA,NA
+E07000079,Cotswold,2019,2,Cotswold (2)
+E07000079,Cotswold,2018,NA,NA
+E07000079,Cotswold,2017,1,Cotswold (1)
+E07000079,Cotswold,2016,NA,NA
+E07000079,Cotswold,2015,NA,NA
+E07000079,Cotswold,2014,NA,NA
+E07000079,Cotswold,2013,NA,NA
+E07000080,Forest of Dean,2020,NA,NA
+E07000080,Forest of Dean,2019,NA,NA
+E07000080,Forest of Dean,2018,NA,NA
+E07000080,Forest of Dean,2017,NA,NA
+E07000080,Forest of Dean,2016,NA,NA
+E07000080,Forest of Dean,2015,NA,NA
+E07000080,Forest of Dean,2014,NA,NA
+E07000080,Forest of Dean,2013,NA,NA
+E07000081,Gloucester,2020,3,Gloucester (3)
+E07000081,Gloucester,2019,6,Gloucester (6)
+E07000081,Gloucester,2018,NA,NA
+E07000081,Gloucester,2017,3,Gloucester (3)
+E07000081,Gloucester,2016,2,Gloucester (2)
+E07000081,Gloucester,2015,1,Gloucester (1)
+E07000081,Gloucester,2014,1,Gloucester (1)
+E07000081,Gloucester,2013,1,Gloucester (1)
+E07000082,Stroud,2020,NA,NA
+E07000082,Stroud,2019,1,Stroud (1)
+E07000082,Stroud,2018,1,Stroud (1)
+E07000082,Stroud,2017,NA,NA
+E07000082,Stroud,2016,NA,NA
+E07000082,Stroud,2015,NA,NA
+E07000082,Stroud,2014,NA,NA
+E07000082,Stroud,2013,1,Stroud (1)
+E07000083,Tewkesbury,2020,NA,NA
+E07000083,Tewkesbury,2019,NA,NA
+E07000083,Tewkesbury,2018,NA,NA
+E07000083,Tewkesbury,2017,NA,NA
+E07000083,Tewkesbury,2016,NA,NA
+E07000083,Tewkesbury,2015,NA,NA
+E07000083,Tewkesbury,2014,NA,NA
+E07000083,Tewkesbury,2013,1,Tewkesbury (1)
+E07000084,Basingstoke and Deane,2020,NA,NA
+E07000084,Basingstoke and Deane,2019,2,Basingstoke and Deane (2)
+E07000084,Basingstoke and Deane,2018,2,Basingstoke and Deane (2)
+E07000084,Basingstoke and Deane,2017,1,Basingstoke and Deane (1)
+E07000084,Basingstoke and Deane,2016,1,Basingstoke and Deane (1)
+E07000084,Basingstoke and Deane,2015,1,Basingstoke and Deane (1)
+E07000084,Basingstoke and Deane,2014,2,Basingstoke and Deane (2)
+E07000084,Basingstoke and Deane,2013,NA,NA
+E07000085,East Hampshire,2020,NA,NA
+E07000085,East Hampshire,2019,NA,NA
+E07000085,East Hampshire,2018,NA,NA
+E07000085,East Hampshire,2017,NA,NA
+E07000085,East Hampshire,2016,NA,NA
+E07000085,East Hampshire,2015,NA,NA
+E07000085,East Hampshire,2014,NA,NA
+E07000085,East Hampshire,2013,NA,NA
+E07000086,Eastleigh,2020,NA,NA
+E07000086,Eastleigh,2019,NA,NA
+E07000086,Eastleigh,2018,1,Eastleigh (1)
+E07000086,Eastleigh,2017,NA,NA
+E07000086,Eastleigh,2016,NA,NA
+E07000086,Eastleigh,2015,NA,NA
+E07000086,Eastleigh,2014,NA,NA
+E07000086,Eastleigh,2013,NA,NA
+E07000087,Fareham,2020,NA,NA
+E07000087,Fareham,2019,NA,NA
+E07000087,Fareham,2018,NA,NA
+E07000087,Fareham,2017,1,Fareham (1)
+E07000087,Fareham,2016,NA,NA
+E07000087,Fareham,2015,NA,NA
+E07000087,Fareham,2014,1,Fareham (1)
+E07000087,Fareham,2013,2,Fareham (2)
+E07000088,Gosport,2020,NA,NA
+E07000088,Gosport,2019,1,Gosport (1)
+E07000088,Gosport,2018,2,Gosport (2)
+E07000088,Gosport,2017,1,Gosport (1)
+E07000088,Gosport,2016,NA,NA
+E07000088,Gosport,2015,1,Gosport (1)
+E07000088,Gosport,2014,NA,NA
+E07000088,Gosport,2013,NA,NA
+E07000089,Hart,2020,NA,NA
+E07000089,Hart,2019,NA,NA
+E07000089,Hart,2018,1,Hart (1)
+E07000089,Hart,2017,NA,NA
+E07000089,Hart,2016,NA,NA
+E07000089,Hart,2015,NA,NA
+E07000089,Hart,2014,NA,NA
+E07000089,Hart,2013,NA,NA
+E07000090,Havant,2020,NA,NA
+E07000090,Havant,2019,2,Havant (2)
+E07000090,Havant,2018,NA,NA
+E07000090,Havant,2017,NA,NA
+E07000090,Havant,2016,1,Havant (1)
+E07000090,Havant,2015,NA,NA
+E07000090,Havant,2014,2,Havant (2)
+E07000090,Havant,2013,NA,NA
+E07000091,New Forest,2020,NA,NA
+E07000091,New Forest,2019,NA,NA
+E07000091,New Forest,2018,NA,NA
+E07000091,New Forest,2017,NA,NA
+E07000091,New Forest,2016,NA,NA
+E07000091,New Forest,2015,NA,NA
+E07000091,New Forest,2014,NA,NA
+E07000091,New Forest,2013,NA,NA
+E07000092,Rushmoor,2020,1,Rushmoor (1)
+E07000092,Rushmoor,2019,NA,NA
+E07000092,Rushmoor,2018,NA,NA
+E07000092,Rushmoor,2017,NA,NA
+E07000092,Rushmoor,2016,NA,NA
+E07000092,Rushmoor,2015,NA,NA
+E07000092,Rushmoor,2014,NA,NA
+E07000092,Rushmoor,2013,NA,NA
+E07000093,Test Valley,2020,NA,NA
+E07000093,Test Valley,2019,NA,NA
+E07000093,Test Valley,2018,NA,NA
+E07000093,Test Valley,2017,NA,NA
+E07000093,Test Valley,2016,3,Test Valley (3)
+E07000093,Test Valley,2015,NA,NA
+E07000093,Test Valley,2014,2,Test Valley (2)
+E07000093,Test Valley,2013,NA,NA
+E07000094,Winchester,2020,NA,NA
+E07000094,Winchester,2019,NA,NA
+E07000094,Winchester,2018,1,Winchester (1)
+E07000094,Winchester,2017,3,Winchester (3)
+E07000094,Winchester,2016,3,Winchester (3)
+E07000094,Winchester,2015,1,Winchester (1)
+E07000094,Winchester,2014,2,Winchester (2)
+E07000094,Winchester,2013,2,Winchester (2)
+E07000095,Broxbourne,2020,NA,NA
+E07000095,Broxbourne,2019,NA,NA
+E07000095,Broxbourne,2018,NA,NA
+E07000095,Broxbourne,2017,1,Broxbourne (1)
+E07000095,Broxbourne,2016,NA,NA
+E07000095,Broxbourne,2015,NA,NA
+E07000095,Broxbourne,2014,NA,NA
+E07000095,Broxbourne,2013,NA,NA
+E07000096,Dacorum,2020,1,Dacorum (1)
+E07000096,Dacorum,2019,NA,NA
+E07000096,Dacorum,2018,1,Dacorum (1)
+E07000096,Dacorum,2017,NA,NA
+E07000096,Dacorum,2016,NA,NA
+E07000096,Dacorum,2015,1,Dacorum (1)
+E07000096,Dacorum,2014,NA,NA
+E07000096,Dacorum,2013,1,Dacorum (1)
+E07000098,Hertsmere,2020,NA,NA
+E07000098,Hertsmere,2019,NA,NA
+E07000098,Hertsmere,2018,NA,NA
+E07000098,Hertsmere,2017,NA,NA
+E07000098,Hertsmere,2016,NA,NA
+E07000098,Hertsmere,2015,NA,NA
+E07000098,Hertsmere,2014,NA,NA
+E07000098,Hertsmere,2013,NA,NA
+E07000099,North Hertfordshire,2020,NA,NA
+E07000099,North Hertfordshire,2019,NA,NA
+E07000099,North Hertfordshire,2018,1,North Hertfordshire (1)
+E07000099,North Hertfordshire,2017,NA,NA
+E07000099,North Hertfordshire,2016,NA,NA
+E07000099,North Hertfordshire,2015,1,North Hertfordshire (1)
+E07000099,North Hertfordshire,2014,NA,NA
+E07000099,North Hertfordshire,2013,NA,NA
+E07000102,Three Rivers,2020,NA,NA
+E07000102,Three Rivers,2019,NA,NA
+E07000102,Three Rivers,2018,1,Three Rivers (1)
+E07000102,Three Rivers,2017,1,Three Rivers (1)
+E07000102,Three Rivers,2016,NA,NA
+E07000102,Three Rivers,2015,NA,NA
+E07000102,Three Rivers,2014,1,Three Rivers (1)
+E07000102,Three Rivers,2013,NA,NA
+E07000103,Watford,2020,3,Watford (3)
+E07000103,Watford,2019,3,Watford (3)
+E07000103,Watford,2018,3,Watford (3)
+E07000103,Watford,2017,2,Watford (2)
+E07000103,Watford,2016,2,Watford (2)
+E07000103,Watford,2015,2,Watford (2)
+E07000103,Watford,2014,3,Watford (3)
+E07000103,Watford,2013,4,Watford (4)
+E07000105,Ashford,2020,NA,NA
+E07000105,Ashford,2019,NA,NA
+E07000105,Ashford,2018,2,Ashford (2)
+E07000105,Ashford,2017,2,Ashford (2)
+E07000105,Ashford,2016,1,Ashford (1)
+E07000105,Ashford,2015,NA,NA
+E07000105,Ashford,2014,NA,NA
+E07000105,Ashford,2013,1,Ashford (1)
+E07000106,Canterbury,2020,2,Canterbury (2)
+E07000106,Canterbury,2019,1,Canterbury (1)
+E07000106,Canterbury,2018,1,Canterbury (1)
+E07000106,Canterbury,2017,7,Canterbury (7)
+E07000106,Canterbury,2016,4,Canterbury (4)
+E07000106,Canterbury,2015,3,Canterbury (3)
+E07000106,Canterbury,2014,2,Canterbury (2)
+E07000106,Canterbury,2013,NA,NA
+E07000107,Dartford,2020,NA,NA
+E07000107,Dartford,2019,1,Dartford (1)
+E07000107,Dartford,2018,NA,NA
+E07000107,Dartford,2017,1,Dartford (1)
+E07000107,Dartford,2016,1,Dartford (1)
+E07000107,Dartford,2015,2,Dartford (2)
+E07000107,Dartford,2014,NA,NA
+E07000107,Dartford,2013,2,Dartford (2)
+E07000108,Dover,2020,NA,NA
+E07000108,Dover,2019,5,Dover (5)
+E07000108,Dover,2018,3,Dover (3)
+E07000108,Dover,2017,NA,NA
+E07000108,Dover,2016,NA,NA
+E07000108,Dover,2015,NA,NA
+E07000108,Dover,2014,2,Dover (2)
+E07000108,Dover,2013,1,Dover (1)
+E07000109,Gravesham,2020,NA,NA
+E07000109,Gravesham,2019,NA,NA
+E07000109,Gravesham,2018,NA,NA
+E07000109,Gravesham,2017,NA,NA
+E07000109,Gravesham,2016,1,Gravesham (1)
+E07000109,Gravesham,2015,NA,NA
+E07000109,Gravesham,2014,1,Gravesham (1)
+E07000109,Gravesham,2013,NA,NA
+E07000110,Maidstone,2020,NA,NA
+E07000110,Maidstone,2019,3,Maidstone (3)
+E07000110,Maidstone,2018,1,Maidstone (1)
+E07000110,Maidstone,2017,1,Maidstone (1)
+E07000110,Maidstone,2016,1,Maidstone (1)
+E07000110,Maidstone,2015,1,Maidstone (1)
+E07000110,Maidstone,2014,1,Maidstone (1)
+E07000110,Maidstone,2013,1,Maidstone (1)
+E07000111,Sevenoaks,2020,NA,NA
+E07000111,Sevenoaks,2019,NA,NA
+E07000111,Sevenoaks,2018,NA,NA
+E07000111,Sevenoaks,2017,NA,NA
+E07000111,Sevenoaks,2016,NA,NA
+E07000111,Sevenoaks,2015,NA,NA
+E07000111,Sevenoaks,2014,NA,NA
+E07000111,Sevenoaks,2013,NA,NA
+E07000112,Folkestone and Hythe,2020,2,Folkestone and Hythe (2)
+E07000112,Folkestone and Hythe,2019,4,Folkestone and Hythe (4)
+E07000112,Folkestone and Hythe,2018,NA,NA
+E07000112,Folkestone and Hythe,2017,1,Folkestone and Hythe (1)
+E07000112,Folkestone and Hythe,2016,1,Folkestone and Hythe (1)
+E07000112,Folkestone and Hythe,2015,2,Folkestone and Hythe (2)
+E07000112,Folkestone and Hythe,2014,NA,NA
+E07000112,Folkestone and Hythe,2013,NA,NA
+E07000113,Swale,2020,NA,NA
+E07000113,Swale,2019,1,Swale (1)
+E07000113,Swale,2018,2,Swale (2)
+E07000113,Swale,2017,NA,NA
+E07000113,Swale,2016,NA,NA
+E07000113,Swale,2015,2,Swale (2)
+E07000113,Swale,2014,1,Swale (1)
+E07000113,Swale,2013,2,Swale (2)
+E07000114,Thanet,2020,3,Thanet (3)
+E07000114,Thanet,2019,1,Thanet (1)
+E07000114,Thanet,2018,4,Thanet (4)
+E07000114,Thanet,2017,NA,NA
+E07000114,Thanet,2016,2,Thanet (2)
+E07000114,Thanet,2015,3,Thanet (3)
+E07000114,Thanet,2014,1,Thanet (1)
+E07000114,Thanet,2013,1,Thanet (1)
+E07000115,Tonbridge and Malling,2020,NA,NA
+E07000115,Tonbridge and Malling,2019,NA,NA
+E07000115,Tonbridge and Malling,2018,NA,NA
+E07000115,Tonbridge and Malling,2017,NA,NA
+E07000115,Tonbridge and Malling,2016,NA,NA
+E07000115,Tonbridge and Malling,2015,2,Tonbridge and Malling (2)
+E07000115,Tonbridge and Malling,2014,2,Tonbridge and Malling (2)
+E07000115,Tonbridge and Malling,2013,1,Tonbridge and Malling (1)
+E07000116,Tunbridge Wells,2020,NA,NA
+E07000116,Tunbridge Wells,2019,3,Tunbridge Wells (3)
+E07000116,Tunbridge Wells,2018,NA,NA
+E07000116,Tunbridge Wells,2017,2,Tunbridge Wells (2)
+E07000116,Tunbridge Wells,2016,NA,NA
+E07000116,Tunbridge Wells,2015,1,Tunbridge Wells (1)
+E07000116,Tunbridge Wells,2014,1,Tunbridge Wells (1)
+E07000116,Tunbridge Wells,2013,NA,NA
+E07000117,Burnley,2020,NA,NA
+E07000117,Burnley,2019,NA,NA
+E07000117,Burnley,2018,1,Burnley (1)
+E07000117,Burnley,2017,NA,NA
+E07000117,Burnley,2016,1,Burnley (1)
+E07000117,Burnley,2015,1,Burnley (1)
+E07000117,Burnley,2014,1,Burnley (1)
+E07000117,Burnley,2013,NA,NA
+E07000118,Chorley,2020,NA,NA
+E07000118,Chorley,2019,NA,NA
+E07000118,Chorley,2018,NA,NA
+E07000118,Chorley,2017,NA,NA
+E07000118,Chorley,2016,NA,NA
+E07000118,Chorley,2015,1,Chorley (1)
+E07000118,Chorley,2014,2,Chorley (2)
+E07000118,Chorley,2013,NA,NA
+E07000119,Fylde,2020,NA,NA
+E07000119,Fylde,2019,2,Fylde (2)
+E07000119,Fylde,2018,NA,NA
+E07000119,Fylde,2017,NA,NA
+E07000119,Fylde,2016,NA,NA
+E07000119,Fylde,2015,NA,NA
+E07000119,Fylde,2014,NA,NA
+E07000119,Fylde,2013,NA,NA
+E07000120,Hyndburn,2020,NA,NA
+E07000120,Hyndburn,2019,NA,NA
+E07000120,Hyndburn,2018,NA,NA
+E07000120,Hyndburn,2017,NA,NA
+E07000120,Hyndburn,2016,NA,NA
+E07000120,Hyndburn,2015,NA,NA
+E07000120,Hyndburn,2014,NA,NA
+E07000120,Hyndburn,2013,NA,NA
+E07000121,Lancaster,2020,NA,NA
+E07000121,Lancaster,2019,NA,NA
+E07000121,Lancaster,2018,NA,NA
+E07000121,Lancaster,2017,NA,NA
+E07000121,Lancaster,2016,NA,NA
+E07000121,Lancaster,2015,NA,NA
+E07000121,Lancaster,2014,1,Lancaster (1)
+E07000121,Lancaster,2013,NA,NA
+E07000122,Pendle,2020,NA,NA
+E07000122,Pendle,2019,NA,NA
+E07000122,Pendle,2018,NA,NA
+E07000122,Pendle,2017,1,Pendle (1)
+E07000122,Pendle,2016,NA,NA
+E07000122,Pendle,2015,1,Pendle (1)
+E07000122,Pendle,2014,NA,NA
+E07000122,Pendle,2013,NA,NA
+E07000123,Preston,2020,4,Preston (4)
+E07000123,Preston,2019,3,Preston (3)
+E07000123,Preston,2018,4,Preston (4)
+E07000123,Preston,2017,2,Preston (2)
+E07000123,Preston,2016,NA,NA
+E07000123,Preston,2015,1,Preston (1)
+E07000123,Preston,2014,3,Preston (3)
+E07000123,Preston,2013,2,Preston (2)
+E07000124,Ribble Valley,2020,NA,NA
+E07000124,Ribble Valley,2019,NA,NA
+E07000124,Ribble Valley,2018,1,Ribble Valley (1)
+E07000124,Ribble Valley,2017,NA,NA
+E07000124,Ribble Valley,2016,NA,NA
+E07000124,Ribble Valley,2015,NA,NA
+E07000124,Ribble Valley,2014,NA,NA
+E07000124,Ribble Valley,2013,NA,NA
+E07000125,Rossendale,2020,NA,NA
+E07000125,Rossendale,2019,NA,NA
+E07000125,Rossendale,2018,NA,NA
+E07000125,Rossendale,2017,NA,NA
+E07000125,Rossendale,2016,NA,NA
+E07000125,Rossendale,2015,NA,NA
+E07000125,Rossendale,2014,NA,NA
+E07000125,Rossendale,2013,NA,NA
+E07000126,South Ribble,2020,1,South Ribble (1)
+E07000126,South Ribble,2019,NA,NA
+E07000126,South Ribble,2018,NA,NA
+E07000126,South Ribble,2017,NA,NA
+E07000126,South Ribble,2016,1,South Ribble (1)
+E07000126,South Ribble,2015,NA,NA
+E07000126,South Ribble,2014,NA,NA
+E07000126,South Ribble,2013,NA,NA
+E07000127,West Lancashire,2020,NA,NA
+E07000127,West Lancashire,2019,NA,NA
+E07000127,West Lancashire,2018,1,West Lancashire (1)
+E07000127,West Lancashire,2017,NA,NA
+E07000127,West Lancashire,2016,NA,NA
+E07000127,West Lancashire,2015,1,West Lancashire (1)
+E07000127,West Lancashire,2014,NA,NA
+E07000127,West Lancashire,2013,NA,NA
+E07000128,Wyre,2020,NA,NA
+E07000128,Wyre,2019,NA,NA
+E07000128,Wyre,2018,NA,NA
+E07000128,Wyre,2017,1,Wyre (1)
+E07000128,Wyre,2016,NA,NA
+E07000128,Wyre,2015,NA,NA
+E07000128,Wyre,2014,NA,NA
+E07000128,Wyre,2013,NA,NA
+E07000129,Blaby,2020,NA,NA
+E07000129,Blaby,2019,NA,NA
+E07000129,Blaby,2018,NA,NA
+E07000129,Blaby,2017,NA,NA
+E07000129,Blaby,2016,NA,NA
+E07000129,Blaby,2015,NA,NA
+E07000129,Blaby,2014,NA,NA
+E07000129,Blaby,2013,NA,NA
+E07000130,Charnwood,2020,2,Charnwood (2)
+E07000130,Charnwood,2019,1,Charnwood (1)
+E07000130,Charnwood,2018,NA,NA
+E07000130,Charnwood,2017,1,Charnwood (1)
+E07000130,Charnwood,2016,NA,NA
+E07000130,Charnwood,2015,NA,NA
+E07000130,Charnwood,2014,NA,NA
+E07000130,Charnwood,2013,NA,NA
+E07000131,Harborough,2020,NA,NA
+E07000131,Harborough,2019,NA,NA
+E07000131,Harborough,2018,NA,NA
+E07000131,Harborough,2017,NA,NA
+E07000131,Harborough,2016,NA,NA
+E07000131,Harborough,2015,NA,NA
+E07000131,Harborough,2014,NA,NA
+E07000131,Harborough,2013,NA,NA
+E07000132,Hinckley and Bosworth,2020,NA,NA
+E07000132,Hinckley and Bosworth,2019,NA,NA
+E07000132,Hinckley and Bosworth,2018,NA,NA
+E07000132,Hinckley and Bosworth,2017,NA,NA
+E07000132,Hinckley and Bosworth,2016,NA,NA
+E07000132,Hinckley and Bosworth,2015,NA,NA
+E07000132,Hinckley and Bosworth,2014,NA,NA
+E07000132,Hinckley and Bosworth,2013,1,Hinckley and Bosworth (1)
+E07000133,Melton,2020,NA,NA
+E07000133,Melton,2019,NA,NA
+E07000133,Melton,2018,NA,NA
+E07000133,Melton,2017,NA,NA
+E07000133,Melton,2016,NA,NA
+E07000133,Melton,2015,NA,NA
+E07000133,Melton,2014,NA,NA
+E07000133,Melton,2013,NA,NA
+E07000134,North West Leicestershire,2020,NA,NA
+E07000134,North West Leicestershire,2019,NA,NA
+E07000134,North West Leicestershire,2018,NA,NA
+E07000134,North West Leicestershire,2017,NA,NA
+E07000134,North West Leicestershire,2016,1,North West Leicestershire (1)
+E07000134,North West Leicestershire,2015,1,North West Leicestershire (1)
+E07000134,North West Leicestershire,2014,NA,NA
+E07000134,North West Leicestershire,2013,NA,NA
+E07000135,Oadby and Wigston,2020,NA,NA
+E07000135,Oadby and Wigston,2019,NA,NA
+E07000135,Oadby and Wigston,2018,NA,NA
+E07000135,Oadby and Wigston,2017,NA,NA
+E07000135,Oadby and Wigston,2016,NA,NA
+E07000135,Oadby and Wigston,2015,NA,NA
+E07000135,Oadby and Wigston,2014,NA,NA
+E07000135,Oadby and Wigston,2013,NA,NA
+E07000136,Boston,2020,1,Boston (1)
+E07000136,Boston,2019,2,Boston (2)
+E07000136,Boston,2018,1,Boston (1)
+E07000136,Boston,2017,1,Boston (1)
+E07000136,Boston,2016,NA,NA
+E07000136,Boston,2015,1,Boston (1)
+E07000136,Boston,2014,NA,NA
+E07000136,Boston,2013,1,Boston (1)
+E07000137,East Lindsey,2020,1,East Lindsey (1)
+E07000137,East Lindsey,2019,1,East Lindsey (1)
+E07000137,East Lindsey,2018,1,East Lindsey (1)
+E07000137,East Lindsey,2017,NA,NA
+E07000137,East Lindsey,2016,NA,NA
+E07000137,East Lindsey,2015,2,East Lindsey (2)
+E07000137,East Lindsey,2014,NA,NA
+E07000137,East Lindsey,2013,1,East Lindsey (1)
+E07000138,Lincoln,2020,2,Lincoln (2)
+E07000138,Lincoln,2019,6,Lincoln (6)
+E07000138,Lincoln,2018,6,Lincoln (6)
+E07000138,Lincoln,2017,1,Lincoln (1)
+E07000138,Lincoln,2016,3,Lincoln (3)
+E07000138,Lincoln,2015,NA,NA
+E07000138,Lincoln,2014,2,Lincoln (2)
+E07000138,Lincoln,2013,1,Lincoln (1)
+E07000139,North Kesteven,2020,NA,NA
+E07000139,North Kesteven,2019,1,North Kesteven (1)
+E07000139,North Kesteven,2018,1,North Kesteven (1)
+E07000139,North Kesteven,2017,NA,NA
+E07000139,North Kesteven,2016,1,North Kesteven (1)
+E07000139,North Kesteven,2015,NA,NA
+E07000139,North Kesteven,2014,NA,NA
+E07000139,North Kesteven,2013,NA,NA
+E07000140,South Holland,2020,NA,NA
+E07000140,South Holland,2019,NA,NA
+E07000140,South Holland,2018,NA,NA
+E07000140,South Holland,2017,NA,NA
+E07000140,South Holland,2016,NA,NA
+E07000140,South Holland,2015,1,South Holland (1)
+E07000140,South Holland,2014,NA,NA
+E07000140,South Holland,2013,NA,NA
+E07000141,South Kesteven,2020,NA,NA
+E07000141,South Kesteven,2019,NA,NA
+E07000141,South Kesteven,2018,1,South Kesteven (1)
+E07000141,South Kesteven,2017,NA,NA
+E07000141,South Kesteven,2016,NA,NA
+E07000141,South Kesteven,2015,NA,NA
+E07000141,South Kesteven,2014,NA,NA
+E07000141,South Kesteven,2013,NA,NA
+E07000142,West Lindsey,2020,NA,NA
+E07000142,West Lindsey,2019,NA,NA
+E07000142,West Lindsey,2018,2,West Lindsey (2)
+E07000142,West Lindsey,2017,2,West Lindsey (2)
+E07000142,West Lindsey,2016,NA,NA
+E07000142,West Lindsey,2015,NA,NA
+E07000142,West Lindsey,2014,NA,NA
+E07000142,West Lindsey,2013,NA,NA
+E07000143,Breckland,2020,NA,NA
+E07000143,Breckland,2019,1,Breckland (1)
+E07000143,Breckland,2018,NA,NA
+E07000143,Breckland,2017,1,Breckland (1)
+E07000143,Breckland,2016,2,Breckland (2)
+E07000143,Breckland,2015,NA,NA
+E07000143,Breckland,2014,NA,NA
+E07000143,Breckland,2013,NA,NA
+E07000144,Broadland,2020,NA,NA
+E07000144,Broadland,2019,NA,NA
+E07000144,Broadland,2018,NA,NA
+E07000144,Broadland,2017,NA,NA
+E07000144,Broadland,2016,NA,NA
+E07000144,Broadland,2015,NA,NA
+E07000144,Broadland,2014,1,Broadland (1)
+E07000144,Broadland,2013,1,Broadland (1)
+E07000145,Great Yarmouth,2020,1,Great Yarmouth (1)
+E07000145,Great Yarmouth,2019,2,Great Yarmouth (2)
+E07000145,Great Yarmouth,2018,3,Great Yarmouth (3)
+E07000145,Great Yarmouth,2017,3,Great Yarmouth (3)
+E07000145,Great Yarmouth,2016,3,Great Yarmouth (3)
+E07000145,Great Yarmouth,2015,NA,NA
+E07000145,Great Yarmouth,2014,2,Great Yarmouth (2)
+E07000145,Great Yarmouth,2013,NA,NA
+E07000146,King's Lynn and West Norfolk,2020,4,King's Lynn and West Norfolk (4)
+E07000146,King's Lynn and West Norfolk,2019,3,King's Lynn and West Norfolk (3)
+E07000146,King's Lynn and West Norfolk,2018,2,King's Lynn and West Norfolk (2)
+E07000146,King's Lynn and West Norfolk,2017,2,King's Lynn and West Norfolk (2)
+E07000146,King's Lynn and West Norfolk,2016,1,King's Lynn and West Norfolk (1)
+E07000146,King's Lynn and West Norfolk,2015,1,King's Lynn and West Norfolk (1)
+E07000146,King's Lynn and West Norfolk,2014,2,King's Lynn and West Norfolk (2)
+E07000146,King's Lynn and West Norfolk,2013,1,King's Lynn and West Norfolk (1)
+E07000147,North Norfolk,2020,NA,NA
+E07000147,North Norfolk,2019,NA,NA
+E07000147,North Norfolk,2018,NA,NA
+E07000147,North Norfolk,2017,NA,NA
+E07000147,North Norfolk,2016,1,North Norfolk (1)
+E07000147,North Norfolk,2015,NA,NA
+E07000147,North Norfolk,2014,2,North Norfolk (2)
+E07000147,North Norfolk,2013,NA,NA
+E07000148,Norwich,2020,4,Norwich (4)
+E07000148,Norwich,2019,4,Norwich (4)
+E07000148,Norwich,2018,3,Norwich (3)
+E07000148,Norwich,2017,1,Norwich (1)
+E07000148,Norwich,2016,2,Norwich (2)
+E07000148,Norwich,2015,3,Norwich (3)
+E07000148,Norwich,2014,1,Norwich (1)
+E07000148,Norwich,2013,1,Norwich (1)
+E07000149,South Norfolk,2020,1,South Norfolk (1)
+E07000149,South Norfolk,2019,2,South Norfolk (2)
+E07000149,South Norfolk,2018,1,South Norfolk (1)
+E07000149,South Norfolk,2017,1,South Norfolk (1)
+E07000149,South Norfolk,2016,NA,NA
+E07000149,South Norfolk,2015,1,South Norfolk (1)
+E07000149,South Norfolk,2014,1,South Norfolk (1)
+E07000149,South Norfolk,2013,2,South Norfolk (2)
+E07000163,Craven,2020,NA,NA
+E07000163,Craven,2019,NA,NA
+E07000163,Craven,2018,NA,NA
+E07000163,Craven,2017,NA,NA
+E07000163,Craven,2016,NA,NA
+E07000163,Craven,2015,NA,NA
+E07000163,Craven,2014,NA,NA
+E07000163,Craven,2013,NA,NA
+E07000164,Hambleton,2020,NA,NA
+E07000164,Hambleton,2019,NA,NA
+E07000164,Hambleton,2018,1,Hambleton (1)
+E07000164,Hambleton,2017,NA,NA
+E07000164,Hambleton,2016,NA,NA
+E07000164,Hambleton,2015,NA,NA
+E07000164,Hambleton,2014,NA,NA
+E07000164,Hambleton,2013,NA,NA
+E07000165,Harrogate,2020,NA,NA
+E07000165,Harrogate,2019,NA,NA
+E07000165,Harrogate,2018,NA,NA
+E07000165,Harrogate,2017,2,Harrogate (2)
+E07000165,Harrogate,2016,NA,NA
+E07000165,Harrogate,2015,1,Harrogate (1)
+E07000165,Harrogate,2014,1,Harrogate (1)
+E07000165,Harrogate,2013,NA,NA
+E07000166,Richmondshire,2020,1,Richmondshire (1)
+E07000166,Richmondshire,2019,NA,NA
+E07000166,Richmondshire,2018,NA,NA
+E07000166,Richmondshire,2017,1,Richmondshire (1)
+E07000166,Richmondshire,2016,NA,NA
+E07000166,Richmondshire,2015,NA,NA
+E07000166,Richmondshire,2014,NA,NA
+E07000166,Richmondshire,2013,NA,NA
+E07000167,Ryedale,2020,NA,NA
+E07000167,Ryedale,2019,NA,NA
+E07000167,Ryedale,2018,1,Ryedale (1)
+E07000167,Ryedale,2017,NA,NA
+E07000167,Ryedale,2016,NA,NA
+E07000167,Ryedale,2015,NA,NA
+E07000167,Ryedale,2014,NA,NA
+E07000167,Ryedale,2013,NA,NA
+E07000168,Scarborough,2020,1,Scarborough (1)
+E07000168,Scarborough,2019,NA,NA
+E07000168,Scarborough,2018,NA,NA
+E07000168,Scarborough,2017,NA,NA
+E07000168,Scarborough,2016,1,Scarborough (1)
+E07000168,Scarborough,2015,2,Scarborough (2)
+E07000168,Scarborough,2014,NA,NA
+E07000168,Scarborough,2013,1,Scarborough (1)
+E07000169,Selby,2020,NA,NA
+E07000169,Selby,2019,1,Selby (1)
+E07000169,Selby,2018,NA,NA
+E07000169,Selby,2017,1,Selby (1)
+E07000169,Selby,2016,NA,NA
+E07000169,Selby,2015,NA,NA
+E07000169,Selby,2014,NA,NA
+E07000169,Selby,2013,NA,NA
+E07000170,Ashfield,2020,2,Ashfield (2)
+E07000170,Ashfield,2019,NA,NA
+E07000170,Ashfield,2018,NA,NA
+E07000170,Ashfield,2017,NA,NA
+E07000170,Ashfield,2016,NA,NA
+E07000170,Ashfield,2015,NA,NA
+E07000170,Ashfield,2014,NA,NA
+E07000170,Ashfield,2013,NA,NA
+E07000171,Bassetlaw,2020,2,Bassetlaw (2)
+E07000171,Bassetlaw,2019,2,Bassetlaw (2)
+E07000171,Bassetlaw,2018,1,Bassetlaw (1)
+E07000171,Bassetlaw,2017,NA,NA
+E07000171,Bassetlaw,2016,1,Bassetlaw (1)
+E07000171,Bassetlaw,2015,1,Bassetlaw (1)
+E07000171,Bassetlaw,2014,NA,NA
+E07000171,Bassetlaw,2013,NA,NA
+E07000172,Broxtowe,2020,NA,NA
+E07000172,Broxtowe,2019,NA,NA
+E07000172,Broxtowe,2018,NA,NA
+E07000172,Broxtowe,2017,NA,NA
+E07000172,Broxtowe,2016,NA,NA
+E07000172,Broxtowe,2015,NA,NA
+E07000172,Broxtowe,2014,NA,NA
+E07000172,Broxtowe,2013,NA,NA
+E07000173,Gedling,2020,NA,NA
+E07000173,Gedling,2019,NA,NA
+E07000173,Gedling,2018,NA,NA
+E07000173,Gedling,2017,NA,NA
+E07000173,Gedling,2016,NA,NA
+E07000173,Gedling,2015,NA,NA
+E07000173,Gedling,2014,NA,NA
+E07000173,Gedling,2013,NA,NA
+E07000174,Mansfield,2020,NA,NA
+E07000174,Mansfield,2019,NA,NA
+E07000174,Mansfield,2018,1,Mansfield (1)
+E07000174,Mansfield,2017,NA,NA
+E07000174,Mansfield,2016,1,Mansfield (1)
+E07000174,Mansfield,2015,NA,NA
+E07000174,Mansfield,2014,1,Mansfield (1)
+E07000174,Mansfield,2013,NA,NA
+E07000175,Newark and Sherwood,2020,NA,NA
+E07000175,Newark and Sherwood,2019,1,Newark and Sherwood (1)
+E07000175,Newark and Sherwood,2018,NA,NA
+E07000175,Newark and Sherwood,2017,NA,NA
+E07000175,Newark and Sherwood,2016,1,Newark and Sherwood (1)
+E07000175,Newark and Sherwood,2015,NA,NA
+E07000175,Newark and Sherwood,2014,NA,NA
+E07000175,Newark and Sherwood,2013,NA,NA
+E07000176,Rushcliffe,2020,NA,NA
+E07000176,Rushcliffe,2019,NA,NA
+E07000176,Rushcliffe,2018,NA,NA
+E07000176,Rushcliffe,2017,1,Rushcliffe (1)
+E07000176,Rushcliffe,2016,NA,NA
+E07000176,Rushcliffe,2015,NA,NA
+E07000176,Rushcliffe,2014,NA,NA
+E07000176,Rushcliffe,2013,NA,NA
+E07000177,Cherwell,2020,NA,NA
+E07000177,Cherwell,2019,3,Cherwell (3)
+E07000177,Cherwell,2018,NA,NA
+E07000177,Cherwell,2017,3,Cherwell (3)
+E07000177,Cherwell,2016,NA,NA
+E07000177,Cherwell,2015,NA,NA
+E07000177,Cherwell,2014,1,Cherwell (1)
+E07000177,Cherwell,2013,1,Cherwell (1)
+E07000178,Oxford,2020,9,Oxford (9)
+E07000178,Oxford,2019,6,Oxford (6)
+E07000178,Oxford,2018,3,Oxford (3)
+E07000178,Oxford,2017,8,Oxford (8)
+E07000178,Oxford,2016,8,Oxford (8)
+E07000178,Oxford,2015,1,Oxford (1)
+E07000178,Oxford,2014,5,Oxford (5)
+E07000178,Oxford,2013,5,Oxford (5)
+E07000179,South Oxfordshire,2020,NA,NA
+E07000179,South Oxfordshire,2019,NA,NA
+E07000179,South Oxfordshire,2018,NA,NA
+E07000179,South Oxfordshire,2017,NA,NA
+E07000179,South Oxfordshire,2016,NA,NA
+E07000179,South Oxfordshire,2015,NA,NA
+E07000179,South Oxfordshire,2014,NA,NA
+E07000179,South Oxfordshire,2013,NA,NA
+E07000180,Vale of White Horse,2020,NA,NA
+E07000180,Vale of White Horse,2019,NA,NA
+E07000180,Vale of White Horse,2018,NA,NA
+E07000180,Vale of White Horse,2017,NA,NA
+E07000180,Vale of White Horse,2016,NA,NA
+E07000180,Vale of White Horse,2015,NA,NA
+E07000180,Vale of White Horse,2014,NA,NA
+E07000180,Vale of White Horse,2013,NA,NA
+E07000181,West Oxfordshire,2020,NA,NA
+E07000181,West Oxfordshire,2019,NA,NA
+E07000181,West Oxfordshire,2018,NA,NA
+E07000181,West Oxfordshire,2017,NA,NA
+E07000181,West Oxfordshire,2016,1,West Oxfordshire (1)
+E07000181,West Oxfordshire,2015,NA,NA
+E07000181,West Oxfordshire,2014,NA,NA
+E07000181,West Oxfordshire,2013,NA,NA
+E07000187,Mendip,2020,NA,NA
+E07000187,Mendip,2019,NA,NA
+E07000187,Mendip,2018,NA,NA
+E07000187,Mendip,2017,NA,NA
+E07000187,Mendip,2016,1,Mendip (1)
+E07000187,Mendip,2015,1,Mendip (1)
+E07000187,Mendip,2014,NA,NA
+E07000187,Mendip,2013,NA,NA
+E07000188,Sedgemoor,2020,3,Sedgemoor (3)
+E07000188,Sedgemoor,2019,2,Sedgemoor (2)
+E07000188,Sedgemoor,2018,NA,NA
+E07000188,Sedgemoor,2017,NA,NA
+E07000188,Sedgemoor,2016,1,Sedgemoor (1)
+E07000188,Sedgemoor,2015,NA,NA
+E07000188,Sedgemoor,2014,1,Sedgemoor (1)
+E07000188,Sedgemoor,2013,1,Sedgemoor (1)
+E07000189,South Somerset,2020,1,South Somerset (1)
+E07000189,South Somerset,2019,1,South Somerset (1)
+E07000189,South Somerset,2018,1,South Somerset (1)
+E07000189,South Somerset,2017,NA,NA
+E07000189,South Somerset,2016,NA,NA
+E07000189,South Somerset,2015,2,South Somerset (2)
+E07000189,South Somerset,2014,1,South Somerset (1)
+E07000189,South Somerset,2013,NA,NA
+E07000192,Cannock Chase,2020,NA,NA
+E07000192,Cannock Chase,2019,NA,NA
+E07000192,Cannock Chase,2018,NA,NA
+E07000192,Cannock Chase,2017,NA,NA
+E07000192,Cannock Chase,2016,NA,NA
+E07000192,Cannock Chase,2015,NA,NA
+E07000192,Cannock Chase,2014,NA,NA
+E07000192,Cannock Chase,2013,NA,NA
+E07000193,East Staffordshire,2020,NA,NA
+E07000193,East Staffordshire,2019,NA,NA
+E07000193,East Staffordshire,2018,NA,NA
+E07000193,East Staffordshire,2017,1,East Staffordshire (1)
+E07000193,East Staffordshire,2016,1,East Staffordshire (1)
+E07000193,East Staffordshire,2015,NA,NA
+E07000193,East Staffordshire,2014,2,East Staffordshire (2)
+E07000193,East Staffordshire,2013,NA,NA
+E07000194,Lichfield,2020,NA,NA
+E07000194,Lichfield,2019,NA,NA
+E07000194,Lichfield,2018,NA,NA
+E07000194,Lichfield,2017,NA,NA
+E07000194,Lichfield,2016,1,Lichfield (1)
+E07000194,Lichfield,2015,NA,NA
+E07000194,Lichfield,2014,NA,NA
+E07000194,Lichfield,2013,NA,NA
+E07000195,Newcastle-under-Lyme,2020,NA,NA
+E07000195,Newcastle-under-Lyme,2019,NA,NA
+E07000195,Newcastle-under-Lyme,2018,1,Newcastle-under-Lyme (1)
+E07000195,Newcastle-under-Lyme,2017,NA,NA
+E07000195,Newcastle-under-Lyme,2016,3,Newcastle-under-Lyme (3)
+E07000195,Newcastle-under-Lyme,2015,NA,NA
+E07000195,Newcastle-under-Lyme,2014,1,Newcastle-under-Lyme (1)
+E07000195,Newcastle-under-Lyme,2013,1,Newcastle-under-Lyme (1)
+E07000196,South Staffordshire,2020,NA,NA
+E07000196,South Staffordshire,2019,NA,NA
+E07000196,South Staffordshire,2018,NA,NA
+E07000196,South Staffordshire,2017,NA,NA
+E07000196,South Staffordshire,2016,NA,NA
+E07000196,South Staffordshire,2015,NA,NA
+E07000196,South Staffordshire,2014,1,South Staffordshire (1)
+E07000196,South Staffordshire,2013,1,South Staffordshire (1)
+E07000197,Stafford,2020,NA,NA
+E07000197,Stafford,2019,NA,NA
+E07000197,Stafford,2018,1,Stafford (1)
+E07000197,Stafford,2017,NA,NA
+E07000197,Stafford,2016,NA,NA
+E07000197,Stafford,2015,1,Stafford (1)
+E07000197,Stafford,2014,NA,NA
+E07000197,Stafford,2013,1,Stafford (1)
+E07000198,Staffordshire Moorlands,2020,NA,NA
+E07000198,Staffordshire Moorlands,2019,NA,NA
+E07000198,Staffordshire Moorlands,2018,1,Staffordshire Moorlands (1)
+E07000198,Staffordshire Moorlands,2017,NA,NA
+E07000198,Staffordshire Moorlands,2016,NA,NA
+E07000198,Staffordshire Moorlands,2015,NA,NA
+E07000198,Staffordshire Moorlands,2014,NA,NA
+E07000198,Staffordshire Moorlands,2013,NA,NA
+E07000199,Tamworth,2020,NA,NA
+E07000199,Tamworth,2019,NA,NA
+E07000199,Tamworth,2018,NA,NA
+E07000199,Tamworth,2017,NA,NA
+E07000199,Tamworth,2016,NA,NA
+E07000199,Tamworth,2015,NA,NA
+E07000199,Tamworth,2014,1,Tamworth (1)
+E07000199,Tamworth,2013,NA,NA
+E07000200,Babergh,2020,NA,NA
+E07000200,Babergh,2019,NA,NA
+E07000200,Babergh,2018,NA,NA
+E07000200,Babergh,2017,NA,NA
+E07000200,Babergh,2016,1,Babergh (1)
+E07000200,Babergh,2015,NA,NA
+E07000200,Babergh,2014,1,Babergh (1)
+E07000200,Babergh,2013,1,Babergh (1)
+E07000202,Ipswich,2020,2,Ipswich (2)
+E07000202,Ipswich,2019,3,Ipswich (3)
+E07000202,Ipswich,2018,1,Ipswich (1)
+E07000202,Ipswich,2017,2,Ipswich (2)
+E07000202,Ipswich,2016,2,Ipswich (2)
+E07000202,Ipswich,2015,NA,NA
+E07000202,Ipswich,2014,3,Ipswich (3)
+E07000202,Ipswich,2013,NA,NA
+E07000203,Mid Suffolk,2020,1,Mid Suffolk (1)
+E07000203,Mid Suffolk,2019,NA,NA
+E07000203,Mid Suffolk,2018,1,Mid Suffolk (1)
+E07000203,Mid Suffolk,2017,NA,NA
+E07000203,Mid Suffolk,2016,1,Mid Suffolk (1)
+E07000203,Mid Suffolk,2015,NA,NA
+E07000203,Mid Suffolk,2014,NA,NA
+E07000203,Mid Suffolk,2013,NA,NA
+E07000207,Elmbridge,2020,NA,NA
+E07000207,Elmbridge,2019,NA,NA
+E07000207,Elmbridge,2018,NA,NA
+E07000207,Elmbridge,2017,NA,NA
+E07000207,Elmbridge,2016,NA,NA
+E07000207,Elmbridge,2015,1,Elmbridge (1)
+E07000207,Elmbridge,2014,2,Elmbridge (2)
+E07000207,Elmbridge,2013,NA,NA
+E07000208,Epsom and Ewell,2020,NA,NA
+E07000208,Epsom and Ewell,2019,NA,NA
+E07000208,Epsom and Ewell,2018,NA,NA
+E07000208,Epsom and Ewell,2017,NA,NA
+E07000208,Epsom and Ewell,2016,NA,NA
+E07000208,Epsom and Ewell,2015,NA,NA
+E07000208,Epsom and Ewell,2014,NA,NA
+E07000208,Epsom and Ewell,2013,NA,NA
+E07000209,Guildford,2020,2,Guildford (2)
+E07000209,Guildford,2019,2,Guildford (2)
+E07000209,Guildford,2018,1,Guildford (1)
+E07000209,Guildford,2017,1,Guildford (1)
+E07000209,Guildford,2016,1,Guildford (1)
+E07000209,Guildford,2015,1,Guildford (1)
+E07000209,Guildford,2014,2,Guildford (2)
+E07000209,Guildford,2013,2,Guildford (2)
+E07000210,Mole Valley,2020,NA,NA
+E07000210,Mole Valley,2019,NA,NA
+E07000210,Mole Valley,2018,2,Mole Valley (2)
+E07000210,Mole Valley,2017,NA,NA
+E07000210,Mole Valley,2016,NA,NA
+E07000210,Mole Valley,2015,NA,NA
+E07000210,Mole Valley,2014,NA,NA
+E07000210,Mole Valley,2013,NA,NA
+E07000211,Reigate and Banstead,2020,NA,NA
+E07000211,Reigate and Banstead,2019,NA,NA
+E07000211,Reigate and Banstead,2018,NA,NA
+E07000211,Reigate and Banstead,2017,1,Reigate and Banstead (1)
+E07000211,Reigate and Banstead,2016,NA,NA
+E07000211,Reigate and Banstead,2015,NA,NA
+E07000211,Reigate and Banstead,2014,1,Reigate and Banstead (1)
+E07000211,Reigate and Banstead,2013,NA,NA
+E07000212,Runnymede,2020,2,Runnymede (2)
+E07000212,Runnymede,2019,NA,NA
+E07000212,Runnymede,2018,NA,NA
+E07000212,Runnymede,2017,NA,NA
+E07000212,Runnymede,2016,NA,NA
+E07000212,Runnymede,2015,1,Runnymede (1)
+E07000212,Runnymede,2014,NA,NA
+E07000212,Runnymede,2013,NA,NA
+E07000213,Spelthorne,2020,NA,NA
+E07000213,Spelthorne,2019,NA,NA
+E07000213,Spelthorne,2018,NA,NA
+E07000213,Spelthorne,2017,NA,NA
+E07000213,Spelthorne,2016,NA,NA
+E07000213,Spelthorne,2015,NA,NA
+E07000213,Spelthorne,2014,NA,NA
+E07000213,Spelthorne,2013,1,Spelthorne (1)
+E07000214,Surrey Heath,2020,NA,NA
+E07000214,Surrey Heath,2019,1,Surrey Heath (1)
+E07000214,Surrey Heath,2018,NA,NA
+E07000214,Surrey Heath,2017,NA,NA
+E07000214,Surrey Heath,2016,NA,NA
+E07000214,Surrey Heath,2015,NA,NA
+E07000214,Surrey Heath,2014,NA,NA
+E07000214,Surrey Heath,2013,NA,NA
+E07000215,Tandridge,2020,NA,NA
+E07000215,Tandridge,2019,NA,NA
+E07000215,Tandridge,2018,NA,NA
+E07000215,Tandridge,2017,NA,NA
+E07000215,Tandridge,2016,NA,NA
+E07000215,Tandridge,2015,NA,NA
+E07000215,Tandridge,2014,NA,NA
+E07000215,Tandridge,2013,1,Tandridge (1)
+E07000216,Waverley,2020,NA,NA
+E07000216,Waverley,2019,NA,NA
+E07000216,Waverley,2018,NA,NA
+E07000216,Waverley,2017,NA,NA
+E07000216,Waverley,2016,1,Waverley (1)
+E07000216,Waverley,2015,1,Waverley (1)
+E07000216,Waverley,2014,NA,NA
+E07000216,Waverley,2013,NA,NA
+E07000217,Woking,2020,NA,NA
+E07000217,Woking,2019,NA,NA
+E07000217,Woking,2018,NA,NA
+E07000217,Woking,2017,NA,NA
+E07000217,Woking,2016,1,Woking (1)
+E07000217,Woking,2015,NA,NA
+E07000217,Woking,2014,1,Woking (1)
+E07000217,Woking,2013,NA,NA
+E07000218,North Warwickshire,2020,1,North Warwickshire (1)
+E07000218,North Warwickshire,2019,NA,NA
+E07000218,North Warwickshire,2018,NA,NA
+E07000218,North Warwickshire,2017,NA,NA
+E07000218,North Warwickshire,2016,NA,NA
+E07000218,North Warwickshire,2015,NA,NA
+E07000218,North Warwickshire,2014,NA,NA
+E07000218,North Warwickshire,2013,NA,NA
+E07000219,Nuneaton and Bedworth,2020,NA,NA
+E07000219,Nuneaton and Bedworth,2019,NA,NA
+E07000219,Nuneaton and Bedworth,2018,1,Nuneaton and Bedworth (1)
+E07000219,Nuneaton and Bedworth,2017,1,Nuneaton and Bedworth (1)
+E07000219,Nuneaton and Bedworth,2016,NA,NA
+E07000219,Nuneaton and Bedworth,2015,1,Nuneaton and Bedworth (1)
+E07000219,Nuneaton and Bedworth,2014,NA,NA
+E07000219,Nuneaton and Bedworth,2013,NA,NA
+E07000220,Rugby,2020,NA,NA
+E07000220,Rugby,2019,1,Rugby (1)
+E07000220,Rugby,2018,NA,NA
+E07000220,Rugby,2017,NA,NA
+E07000220,Rugby,2016,NA,NA
+E07000220,Rugby,2015,NA,NA
+E07000220,Rugby,2014,NA,NA
+E07000220,Rugby,2013,NA,NA
+E07000221,Stratford-on-Avon,2020,NA,NA
+E07000221,Stratford-on-Avon,2019,1,Stratford-on-Avon (1)
+E07000221,Stratford-on-Avon,2018,NA,NA
+E07000221,Stratford-on-Avon,2017,NA,NA
+E07000221,Stratford-on-Avon,2016,NA,NA
+E07000221,Stratford-on-Avon,2015,NA,NA
+E07000221,Stratford-on-Avon,2014,NA,NA
+E07000221,Stratford-on-Avon,2013,1,Stratford-on-Avon (1)
+E07000222,Warwick,2020,NA,NA
+E07000222,Warwick,2019,1,Warwick (1)
+E07000222,Warwick,2018,2,Warwick (2)
+E07000222,Warwick,2017,NA,NA
+E07000222,Warwick,2016,NA,NA
+E07000222,Warwick,2015,NA,NA
+E07000222,Warwick,2014,1,Warwick (1)
+E07000222,Warwick,2013,1,Warwick (1)
+E07000223,Adur,2020,NA,NA
+E07000223,Adur,2019,NA,NA
+E07000223,Adur,2018,NA,NA
+E07000223,Adur,2017,NA,NA
+E07000223,Adur,2016,NA,NA
+E07000223,Adur,2015,NA,NA
+E07000223,Adur,2014,NA,NA
+E07000223,Adur,2013,NA,NA
+E07000224,Arun,2020,NA,NA
+E07000224,Arun,2019,NA,NA
+E07000224,Arun,2018,1,Arun (1)
+E07000224,Arun,2017,NA,NA
+E07000224,Arun,2016,NA,NA
+E07000224,Arun,2015,NA,NA
+E07000224,Arun,2014,NA,NA
+E07000224,Arun,2013,NA,NA
+E07000225,Chichester,2020,1,Chichester (1)
+E07000225,Chichester,2019,1,Chichester (1)
+E07000225,Chichester,2018,NA,NA
+E07000225,Chichester,2017,NA,NA
+E07000225,Chichester,2016,NA,NA
+E07000225,Chichester,2015,NA,NA
+E07000225,Chichester,2014,NA,NA
+E07000225,Chichester,2013,NA,NA
+E07000226,Crawley,2020,1,Crawley (1)
+E07000226,Crawley,2019,NA,NA
+E07000226,Crawley,2018,NA,NA
+E07000226,Crawley,2017,NA,NA
+E07000226,Crawley,2016,1,Crawley (1)
+E07000226,Crawley,2015,NA,NA
+E07000226,Crawley,2014,NA,NA
+E07000226,Crawley,2013,NA,NA
+E07000227,Horsham,2020,NA,NA
+E07000227,Horsham,2019,NA,NA
+E07000227,Horsham,2018,NA,NA
+E07000227,Horsham,2017,NA,NA
+E07000227,Horsham,2016,NA,NA
+E07000227,Horsham,2015,NA,NA
+E07000227,Horsham,2014,NA,NA
+E07000227,Horsham,2013,NA,NA
+E07000228,Mid Sussex,2020,1,Mid Sussex (1)
+E07000228,Mid Sussex,2019,NA,NA
+E07000228,Mid Sussex,2018,NA,NA
+E07000228,Mid Sussex,2017,NA,NA
+E07000228,Mid Sussex,2016,NA,NA
+E07000228,Mid Sussex,2015,NA,NA
+E07000228,Mid Sussex,2014,1,Mid Sussex (1)
+E07000228,Mid Sussex,2013,1,Mid Sussex (1)
+E07000229,Worthing,2020,NA,NA
+E07000229,Worthing,2019,NA,NA
+E07000229,Worthing,2018,NA,NA
+E07000229,Worthing,2017,NA,NA
+E07000229,Worthing,2016,NA,NA
+E07000229,Worthing,2015,1,Worthing (1)
+E07000229,Worthing,2014,NA,NA
+E07000229,Worthing,2013,NA,NA
+E07000234,Bromsgrove,2020,NA,NA
+E07000234,Bromsgrove,2019,NA,NA
+E07000234,Bromsgrove,2018,1,Bromsgrove (1)
+E07000234,Bromsgrove,2017,NA,NA
+E07000234,Bromsgrove,2016,NA,NA
+E07000234,Bromsgrove,2015,2,Bromsgrove (2)
+E07000234,Bromsgrove,2014,NA,NA
+E07000234,Bromsgrove,2013,NA,NA
+E07000235,Malvern Hills,2020,NA,NA
+E07000235,Malvern Hills,2019,2,Malvern Hills (2)
+E07000235,Malvern Hills,2018,NA,NA
+E07000235,Malvern Hills,2017,NA,NA
+E07000235,Malvern Hills,2016,1,Malvern Hills (1)
+E07000235,Malvern Hills,2015,NA,NA
+E07000235,Malvern Hills,2014,NA,NA
+E07000235,Malvern Hills,2013,1,Malvern Hills (1)
+E07000236,Redditch,2020,NA,NA
+E07000236,Redditch,2019,1,Redditch (1)
+E07000236,Redditch,2018,1,Redditch (1)
+E07000236,Redditch,2017,NA,NA
+E07000236,Redditch,2016,NA,NA
+E07000236,Redditch,2015,1,Redditch (1)
+E07000236,Redditch,2014,1,Redditch (1)
+E07000236,Redditch,2013,NA,NA
+E07000237,Worcester,2020,2,Worcester (2)
+E07000237,Worcester,2019,1,Worcester (1)
+E07000237,Worcester,2018,3,Worcester (3)
+E07000237,Worcester,2017,1,Worcester (1)
+E07000237,Worcester,2016,NA,NA
+E07000237,Worcester,2015,2,Worcester (2)
+E07000237,Worcester,2014,3,Worcester (3)
+E07000237,Worcester,2013,1,Worcester (1)
+E07000238,Wychavon,2020,NA,NA
+E07000238,Wychavon,2019,NA,NA
+E07000238,Wychavon,2018,NA,NA
+E07000238,Wychavon,2017,1,Wychavon (1)
+E07000238,Wychavon,2016,NA,NA
+E07000238,Wychavon,2015,NA,NA
+E07000238,Wychavon,2014,1,Wychavon (1)
+E07000238,Wychavon,2013,1,Wychavon (1)
+E07000239,Wyre Forest,2020,NA,NA
+E07000239,Wyre Forest,2019,NA,NA
+E07000239,Wyre Forest,2018,NA,NA
+E07000239,Wyre Forest,2017,NA,NA
+E07000239,Wyre Forest,2016,NA,NA
+E07000239,Wyre Forest,2015,1,Wyre Forest (1)
+E07000239,Wyre Forest,2014,NA,NA
+E07000239,Wyre Forest,2013,NA,NA
+E07000240,St Albans,2020,NA,NA
+E07000240,St Albans,2019,NA,NA
+E07000240,St Albans,2018,1,St Albans (1)
+E07000240,St Albans,2017,NA,NA
+E07000240,St Albans,2016,NA,NA
+E07000240,St Albans,2015,NA,NA
+E07000240,St Albans,2014,1,St Albans (1)
+E07000240,St Albans,2013,NA,NA
+E07000241,Welwyn Hatfield,2020,NA,NA
+E07000241,Welwyn Hatfield,2019,1,Welwyn Hatfield (1)
+E07000241,Welwyn Hatfield,2018,1,Welwyn Hatfield (1)
+E07000241,Welwyn Hatfield,2017,2,Welwyn Hatfield (2)
+E07000241,Welwyn Hatfield,2016,NA,NA
+E07000241,Welwyn Hatfield,2015,2,Welwyn Hatfield (2)
+E07000241,Welwyn Hatfield,2014,1,Welwyn Hatfield (1)
+E07000241,Welwyn Hatfield,2013,1,Welwyn Hatfield (1)
+E07000242,East Hertfordshire,2020,NA,NA
+E07000242,East Hertfordshire,2019,NA,NA
+E07000242,East Hertfordshire,2018,NA,NA
+E07000242,East Hertfordshire,2017,NA,NA
+E07000242,East Hertfordshire,2016,NA,NA
+E07000242,East Hertfordshire,2015,NA,NA
+E07000242,East Hertfordshire,2014,NA,NA
+E07000242,East Hertfordshire,2013,NA,NA
+E07000243,Stevenage,2020,NA,NA
+E07000243,Stevenage,2019,3,Stevenage (3)
+E07000243,Stevenage,2018,3,Stevenage (3)
+E07000243,Stevenage,2017,NA,NA
+E07000243,Stevenage,2016,1,Stevenage (1)
+E07000243,Stevenage,2015,NA,NA
+E07000243,Stevenage,2014,2,Stevenage (2)
+E07000243,Stevenage,2013,NA,NA
+E07000244,East Suffolk,2020,2,East Suffolk (2)
+E07000244,East Suffolk,2019,1,East Suffolk (1)
+E07000244,East Suffolk,2018,NA,NA
+E07000244,East Suffolk,2017,NA,NA
+E07000244,East Suffolk,2016,NA,NA
+E07000244,East Suffolk,2015,NA,NA
+E07000244,East Suffolk,2014,1,East Suffolk (1)
+E07000244,East Suffolk,2013,NA,NA
+E07000245,West Suffolk,2020,1,West Suffolk (1)
+E07000245,West Suffolk,2019,NA,NA
+E07000245,West Suffolk,2018,2,West Suffolk (2)
+E07000245,West Suffolk,2017,NA,NA
+E07000245,West Suffolk,2016,2,West Suffolk (2)
+E07000245,West Suffolk,2015,NA,NA
+E07000245,West Suffolk,2014,2,West Suffolk (2)
+E07000245,West Suffolk,2013,NA,NA
+E07000246,Somerset West and Taunton,2020,6,Somerset West and Taunton (6)
+E07000246,Somerset West and Taunton,2019,8,Somerset West and Taunton (8)
+E07000246,Somerset West and Taunton,2018,3,Somerset West and Taunton (3)
+E07000246,Somerset West and Taunton,2017,2,Somerset West and Taunton (2)
+E07000246,Somerset West and Taunton,2016,1,Somerset West and Taunton (1)
+E07000246,Somerset West and Taunton,2015,3,Somerset West and Taunton (3)
+E07000246,Somerset West and Taunton,2014,2,Somerset West and Taunton (2)
+E07000246,Somerset West and Taunton,2013,3,Somerset West and Taunton (3)
+E08000001,Bolton,2020,1,Bolton (1)
+E08000001,Bolton,2019,4,Bolton (4)
+E08000001,Bolton,2018,1,Bolton (1)
+E08000001,Bolton,2017,4,Bolton (4)
+E08000001,Bolton,2016,3,Bolton (3)
+E08000001,Bolton,2015,NA,NA
+E08000001,Bolton,2014,2,Bolton (2)
+E08000001,Bolton,2013,NA,NA
+E08000002,Bury,2020,2,Bury (2)
+E08000002,Bury,2019,NA,NA
+E08000002,Bury,2018,3,Bury (3)
+E08000002,Bury,2017,4,Bury (4)
+E08000002,Bury,2016,2,Bury (2)
+E08000002,Bury,2015,NA,NA
+E08000002,Bury,2014,3,Bury (3)
+E08000002,Bury,2013,2,Bury (2)
+E08000003,Manchester,2020,8,Manchester (8)
+E08000003,Manchester,2019,20,Manchester (20)
+E08000003,Manchester,2018,14,Manchester (14)
+E08000003,Manchester,2017,17,Manchester (17)
+E08000003,Manchester,2016,9,Manchester (9)
+E08000003,Manchester,2015,10,Manchester (10)
+E08000003,Manchester,2014,10,Manchester (10)
+E08000003,Manchester,2013,7,Manchester (7)
+E08000004,Oldham,2020,NA,NA
+E08000004,Oldham,2019,2,Oldham (2)
+E08000004,Oldham,2018,3,Oldham (3)
+E08000004,Oldham,2017,3,Oldham (3)
+E08000004,Oldham,2016,NA,NA
+E08000004,Oldham,2015,NA,NA
+E08000004,Oldham,2014,1,Oldham (1)
+E08000004,Oldham,2013,2,Oldham (2)
+E08000005,Rochdale,2020,1,Rochdale (1)
+E08000005,Rochdale,2019,3,Rochdale (3)
+E08000005,Rochdale,2018,3,Rochdale (3)
+E08000005,Rochdale,2017,1,Rochdale (1)
+E08000005,Rochdale,2016,1,Rochdale (1)
+E08000005,Rochdale,2015,3,Rochdale (3)
+E08000005,Rochdale,2014,NA,NA
+E08000005,Rochdale,2013,1,Rochdale (1)
+E08000006,Salford,2020,5,Salford (5)
+E08000006,Salford,2019,4,Salford (4)
+E08000006,Salford,2018,1,Salford (1)
+E08000006,Salford,2017,5,Salford (5)
+E08000006,Salford,2016,7,Salford (7)
+E08000006,Salford,2015,2,Salford (2)
+E08000006,Salford,2014,4,Salford (4)
+E08000006,Salford,2013,NA,NA
+E08000007,Stockport,2020,1,Stockport (1)
+E08000007,Stockport,2019,1,Stockport (1)
+E08000007,Stockport,2018,3,Stockport (3)
+E08000007,Stockport,2017,1,Stockport (1)
+E08000007,Stockport,2016,1,Stockport (1)
+E08000007,Stockport,2015,NA,NA
+E08000007,Stockport,2014,NA,NA
+E08000007,Stockport,2013,3,Stockport (3)
+E08000008,Tameside,2020,1,Tameside (1)
+E08000008,Tameside,2019,NA,NA
+E08000008,Tameside,2018,NA,NA
+E08000008,Tameside,2017,1,Tameside (1)
+E08000008,Tameside,2016,1,Tameside (1)
+E08000008,Tameside,2015,2,Tameside (2)
+E08000008,Tameside,2014,3,Tameside (3)
+E08000008,Tameside,2013,NA,NA
+E08000009,Trafford,2020,1,Trafford (1)
+E08000009,Trafford,2019,NA,NA
+E08000009,Trafford,2018,1,Trafford (1)
+E08000009,Trafford,2017,2,Trafford (2)
+E08000009,Trafford,2016,NA,NA
+E08000009,Trafford,2015,NA,NA
+E08000009,Trafford,2014,1,Trafford (1)
+E08000009,Trafford,2013,1,Trafford (1)
+E08000010,Wigan,2020,5,Wigan (5)
+E08000010,Wigan,2019,2,Wigan (2)
+E08000010,Wigan,2018,2,Wigan (2)
+E08000010,Wigan,2017,3,Wigan (3)
+E08000010,Wigan,2016,1,Wigan (1)
+E08000010,Wigan,2015,4,Wigan (4)
+E08000010,Wigan,2014,1,Wigan (1)
+E08000010,Wigan,2013,1,Wigan (1)
+E08000011,Knowsley,2020,NA,NA
+E08000011,Knowsley,2019,1,Knowsley (1)
+E08000011,Knowsley,2018,2,Knowsley (2)
+E08000011,Knowsley,2017,1,Knowsley (1)
+E08000011,Knowsley,2016,1,Knowsley (1)
+E08000011,Knowsley,2015,1,Knowsley (1)
+E08000011,Knowsley,2014,1,Knowsley (1)
+E08000011,Knowsley,2013,NA,NA
+E08000012,Liverpool,2020,21,Liverpool (21)
+E08000012,Liverpool,2019,18,Liverpool (18)
+E08000012,Liverpool,2018,12,Liverpool (12)
+E08000012,Liverpool,2017,14,Liverpool (14)
+E08000012,Liverpool,2016,14,Liverpool (14)
+E08000012,Liverpool,2015,9,Liverpool (9)
+E08000012,Liverpool,2014,6,Liverpool (6)
+E08000012,Liverpool,2013,8,Liverpool (8)
+E08000013,St. Helens,2020,5,St. Helens (5)
+E08000013,St. Helens,2019,4,St. Helens (4)
+E08000013,St. Helens,2018,3,St. Helens (3)
+E08000013,St. Helens,2017,6,St. Helens (6)
+E08000013,St. Helens,2016,5,St. Helens (5)
+E08000013,St. Helens,2015,1,St. Helens (1)
+E08000013,St. Helens,2014,1,St. Helens (1)
+E08000013,St. Helens,2013,1,St. Helens (1)
+E08000014,Sefton,2020,NA,NA
+E08000014,Sefton,2019,1,Sefton (1)
+E08000014,Sefton,2018,1,Sefton (1)
+E08000014,Sefton,2017,1,Sefton (1)
+E08000014,Sefton,2016,NA,NA
+E08000014,Sefton,2015,1,Sefton (1)
+E08000014,Sefton,2014,NA,NA
+E08000014,Sefton,2013,NA,NA
+E08000015,Wirral,2020,6,Wirral (6)
+E08000015,Wirral,2019,6,Wirral (6)
+E08000015,Wirral,2018,1,Wirral (1)
+E08000015,Wirral,2017,2,Wirral (2)
+E08000015,Wirral,2016,1,Wirral (1)
+E08000015,Wirral,2015,3,Wirral (3)
+E08000015,Wirral,2014,3,Wirral (3)
+E08000015,Wirral,2013,3,Wirral (3)
+E08000016,Barnsley,2020,2,Barnsley (2)
+E08000016,Barnsley,2019,2,Barnsley (2)
+E08000016,Barnsley,2018,3,Barnsley (3)
+E08000016,Barnsley,2017,NA,NA
+E08000016,Barnsley,2016,2,Barnsley (2)
+E08000016,Barnsley,2015,NA,NA
+E08000016,Barnsley,2014,NA,NA
+E08000016,Barnsley,2013,NA,NA
+E08000017,Doncaster,2020,4,Doncaster (4)
+E08000017,Doncaster,2019,NA,NA
+E08000017,Doncaster,2018,1,Doncaster (1)
+E08000017,Doncaster,2017,3,Doncaster (3)
+E08000017,Doncaster,2016,2,Doncaster (2)
+E08000017,Doncaster,2015,1,Doncaster (1)
+E08000017,Doncaster,2014,1,Doncaster (1)
+E08000017,Doncaster,2013,3,Doncaster (3)
+E08000018,Rotherham,2020,NA,NA
+E08000018,Rotherham,2019,NA,NA
+E08000018,Rotherham,2018,2,Rotherham (2)
+E08000018,Rotherham,2017,NA,NA
+E08000018,Rotherham,2016,NA,NA
+E08000018,Rotherham,2015,2,Rotherham (2)
+E08000018,Rotherham,2014,1,Rotherham (1)
+E08000018,Rotherham,2013,NA,NA
+E08000019,Sheffield,2020,5,Sheffield (5)
+E08000019,Sheffield,2019,6,Sheffield (6)
+E08000019,Sheffield,2018,11,Sheffield (11)
+E08000019,Sheffield,2017,4,Sheffield (4)
+E08000019,Sheffield,2016,3,Sheffield (3)
+E08000019,Sheffield,2015,6,Sheffield (6)
+E08000019,Sheffield,2014,4,Sheffield (4)
+E08000019,Sheffield,2013,7,Sheffield (7)
+E08000021,Newcastle upon Tyne,2020,12,Newcastle upon Tyne (12)
+E08000021,Newcastle upon Tyne,2019,9,Newcastle upon Tyne (9)
+E08000021,Newcastle upon Tyne,2018,15,Newcastle upon Tyne (15)
+E08000021,Newcastle upon Tyne,2017,11,Newcastle upon Tyne (11)
+E08000021,Newcastle upon Tyne,2016,8,Newcastle upon Tyne (8)
+E08000021,Newcastle upon Tyne,2015,3,Newcastle upon Tyne (3)
+E08000021,Newcastle upon Tyne,2014,10,Newcastle upon Tyne (10)
+E08000021,Newcastle upon Tyne,2013,6,Newcastle upon Tyne (6)
+E08000022,North Tyneside,2020,1,North Tyneside (1)
+E08000022,North Tyneside,2019,NA,NA
+E08000022,North Tyneside,2018,3,North Tyneside (3)
+E08000022,North Tyneside,2017,NA,NA
+E08000022,North Tyneside,2016,NA,NA
+E08000022,North Tyneside,2015,1,North Tyneside (1)
+E08000022,North Tyneside,2014,1,North Tyneside (1)
+E08000022,North Tyneside,2013,NA,NA
+E08000023,South Tyneside,2020,NA,NA
+E08000023,South Tyneside,2019,1,South Tyneside (1)
+E08000023,South Tyneside,2018,NA,NA
+E08000023,South Tyneside,2017,2,South Tyneside (2)
+E08000023,South Tyneside,2016,NA,NA
+E08000023,South Tyneside,2015,NA,NA
+E08000023,South Tyneside,2014,1,South Tyneside (1)
+E08000023,South Tyneside,2013,NA,NA
+E08000024,Sunderland,2020,4,Sunderland (4)
+E08000024,Sunderland,2019,5,Sunderland (5)
+E08000024,Sunderland,2018,1,Sunderland (1)
+E08000024,Sunderland,2017,5,Sunderland (5)
+E08000024,Sunderland,2016,3,Sunderland (3)
+E08000024,Sunderland,2015,2,Sunderland (2)
+E08000024,Sunderland,2014,3,Sunderland (3)
+E08000024,Sunderland,2013,3,Sunderland (3)
+E08000025,Birmingham,2020,15,Birmingham (15)
+E08000025,Birmingham,2019,18,Birmingham (18)
+E08000025,Birmingham,2018,17,Birmingham (17)
+E08000025,Birmingham,2017,15,Birmingham (15)
+E08000025,Birmingham,2016,15,Birmingham (15)
+E08000025,Birmingham,2015,17,Birmingham (17)
+E08000025,Birmingham,2014,15,Birmingham (15)
+E08000025,Birmingham,2013,13,Birmingham (13)
+E08000026,Coventry,2020,NA,NA
+E08000026,Coventry,2019,7,Coventry (7)
+E08000026,Coventry,2018,2,Coventry (2)
+E08000026,Coventry,2017,7,Coventry (7)
+E08000026,Coventry,2016,2,Coventry (2)
+E08000026,Coventry,2015,1,Coventry (1)
+E08000026,Coventry,2014,2,Coventry (2)
+E08000026,Coventry,2013,4,Coventry (4)
+E08000027,Dudley,2020,NA,NA
+E08000027,Dudley,2019,1,Dudley (1)
+E08000027,Dudley,2018,2,Dudley (2)
+E08000027,Dudley,2017,NA,NA
+E08000027,Dudley,2016,NA,NA
+E08000027,Dudley,2015,1,Dudley (1)
+E08000027,Dudley,2014,NA,NA
+E08000027,Dudley,2013,NA,NA
+E08000028,Sandwell,2020,NA,NA
+E08000028,Sandwell,2019,2,Sandwell (2)
+E08000028,Sandwell,2018,3,Sandwell (3)
+E08000028,Sandwell,2017,2,Sandwell (2)
+E08000028,Sandwell,2016,1,Sandwell (1)
+E08000028,Sandwell,2015,3,Sandwell (3)
+E08000028,Sandwell,2014,3,Sandwell (3)
+E08000028,Sandwell,2013,1,Sandwell (1)
+E08000029,Solihull,2020,NA,NA
+E08000029,Solihull,2019,1,Solihull (1)
+E08000029,Solihull,2018,1,Solihull (1)
+E08000029,Solihull,2017,NA,NA
+E08000029,Solihull,2016,NA,NA
+E08000029,Solihull,2015,1,Solihull (1)
+E08000029,Solihull,2014,NA,NA
+E08000029,Solihull,2013,1,Solihull (1)
+E08000030,Walsall,2020,NA,NA
+E08000030,Walsall,2019,1,Walsall (1)
+E08000030,Walsall,2018,NA,NA
+E08000030,Walsall,2017,2,Walsall (2)
+E08000030,Walsall,2016,1,Walsall (1)
+E08000030,Walsall,2015,3,Walsall (3)
+E08000030,Walsall,2014,3,Walsall (3)
+E08000030,Walsall,2013,NA,NA
+E08000031,Wolverhampton,2020,3,Wolverhampton (3)
+E08000031,Wolverhampton,2019,NA,NA
+E08000031,Wolverhampton,2018,4,Wolverhampton (4)
+E08000031,Wolverhampton,2017,2,Wolverhampton (2)
+E08000031,Wolverhampton,2016,2,Wolverhampton (2)
+E08000031,Wolverhampton,2015,1,Wolverhampton (1)
+E08000031,Wolverhampton,2014,2,Wolverhampton (2)
+E08000031,Wolverhampton,2013,1,Wolverhampton (1)
+E08000032,Bradford,2020,4,Bradford (4)
+E08000032,Bradford,2019,1,Bradford (1)
+E08000032,Bradford,2018,4,Bradford (4)
+E08000032,Bradford,2017,2,Bradford (2)
+E08000032,Bradford,2016,1,Bradford (1)
+E08000032,Bradford,2015,NA,NA
+E08000032,Bradford,2014,3,Bradford (3)
+E08000032,Bradford,2013,2,Bradford (2)
+E08000033,Calderdale,2020,NA,NA
+E08000033,Calderdale,2019,2,Calderdale (2)
+E08000033,Calderdale,2018,NA,NA
+E08000033,Calderdale,2017,NA,NA
+E08000033,Calderdale,2016,1,Calderdale (1)
+E08000033,Calderdale,2015,NA,NA
+E08000033,Calderdale,2014,1,Calderdale (1)
+E08000033,Calderdale,2013,NA,NA
+E08000034,Kirklees,2020,2,Kirklees (2)
+E08000034,Kirklees,2019,2,Kirklees (2)
+E08000034,Kirklees,2018,1,Kirklees (1)
+E08000034,Kirklees,2017,NA,NA
+E08000034,Kirklees,2016,2,Kirklees (2)
+E08000034,Kirklees,2015,NA,NA
+E08000034,Kirklees,2014,NA,NA
+E08000034,Kirklees,2013,NA,NA
+E08000035,Leeds,2020,13,Leeds (13)
+E08000035,Leeds,2019,14,Leeds (14)
+E08000035,Leeds,2018,9,Leeds (9)
+E08000035,Leeds,2017,8,Leeds (8)
+E08000035,Leeds,2016,9,Leeds (9)
+E08000035,Leeds,2015,10,Leeds (10)
+E08000035,Leeds,2014,5,Leeds (5)
+E08000035,Leeds,2013,8,Leeds (8)
+E08000036,Wakefield,2020,3,Wakefield (3)
+E08000036,Wakefield,2019,5,Wakefield (5)
+E08000036,Wakefield,2018,4,Wakefield (4)
+E08000036,Wakefield,2017,1,Wakefield (1)
+E08000036,Wakefield,2016,1,Wakefield (1)
+E08000036,Wakefield,2015,2,Wakefield (2)
+E08000036,Wakefield,2014,1,Wakefield (1)
+E08000036,Wakefield,2013,NA,NA
+E08000037,Gateshead,2020,NA,NA
+E08000037,Gateshead,2019,NA,NA
+E08000037,Gateshead,2018,1,Gateshead (1)
+E08000037,Gateshead,2017,1,Gateshead (1)
+E08000037,Gateshead,2016,NA,NA
+E08000037,Gateshead,2015,NA,NA
+E08000037,Gateshead,2014,1,Gateshead (1)
+E08000037,Gateshead,2013,NA,NA
+E09000001,City of London,2020,1,City of London (1)
+E09000001,City of London,2019,1,City of London (1)
+E09000001,City of London,2018,1,City of London (1)
+E09000001,City of London,2017,1,City of London (1)
+E09000001,City of London,2016,NA,NA
+E09000001,City of London,2015,2,City of London (2)
+E09000001,City of London,2014,NA,NA
+E09000001,City of London,2013,NA,NA
+E09000002,Barking and Dagenham,2020,2,Barking and Dagenham (2)
+E09000002,Barking and Dagenham,2019,NA,NA
+E09000002,Barking and Dagenham,2018,1,Barking and Dagenham (1)
+E09000002,Barking and Dagenham,2017,2,Barking and Dagenham (2)
+E09000002,Barking and Dagenham,2016,2,Barking and Dagenham (2)
+E09000002,Barking and Dagenham,2015,NA,NA
+E09000002,Barking and Dagenham,2014,NA,NA
+E09000002,Barking and Dagenham,2013,NA,NA
+E09000003,Barnet,2020,2,Barnet (2)
+E09000003,Barnet,2019,NA,NA
+E09000003,Barnet,2018,1,Barnet (1)
+E09000003,Barnet,2017,NA,NA
+E09000003,Barnet,2016,NA,NA
+E09000003,Barnet,2015,3,Barnet (3)
+E09000003,Barnet,2014,2,Barnet (2)
+E09000003,Barnet,2013,1,Barnet (1)
+E09000004,Bexley,2020,NA,NA
+E09000004,Bexley,2019,NA,NA
+E09000004,Bexley,2018,1,Bexley (1)
+E09000004,Bexley,2017,1,Bexley (1)
+E09000004,Bexley,2016,NA,NA
+E09000004,Bexley,2015,NA,NA
+E09000004,Bexley,2014,3,Bexley (3)
+E09000004,Bexley,2013,1,Bexley (1)
+E09000005,Brent,2020,4,Brent (4)
+E09000005,Brent,2019,4,Brent (4)
+E09000005,Brent,2018,3,Brent (3)
+E09000005,Brent,2017,NA,NA
+E09000005,Brent,2016,2,Brent (2)
+E09000005,Brent,2015,5,Brent (5)
+E09000005,Brent,2014,7,Brent (7)
+E09000005,Brent,2013,1,Brent (1)
+E09000006,Bromley,2020,NA,NA
+E09000006,Bromley,2019,NA,NA
+E09000006,Bromley,2018,1,Bromley (1)
+E09000006,Bromley,2017,NA,NA
+E09000006,Bromley,2016,1,Bromley (1)
+E09000006,Bromley,2015,2,Bromley (2)
+E09000006,Bromley,2014,1,Bromley (1)
+E09000006,Bromley,2013,3,Bromley (3)
+E09000007,Camden,2020,12,Camden (12)
+E09000007,Camden,2019,9,Camden (9)
+E09000007,Camden,2018,9,Camden (9)
+E09000007,Camden,2017,12,Camden (12)
+E09000007,Camden,2016,19,Camden (19)
+E09000007,Camden,2015,16,Camden (16)
+E09000007,Camden,2014,9,Camden (9)
+E09000007,Camden,2013,17,Camden (17)
+E09000008,Croydon,2020,5,Croydon (5)
+E09000008,Croydon,2019,9,Croydon (9)
+E09000008,Croydon,2018,3,Croydon (3)
+E09000008,Croydon,2017,2,Croydon (2)
+E09000008,Croydon,2016,3,Croydon (3)
+E09000008,Croydon,2015,2,Croydon (2)
+E09000008,Croydon,2014,3,Croydon (3)
+E09000008,Croydon,2013,2,Croydon (2)
+E09000009,Ealing,2020,5,Ealing (5)
+E09000009,Ealing,2019,5,Ealing (5)
+E09000009,Ealing,2018,3,Ealing (3)
+E09000009,Ealing,2017,3,Ealing (3)
+E09000009,Ealing,2016,4,Ealing (4)
+E09000009,Ealing,2015,6,Ealing (6)
+E09000009,Ealing,2014,1,Ealing (1)
+E09000009,Ealing,2013,4,Ealing (4)
+E09000010,Enfield,2020,NA,NA
+E09000010,Enfield,2019,2,Enfield (2)
+E09000010,Enfield,2018,1,Enfield (1)
+E09000010,Enfield,2017,1,Enfield (1)
+E09000010,Enfield,2016,NA,NA
+E09000010,Enfield,2015,2,Enfield (2)
+E09000010,Enfield,2014,2,Enfield (2)
+E09000010,Enfield,2013,1,Enfield (1)
+E09000011,Greenwich,2020,1,Greenwich (1)
+E09000011,Greenwich,2019,1,Greenwich (1)
+E09000011,Greenwich,2018,1,Greenwich (1)
+E09000011,Greenwich,2017,2,Greenwich (2)
+E09000011,Greenwich,2016,2,Greenwich (2)
+E09000011,Greenwich,2015,1,Greenwich (1)
+E09000011,Greenwich,2014,2,Greenwich (2)
+E09000011,Greenwich,2013,NA,NA
+E09000012,Hackney,2020,6,Hackney (6)
+E09000012,Hackney,2019,5,Hackney (5)
+E09000012,Hackney,2018,1,Hackney (1)
+E09000012,Hackney,2017,5,Hackney (5)
+E09000012,Hackney,2016,9,Hackney (9)
+E09000012,Hackney,2015,5,Hackney (5)
+E09000012,Hackney,2014,1,Hackney (1)
+E09000012,Hackney,2013,9,Hackney (9)
+E09000013,Hammersmith and Fulham,2020,2,Hammersmith and Fulham (2)
+E09000013,Hammersmith and Fulham,2019,1,Hammersmith and Fulham (1)
+E09000013,Hammersmith and Fulham,2018,6,Hammersmith and Fulham (6)
+E09000013,Hammersmith and Fulham,2017,4,Hammersmith and Fulham (4)
+E09000013,Hammersmith and Fulham,2016,2,Hammersmith and Fulham (2)
+E09000013,Hammersmith and Fulham,2015,3,Hammersmith and Fulham (3)
+E09000013,Hammersmith and Fulham,2014,NA,NA
+E09000013,Hammersmith and Fulham,2013,2,Hammersmith and Fulham (2)
+E09000014,Haringey,2020,1,Haringey (1)
+E09000014,Haringey,2019,2,Haringey (2)
+E09000014,Haringey,2018,1,Haringey (1)
+E09000014,Haringey,2017,5,Haringey (5)
+E09000014,Haringey,2016,1,Haringey (1)
+E09000014,Haringey,2015,NA,NA
+E09000014,Haringey,2014,1,Haringey (1)
+E09000014,Haringey,2013,1,Haringey (1)
+E09000015,Harrow,2020,1,Harrow (1)
+E09000015,Harrow,2019,1,Harrow (1)
+E09000015,Harrow,2018,NA,NA
+E09000015,Harrow,2017,1,Harrow (1)
+E09000015,Harrow,2016,NA,NA
+E09000015,Harrow,2015,1,Harrow (1)
+E09000015,Harrow,2014,1,Harrow (1)
+E09000015,Harrow,2013,1,Harrow (1)
+E09000016,Havering,2020,2,Havering (2)
+E09000016,Havering,2019,2,Havering (2)
+E09000016,Havering,2018,1,Havering (1)
+E09000016,Havering,2017,2,Havering (2)
+E09000016,Havering,2016,3,Havering (3)
+E09000016,Havering,2015,NA,NA
+E09000016,Havering,2014,NA,NA
+E09000016,Havering,2013,1,Havering (1)
+E09000017,Hillingdon,2020,2,Hillingdon (2)
+E09000017,Hillingdon,2019,1,Hillingdon (1)
+E09000017,Hillingdon,2018,3,Hillingdon (3)
+E09000017,Hillingdon,2017,1,Hillingdon (1)
+E09000017,Hillingdon,2016,2,Hillingdon (2)
+E09000017,Hillingdon,2015,1,Hillingdon (1)
+E09000017,Hillingdon,2014,2,Hillingdon (2)
+E09000017,Hillingdon,2013,NA,NA
+E09000018,Hounslow,2020,1,Hounslow (1)
+E09000018,Hounslow,2019,2,Hounslow (2)
+E09000018,Hounslow,2018,5,Hounslow (5)
+E09000018,Hounslow,2017,2,Hounslow (2)
+E09000018,Hounslow,2016,5,Hounslow (5)
+E09000018,Hounslow,2015,NA,NA
+E09000018,Hounslow,2014,1,Hounslow (1)
+E09000018,Hounslow,2013,1,Hounslow (1)
+E09000019,Islington,2020,2,Islington (2)
+E09000019,Islington,2019,5,Islington (5)
+E09000019,Islington,2018,3,Islington (3)
+E09000019,Islington,2017,4,Islington (4)
+E09000019,Islington,2016,7,Islington (7)
+E09000019,Islington,2015,1,Islington (1)
+E09000019,Islington,2014,6,Islington (6)
+E09000019,Islington,2013,7,Islington (7)
+E09000020,Kensington and Chelsea,2020,3,Kensington and Chelsea (3)
+E09000020,Kensington and Chelsea,2019,1,Kensington and Chelsea (1)
+E09000020,Kensington and Chelsea,2018,3,Kensington and Chelsea (3)
+E09000020,Kensington and Chelsea,2017,3,Kensington and Chelsea (3)
+E09000020,Kensington and Chelsea,2016,3,Kensington and Chelsea (3)
+E09000020,Kensington and Chelsea,2015,1,Kensington and Chelsea (1)
+E09000020,Kensington and Chelsea,2014,2,Kensington and Chelsea (2)
+E09000020,Kensington and Chelsea,2013,6,Kensington and Chelsea (6)
+E09000021,Kingston upon Thames,2020,NA,NA
+E09000021,Kingston upon Thames,2019,2,Kingston upon Thames (2)
+E09000021,Kingston upon Thames,2018,2,Kingston upon Thames (2)
+E09000021,Kingston upon Thames,2017,4,Kingston upon Thames (4)
+E09000021,Kingston upon Thames,2016,2,Kingston upon Thames (2)
+E09000021,Kingston upon Thames,2015,4,Kingston upon Thames (4)
+E09000021,Kingston upon Thames,2014,NA,NA
+E09000021,Kingston upon Thames,2013,2,Kingston upon Thames (2)
+E09000022,Lambeth,2020,9,Lambeth (9)
+E09000022,Lambeth,2019,10,Lambeth (10)
+E09000022,Lambeth,2018,8,Lambeth (8)
+E09000022,Lambeth,2017,14,Lambeth (14)
+E09000022,Lambeth,2016,7,Lambeth (7)
+E09000022,Lambeth,2015,8,Lambeth (8)
+E09000022,Lambeth,2014,12,Lambeth (12)
+E09000022,Lambeth,2013,13,Lambeth (13)
+E09000023,Lewisham,2020,NA,NA
+E09000023,Lewisham,2019,7,Lewisham (7)
+E09000023,Lewisham,2018,5,Lewisham (5)
+E09000023,Lewisham,2017,7,Lewisham (7)
+E09000023,Lewisham,2016,6,Lewisham (6)
+E09000023,Lewisham,2015,4,Lewisham (4)
+E09000023,Lewisham,2014,7,Lewisham (7)
+E09000023,Lewisham,2013,2,Lewisham (2)
+E09000024,Merton,2020,2,Merton (2)
+E09000024,Merton,2019,3,Merton (3)
+E09000024,Merton,2018,NA,NA
+E09000024,Merton,2017,1,Merton (1)
+E09000024,Merton,2016,1,Merton (1)
+E09000024,Merton,2015,NA,NA
+E09000024,Merton,2014,1,Merton (1)
+E09000024,Merton,2013,1,Merton (1)
+E09000025,Newham,2020,8,Newham (8)
+E09000025,Newham,2019,1,Newham (1)
+E09000025,Newham,2018,5,Newham (5)
+E09000025,Newham,2017,6,Newham (6)
+E09000025,Newham,2016,4,Newham (4)
+E09000025,Newham,2015,9,Newham (9)
+E09000025,Newham,2014,3,Newham (3)
+E09000025,Newham,2013,NA,NA
+E09000026,Redbridge,2020,3,Redbridge (3)
+E09000026,Redbridge,2019,2,Redbridge (2)
+E09000026,Redbridge,2018,5,Redbridge (5)
+E09000026,Redbridge,2017,1,Redbridge (1)
+E09000026,Redbridge,2016,3,Redbridge (3)
+E09000026,Redbridge,2015,NA,NA
+E09000026,Redbridge,2014,1,Redbridge (1)
+E09000026,Redbridge,2013,2,Redbridge (2)
+E09000027,Richmond upon Thames,2020,NA,NA
+E09000027,Richmond upon Thames,2019,NA,NA
+E09000027,Richmond upon Thames,2018,2,Richmond upon Thames (2)
+E09000027,Richmond upon Thames,2017,NA,NA
+E09000027,Richmond upon Thames,2016,NA,NA
+E09000027,Richmond upon Thames,2015,NA,NA
+E09000027,Richmond upon Thames,2014,NA,NA
+E09000027,Richmond upon Thames,2013,1,Richmond upon Thames (1)
+E09000028,Southwark,2020,3,Southwark (3)
+E09000028,Southwark,2019,4,Southwark (4)
+E09000028,Southwark,2018,5,Southwark (5)
+E09000028,Southwark,2017,10,Southwark (10)
+E09000028,Southwark,2016,7,Southwark (7)
+E09000028,Southwark,2015,7,Southwark (7)
+E09000028,Southwark,2014,2,Southwark (2)
+E09000028,Southwark,2013,3,Southwark (3)
+E09000029,Sutton,2020,NA,NA
+E09000029,Sutton,2019,NA,NA
+E09000029,Sutton,2018,NA,NA
+E09000029,Sutton,2017,NA,NA
+E09000029,Sutton,2016,2,Sutton (2)
+E09000029,Sutton,2015,NA,NA
+E09000029,Sutton,2014,NA,NA
+E09000029,Sutton,2013,1,Sutton (1)
+E09000030,Tower Hamlets,2020,7,Tower Hamlets (7)
+E09000030,Tower Hamlets,2019,10,Tower Hamlets (10)
+E09000030,Tower Hamlets,2018,9,Tower Hamlets (9)
+E09000030,Tower Hamlets,2017,8,Tower Hamlets (8)
+E09000030,Tower Hamlets,2016,4,Tower Hamlets (4)
+E09000030,Tower Hamlets,2015,10,Tower Hamlets (10)
+E09000030,Tower Hamlets,2014,4,Tower Hamlets (4)
+E09000030,Tower Hamlets,2013,10,Tower Hamlets (10)
+E09000031,Waltham Forest,2020,2,Waltham Forest (2)
+E09000031,Waltham Forest,2019,1,Waltham Forest (1)
+E09000031,Waltham Forest,2018,3,Waltham Forest (3)
+E09000031,Waltham Forest,2017,1,Waltham Forest (1)
+E09000031,Waltham Forest,2016,3,Waltham Forest (3)
+E09000031,Waltham Forest,2015,5,Waltham Forest (5)
+E09000031,Waltham Forest,2014,2,Waltham Forest (2)
+E09000031,Waltham Forest,2013,1,Waltham Forest (1)
+E09000032,Wandsworth,2020,1,Wandsworth (1)
+E09000032,Wandsworth,2019,2,Wandsworth (2)
+E09000032,Wandsworth,2018,5,Wandsworth (5)
+E09000032,Wandsworth,2017,2,Wandsworth (2)
+E09000032,Wandsworth,2016,1,Wandsworth (1)
+E09000032,Wandsworth,2015,4,Wandsworth (4)
+E09000032,Wandsworth,2014,4,Wandsworth (4)
+E09000032,Wandsworth,2013,4,Wandsworth (4)
+E09000033,Westminster,2020,15,Westminster (15)
+E09000033,Westminster,2019,11,Westminster (11)
+E09000033,Westminster,2018,13,Westminster (13)
+E09000033,Westminster,2017,6,Westminster (6)
+E09000033,Westminster,2016,5,Westminster (5)
+E09000033,Westminster,2015,16,Westminster (16)
+E09000033,Westminster,2014,7,Westminster (7)
+E09000033,Westminster,2013,10,Westminster (10)
+W06000001,Isle of Anglesey,2020,2,Isle of Anglesey (2)
+W06000001,Isle of Anglesey,2019,NA,NA
+W06000001,Isle of Anglesey,2018,2,Isle of Anglesey (2)
+W06000001,Isle of Anglesey,2017,NA,NA
+W06000001,Isle of Anglesey,2016,NA,NA
+W06000001,Isle of Anglesey,2015,NA,NA
+W06000001,Isle of Anglesey,2014,NA,NA
+W06000001,Isle of Anglesey,2013,NA,NA
+W06000002,Gwynedd,2020,1,Gwynedd (1)
+W06000002,Gwynedd,2019,1,Gwynedd (1)
+W06000002,Gwynedd,2018,NA,NA
+W06000002,Gwynedd,2017,NA,NA
+W06000002,Gwynedd,2016,1,Gwynedd (1)
+W06000002,Gwynedd,2015,2,Gwynedd (2)
+W06000002,Gwynedd,2014,NA,NA
+W06000002,Gwynedd,2013,1,Gwynedd (1)
+W06000003,Conwy,2020,NA,NA
+W06000003,Conwy,2019,NA,NA
+W06000003,Conwy,2018,NA,NA
+W06000003,Conwy,2017,1,Conwy (1)
+W06000003,Conwy,2016,NA,NA
+W06000003,Conwy,2015,NA,NA
+W06000003,Conwy,2014,1,Conwy (1)
+W06000003,Conwy,2013,NA,NA
+W06000004,Denbighshire,2020,NA,NA
+W06000004,Denbighshire,2019,2,Denbighshire (2)
+W06000004,Denbighshire,2018,NA,NA
+W06000004,Denbighshire,2017,NA,NA
+W06000004,Denbighshire,2016,2,Denbighshire (2)
+W06000004,Denbighshire,2015,1,Denbighshire (1)
+W06000004,Denbighshire,2014,NA,NA
+W06000004,Denbighshire,2013,1,Denbighshire (1)
+W06000005,Flintshire,2020,NA,NA
+W06000005,Flintshire,2019,1,Flintshire (1)
+W06000005,Flintshire,2018,1,Flintshire (1)
+W06000005,Flintshire,2017,NA,NA
+W06000005,Flintshire,2016,NA,NA
+W06000005,Flintshire,2015,NA,NA
+W06000005,Flintshire,2014,NA,NA
+W06000005,Flintshire,2013,NA,NA
+W06000006,Wrexham,2020,NA,NA
+W06000006,Wrexham,2019,3,Wrexham (3)
+W06000006,Wrexham,2018,2,Wrexham (2)
+W06000006,Wrexham,2017,5,Wrexham (5)
+W06000006,Wrexham,2016,1,Wrexham (1)
+W06000006,Wrexham,2015,NA,NA
+W06000006,Wrexham,2014,1,Wrexham (1)
+W06000006,Wrexham,2013,NA,NA
+W06000008,Ceredigion,2020,NA,NA
+W06000008,Ceredigion,2019,NA,NA
+W06000008,Ceredigion,2018,NA,NA
+W06000008,Ceredigion,2017,NA,NA
+W06000008,Ceredigion,2016,1,Ceredigion (1)
+W06000008,Ceredigion,2015,NA,NA
+W06000008,Ceredigion,2014,NA,NA
+W06000008,Ceredigion,2013,1,Ceredigion (1)
+W06000009,Pembrokeshire,2020,NA,NA
+W06000009,Pembrokeshire,2019,NA,NA
+W06000009,Pembrokeshire,2018,NA,NA
+W06000009,Pembrokeshire,2017,NA,NA
+W06000009,Pembrokeshire,2016,NA,NA
+W06000009,Pembrokeshire,2015,NA,NA
+W06000009,Pembrokeshire,2014,NA,NA
+W06000009,Pembrokeshire,2013,1,Pembrokeshire (1)
+W06000010,Carmarthenshire,2020,NA,NA
+W06000010,Carmarthenshire,2019,NA,NA
+W06000010,Carmarthenshire,2018,3,Carmarthenshire (3)
+W06000010,Carmarthenshire,2017,NA,NA
+W06000010,Carmarthenshire,2016,2,Carmarthenshire (2)
+W06000010,Carmarthenshire,2015,NA,NA
+W06000010,Carmarthenshire,2014,NA,NA
+W06000010,Carmarthenshire,2013,NA,NA
+W06000011,Swansea,2020,4,Swansea (4)
+W06000011,Swansea,2019,5,Swansea (5)
+W06000011,Swansea,2018,7,Swansea (7)
+W06000011,Swansea,2017,1,Swansea (1)
+W06000011,Swansea,2016,3,Swansea (3)
+W06000011,Swansea,2015,4,Swansea (4)
+W06000011,Swansea,2014,1,Swansea (1)
+W06000011,Swansea,2013,NA,NA
+W06000012,Neath Port Talbot,2020,1,Neath Port Talbot (1)
+W06000012,Neath Port Talbot,2019,1,Neath Port Talbot (1)
+W06000012,Neath Port Talbot,2018,2,Neath Port Talbot (2)
+W06000012,Neath Port Talbot,2017,NA,NA
+W06000012,Neath Port Talbot,2016,2,Neath Port Talbot (2)
+W06000012,Neath Port Talbot,2015,NA,NA
+W06000012,Neath Port Talbot,2014,NA,NA
+W06000012,Neath Port Talbot,2013,NA,NA
+W06000013,Bridgend,2020,2,Bridgend (2)
+W06000013,Bridgend,2019,NA,NA
+W06000013,Bridgend,2018,3,Bridgend (3)
+W06000013,Bridgend,2017,NA,NA
+W06000013,Bridgend,2016,NA,NA
+W06000013,Bridgend,2015,NA,NA
+W06000013,Bridgend,2014,NA,NA
+W06000013,Bridgend,2013,1,Bridgend (1)
+W06000014,Vale of Glamorgan,2020,NA,NA
+W06000014,Vale of Glamorgan,2019,NA,NA
+W06000014,Vale of Glamorgan,2018,NA,NA
+W06000014,Vale of Glamorgan,2017,NA,NA
+W06000014,Vale of Glamorgan,2016,1,Vale of Glamorgan (1)
+W06000014,Vale of Glamorgan,2015,1,Vale of Glamorgan (1)
+W06000014,Vale of Glamorgan,2014,NA,NA
+W06000014,Vale of Glamorgan,2013,2,Vale of Glamorgan (2)
+W06000015,Cardiff,2020,2,Cardiff (2)
+W06000015,Cardiff,2019,5,Cardiff (5)
+W06000015,Cardiff,2018,4,Cardiff (4)
+W06000015,Cardiff,2017,3,Cardiff (3)
+W06000015,Cardiff,2016,5,Cardiff (5)
+W06000015,Cardiff,2015,3,Cardiff (3)
+W06000015,Cardiff,2014,1,Cardiff (1)
+W06000015,Cardiff,2013,7,Cardiff (7)
+W06000016,Rhondda Cynon Taf,2020,NA,NA
+W06000016,Rhondda Cynon Taf,2019,1,Rhondda Cynon Taf (1)
+W06000016,Rhondda Cynon Taf,2018,NA,NA
+W06000016,Rhondda Cynon Taf,2017,1,Rhondda Cynon Taf (1)
+W06000016,Rhondda Cynon Taf,2016,NA,NA
+W06000016,Rhondda Cynon Taf,2015,1,Rhondda Cynon Taf (1)
+W06000016,Rhondda Cynon Taf,2014,NA,NA
+W06000016,Rhondda Cynon Taf,2013,NA,NA
+W06000018,Caerphilly,2020,NA,NA
+W06000018,Caerphilly,2019,NA,NA
+W06000018,Caerphilly,2018,NA,NA
+W06000018,Caerphilly,2017,NA,NA
+W06000018,Caerphilly,2016,NA,NA
+W06000018,Caerphilly,2015,1,Caerphilly (1)
+W06000018,Caerphilly,2014,NA,NA
+W06000018,Caerphilly,2013,2,Caerphilly (2)
+W06000019,Blaenau Gwent,2020,NA,NA
+W06000019,Blaenau Gwent,2019,NA,NA
+W06000019,Blaenau Gwent,2018,NA,NA
+W06000019,Blaenau Gwent,2017,NA,NA
+W06000019,Blaenau Gwent,2016,NA,NA
+W06000019,Blaenau Gwent,2015,NA,NA
+W06000019,Blaenau Gwent,2014,NA,NA
+W06000019,Blaenau Gwent,2013,NA,NA
+W06000020,Torfaen,2020,NA,NA
+W06000020,Torfaen,2019,NA,NA
+W06000020,Torfaen,2018,NA,NA
+W06000020,Torfaen,2017,NA,NA
+W06000020,Torfaen,2016,1,Torfaen (1)
+W06000020,Torfaen,2015,1,Torfaen (1)
+W06000020,Torfaen,2014,NA,NA
+W06000020,Torfaen,2013,1,Torfaen (1)
+W06000021,Monmouthshire,2020,NA,NA
+W06000021,Monmouthshire,2019,1,Monmouthshire (1)
+W06000021,Monmouthshire,2018,NA,NA
+W06000021,Monmouthshire,2017,NA,NA
+W06000021,Monmouthshire,2016,NA,NA
+W06000021,Monmouthshire,2015,1,Monmouthshire (1)
+W06000021,Monmouthshire,2014,NA,NA
+W06000021,Monmouthshire,2013,1,Monmouthshire (1)
+W06000022,Newport,2020,3,Newport (3)
+W06000022,Newport,2019,4,Newport (4)
+W06000022,Newport,2018,NA,NA
+W06000022,Newport,2017,NA,NA
+W06000022,Newport,2016,2,Newport (2)
+W06000022,Newport,2015,4,Newport (4)
+W06000022,Newport,2014,1,Newport (1)
+W06000022,Newport,2013,NA,NA
+W06000023,Powys,2020,NA,NA
+W06000023,Powys,2019,NA,NA
+W06000023,Powys,2018,NA,NA
+W06000023,Powys,2017,NA,NA
+W06000023,Powys,2016,NA,NA
+W06000023,Powys,2015,NA,NA
+W06000023,Powys,2014,NA,NA
+W06000023,Powys,2013,NA,NA
+W06000024,Merthyr Tydfil,2020,1,Merthyr Tydfil (1)
+W06000024,Merthyr Tydfil,2019,NA,NA
+W06000024,Merthyr Tydfil,2018,1,Merthyr Tydfil (1)
+W06000024,Merthyr Tydfil,2017,NA,NA
+W06000024,Merthyr Tydfil,2016,1,Merthyr Tydfil (1)
+W06000024,Merthyr Tydfil,2015,NA,NA
+W06000024,Merthyr Tydfil,2014,NA,NA
+W06000024,Merthyr Tydfil,2013,NA,NA

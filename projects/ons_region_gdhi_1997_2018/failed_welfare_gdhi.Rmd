@@ -1,0 +1,513 @@
+---
+title: "Redistributive Piece"
+author: "NearAndDistant"
+date: "08/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+```
+
+```{r}
+
+# create tibble for colours
+nuts1_palette <- tibble(region_name = c("Scotland", "North East", "North West", "Yorkshire", "East Midlands", "West Midlands",
+                                        "Wales", "South West", "South East", "London", "East of England", "Northern Ireland"),
+                        fill        = c("#9E7BB5", "#B7E4F9FF", "#24325FFF", "#82491EFF", "#FB6467FF", "#FF6348FF", 
+                                        "#ADE2D0FF", "#E89242FF", "#FAE48BFF", "#3F4041FF", "#917C5DFF", "#526E2DFF"))
+
+region_order <- c("Scotland", "North East", "North West", "Yorkshire", "East Midlands", "West Midlands",
+                  "Wales", "South West", "South East", "London", "East of England", "Northern Ireland")
+
+```
+
+# Import
+```{r}
+
+uk_gdhi_raw <- read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_gdhi_perhead_components_97_18.csv")
+
+uk_gdhi_nuts1 <-
+  uk_gdhi_raw %>%
+  janitor::clean_names(numerals = "left") %>%
+  filter(!is.na(nuts_code)) %>%
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire and The Humber", "Yorkshire", region_name)) %>%
+  select(-transaction_code)
+
+uk_gdhi_nuts_calc <- 
+uk_gdhi_nuts1 %>%
+  pivot_wider(id_cols = c(nuts_level:year), names_from = "transaction", values_from = "value") %>%
+  # net taxes
+  mutate(`Income net taxes`    = `Balance of primary incomes` - `Secondary uses total`) %>%
+  pivot_longer(cols = c(`Operating surplus`:last_col()) , names_to = "transaction" , values_to = "value")
+
+```
+
+```{r}
+
+# transformation
+net_change <-
+uk_gdhi_nuts_calc %>%
+  filter(transaction %in% c("Balance of primary incomes", "Gross Disposable Income")) %>%
+  arrange(nuts_level , region_name, year) %>%
+  group_by(nuts_level, region_name, year) %>%
+  mutate(pc_net  = value / first(value)) %>%
+  ungroup() %>%
+  arrange(region_name)
+
+```
+
+# Map : Who are on Benefits / who do we give money to
+```{r}
+
+pc_ben_tax <-
+uk_gdhi_nuts1 %>%
+  filter(transaction %in% c("Primary resources total" , "Secondary resources total", "Secondary uses total")) %>%
+  pivot_wider(id_cols = c(nuts_level:year), names_from = "transaction", values_from = "value") %>%
+  mutate(pc_tax = `Secondary uses total`      / `Primary resources total`,
+         pc_ben = `Secondary resources total` / `Primary resources total`) %>%
+  select(nuts_level, nuts_code, region_name, year, pc_ben, pc_tax) %>%
+  pivot_longer(cols = c(pc_ben, pc_tax), names_to = "pc_type", values_to = "value")
+
+```
+
+```{r}
+
+# local authority boundaries
+uk_nuts3 <- 
+  readOGR( 
+  dsn = here::here("/Users/patrickcorby/Documents/Data/NUTS_Level_3_(January_2018)_Boundaries"), 
+  layer ="NUTS_Level_3_(January_2018)_Boundaries",
+  verbose=FALSE)
+
+uk_nuts3_simp <- 
+  uk_nuts3 %>%
+  rmapshaper::ms_simplify() %>%
+  janitor::clean_names() %>%
+  rename(nuts_code = "nuts318cd",
+         name      = "nuts318nm")
+
+uk_nuts3_bens <-
+  uk_nuts3_simp %>%
+  left_join(pc_ben_tax %>% filter(nuts_level   == "NUTS3",
+                                  year         == 2018),
+            by = "nuts_code")
+
+# Ireland outline for map
+library(rnaturalearth)
+ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "ireland")
+
+# check plot
+
+# filter each for tax and bens etc
+map_trans <-
+uk_nuts3_bens %>%
+#filter(pc_type == "pc_ben") %>%
+filter(pc_type == "pc_tax") %>%
+arrange(desc(value)) %>%
+mutate(rown = row_number()) %>%
+mutate(value2 = if_else(rown %in% c(1:30), paste0(region_name.x, " (", scales::percent(value, accuracy = 0.01),")"), NA_character_))
+#mutate(value2 = if_else(rown %in% c(1:30), paste0(region_name.x), NA_character_)) # for comparing lists
+
+nuts3_order <- unlist(map_trans %>% filter(!is.na(value2)) %>% select(value2) %>% st_drop_geometry())
+
+map_top <- # tax / bens
+map_trans %>%
+mutate(value2 = factor(value2, levels = nuts3_order)) %>%
+  ggplot() +
+    geom_sf(color = "#FFFFFF", aes(fill = value2), size = 0.25) +
+    geom_sf(data = ireland, color = "#FFFFFF", fill = "#D3D3D3" , size = 0.25) +
+    coord_sf() +
+    scale_fill_manual(values = rep("#990000" ,30), na.value = "#D3D3D3") + # tax = red: "#990000" / bens: "#51C56AFF"
+    guides(fill = guide_legend(ncol = 1)) +
+    labs(fill = "Top 30 Benefit Sub-Regions as a % of Gross Income, highest to lowest rate",
+         caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
+    theme_void() +
+    theme(legend.title = element_text(face = "bold", size = 16),
+          legend.text = element_text(size = 12),
+          plot.caption = element_text(hjust = 0.84, vjust = 25, size = 10),
+          legend.position = c(-0.05,0.46),
+          plot.margin = margin(0,-12,0,0, unit = "cm"))
+
+# save (don't forget to change the file name so as not to overwrite)
+ggsave(plot = map_top, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_top_ben_tax_1.jpeg"), 
+       dpi = 360, height = 10, width = 12)
+
+```
+
+```{r}
+
+map_ben <- 
+map_trans %>%
+  ggplot() +
+    geom_sf(color = "#FFFFFF", aes(fill = value), size = 0.25) +
+    geom_sf(data = ireland, color = "#FFFFFF", fill = "#D3D3D3" , size = 0.25) +
+    coord_sf() +
+    rcartocolor::scale_fill_carto_c(palette = "Emrld", labels = scales::percent_format(accuracy = 1)) +
+    guides(fill = guide_legend(ncol = 1)) +
+    labs(fill = "Welfare benefits\nas a % of Gross Income",
+         caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
+    theme_void() +
+    theme(legend.title = element_text(face = "bold"),
+          plot.caption = element_text(hjust = 0.84, vjust = 24.5, size = 10),
+          legend.position = c(0.15,0.60),
+          plot.margin = margin(0,0,0,0, unit = "cm"))
+
+# save (don't forget to change the file name so as not to overwrite)
+ggsave(plot = map_ben, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_all_bens.jpeg"), 
+       dpi = 360, height = 10, width = 9)
+
+```
+
+```{r}
+
+map_tax <- 
+map_trans %>%
+  ggplot() +
+    geom_sf(color = "#FFFFFF", aes(fill = value), size = 0.25) +
+    geom_sf(data = ireland, color = "#FFFFFF", fill = "#D3D3D3" , size = 0.25) +
+    coord_sf() +
+    rcartocolor::scale_fill_carto_c(palette = "ag_Sunset",direction = -1, labels = scales::percent_format(accuracy = 1)) +
+    guides(fill = guide_legend(ncol = 1)) +
+    labs(fill = "Taxes as a\n% of Gross Income",
+         caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
+    theme_void() +
+    theme(legend.title = element_text(face = "bold"),
+          plot.caption = element_text(hjust = 0.84, vjust = 24.5, size = 10),
+          legend.position = c(0.15,0.60),
+          plot.margin = margin(0,0,0,0, unit = "cm"))
+
+# save (don't forget to change the file name so as not to overwrite)
+ggsave(plot = map_tax, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_all_taxes.jpeg"), 
+       dpi = 360, height = 10, width = 9)
+
+```
+
+# Plot Transformation
+```{r}
+
+net_change_nuts1 <-
+  net_change %>%
+  filter(nuts_level == "NUTS1")
+
+net_taxes_nuts1 <-
+  uk_gdhi_nuts_calc %>%
+  filter(nuts_level == "NUTS1") %>% 
+  filter(transaction %in% c("Balance of primary incomes", "Income net taxes")) %>%
+  group_by(region_name, year) %>%
+  mutate(pc_net  = value / first(value)) %>%
+  ungroup() %>%
+  filter(transaction != "Balance of primary incomes")
+
+net_changes_all <-
+  rbind(net_change_nuts1, net_taxes_nuts1) %>%
+  # creating values for ribbon
+  group_by(region_name, year) %>%
+  mutate(ymin    = pc_net[which(transaction == "Gross Disposable Income")],
+         ymax    = max(pc_net),
+         ymin2    = value[which(transaction == "Gross Disposable Income")],
+         ymax2    = max(value)) %>%
+  # create palette for each region for ribbon
+  left_join(nuts1_palette) %>%
+  # facet labels
+  group_by(region_name) %>%
+  mutate(facet_label = paste0("(2018 Gross = ", scales::comma(value[year == 2018 & transaction == "Balance of primary incomes"], 
+                                                              accuracy = 2, prefix = "£"),")")) %>%
+  ungroup() %>%
+  # correct order through factors
+  mutate(region_name = as.factor(region_name),
+         region_name = factor(region_name, levels = region_order))
+
+```
+
+# Plots
+```{r}
+library(showtext); showtext_auto(); font_add_google("Roboto", "roboto")
+
+# pc net
+plot_pc_gross <-
+net_changes_all %>%
+  ggplot(aes(year, pc_net, color = fill)) +
+  geom_line(aes(linetype = transaction), size = 1, show.legend = FALSE) +
+  geom_ribbon(aes(ymin = ymin, ymax = 1, fill = fill), alpha = 0.3) +
+  scale_color_identity() +
+  scale_fill_identity() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(limits = c(0.5,1),
+                     breaks = seq(0.5,1,0.25),
+                     labels = scales::percent_format()) +
+  facet_wrap(~region_name + facet_label, ncol = 3) +
+  labs(title    = "Taxed and Benefit Adjusted Income as a Percentage of Gross Income (1997 - 2019)",
+       subtitle = "Income post-tax (lower line) and post-benefit adjustments (filled ribbon) across regions of the UK",
+       caption  = "Data: ONS (GDHI) | Table: @NearAndDistant",
+       x        = NULL, 
+       y        = "Monthly Gross and Net Income") +
+  theme_minimal() +
+  theme(plot.title         = element_text(size = 22, face = "bold", family = "roboto", vjust = 5),
+        plot.subtitle      = element_text(size = 16, family = "roboto", vjust = 8),
+        plot.caption       = element_text(size = 10, family = "roboto", vjust = 2, hjust = 0),
+        strip.background   = element_blank(),
+        strip.text         = element_text(color = "#333333", size = 12),
+        panel.grid.minor   = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.margin        = margin(1.5,1.5,1,0.5, unit = "cm"))
+
+# save
+ggsave(plot = plot_pc_gross, here::here("projects/ons_region_gdhi_1997_2018/outputs/pc_gross.jpeg"), dpi = 360, height = 10, width = 16)
+
+```
+
+```{r}
+# pc net
+plot_absolute_gross <- # _ne_lnd
+net_changes_all %>%
+  #filter(region_name %in% c("London", "North East")) %>%
+  ggplot(aes(year, value, color = fill)) +
+  geom_line(aes(linetype = transaction), size = 1, show.legend = FALSE) +
+  geom_ribbon(aes(ymin = ymin2, ymax = ymax2, fill = fill), alpha = 0.1) +
+  scale_color_identity() +
+  scale_fill_identity() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(labels = scales::comma_format(prefix = "£")) +
+  facet_wrap(~region_name, ncol = 2) +
+  labs(title = "Taxed and Benefit Adjusted Income against Gross Income (1997 - 2019)", #  - North East & London
+       subtitle = "Income post-tax (lower line) and post-benefit adjustments (filled ribbon) across regions of the UK against gross income (solid line)",
+       caption  = "Data: ONS (GDHI) | Table: @NearAndDistant",
+       x        = NULL, 
+       y        = "Monthly Gross and Net Income") +
+  theme_minimal() +
+  theme(plot.title         = element_text(size = 22, face = "bold", family = "roboto", vjust = 5),
+        plot.subtitle      = element_text(size = 16, family = "roboto", vjust = 7),
+        plot.caption       = element_text(size = 14, family = "roboto", vjust = 0, hjust = 0),
+        strip.background   = element_blank(),
+        strip.text         = element_text(color = "#333333", size = 16),
+        panel.grid.minor   = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.text          = element_text(size = 18),
+        plot.margin        = margin(1.5,1.5,1,0.5, unit = "cm"))
+
+# save
+ggsave(plot = plot_absolute_gross_ne_lnd, here::here("projects/ons_region_gdhi_1997_2018/outputs/absolute_gross_ne_ldn.jpeg"), dpi = 360, height = 10, width = 16)
+
+```
+
+### Absolute Net Effect Per Region (Per head for population differentials)
+```{r}
+
+gdhi_absolute <-
+  uk_gdhi_raw %>%
+  janitor::clean_names(numerals = "left") %>%
+  filter(!is.na(nuts_code)) %>%
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  select(-transaction_code)
+
+gdhi_absolute_net <- 
+gdhi_absolute %>%
+  pivot_wider(id_cols = c(nuts_level:year), names_from = "transaction", values_from = "value") %>%
+  # absolute net values
+  mutate(`Net Absolute Transfers` = `Secondary resources total` - `Secondary uses total`) %>%
+  pivot_longer(cols = c(`Operating surplus`:last_col()) , names_to = "transaction" , values_to = "value") %>%
+  filter(nuts_level   == "NUTS3",
+         year         == 2018,
+         transaction  == "Net Absolute Transfers") %>%
+  arrange(desc(value)) %>%
+  mutate(rown = row_number()) %>%
+  mutate(legend = cut(value,
+                  breaks = c(-22500, -20000, -17500, -15000, -12500, -10000, 
+                             -7500, -5000, -2500, -1,  
+                             2500),
+                  labels = c("-£22,500 to -£20,001 (Losses)", "-£20,000 to -£17,501", "-£17,500 to -£15,001", "-£15,000 to -£12,501", "-£12,500 to -£10,001",
+                             "-£10,000 to -£7,501", "-£7,500 to -£5,001", "-£5,000 to -£2,501", "-£2,500 to -£1", 
+                             "£1 to £2,500 (Gains)"))) %>%
+  mutate(legend = factor(legend, levels = c("£1 to £2,500 (Gains)", 
+                                            "-£2,500 to -£1", "-£5,000 to -£2,501", "-£7,500 to -£5,001", "-£10,000 to -£7,501", "-£12,500 to -£10,001", 
+                                            "-£15,000 to -£12,501", "-£17,500 to -£15,001", "-£20,000 to -£17,501", "-£22,500 to -£20,001 (Losses)")))
+
+# fill data
+palette <- c("#217A79", viridis::magma(n=9, direction = -1, end = 0.75, alpha = 0.9))
+
+gdhi_absolute_net_fill <-
+gdhi_absolute_net %>%
+  mutate(fill = case_when(legend == "£1 to £2,500 (Gains)"          ~ "#217A79",
+                          legend == "-£2,500 to -£1"                ~ "#FB8861E6",
+                          legend == "-£5,000 to -£2,501"            ~ "#EE5C5EE6",
+                          legend == "-£7,500 to -£5,001"            ~ "#CF406FE6",
+                          legend == "-£10,000 to -£7,501"           ~ "#A9337DE6",
+                          legend == "-£12,500 to -£10,001"          ~ "#822681E6",
+                          legend == "-£15,000 to -£12,501"          ~ "#5D177FE6",
+                          legend == "-£17,500 to -£15,001"          ~ "#36106BE6",
+                          legend == "-£20,000 to -£17,501"          ~ "#130D34E6",
+                          legend == "-£22,500 to -£20,001 (Losses)" ~ "#000004E6"))
+
+
+# join data
+gdhi_abs_net_map <-
+uk_nuts3_simp %>%
+left_join(gdhi_absolute_net_fill, by = "nuts_code")
+
+# London only
+lnd_nuts3_codes <- c("UKI31","UKI32","UKI33","UKI34","UKI41","UKI42","UKI43","UKI44","UKI45","UKI51",
+                     "UKI52","UKI53","UKI54","UKI61","UKI62","UKI63","UKI71","UKI72","UKI73","UKI74","UKI75")
+
+lnd_abs_net_trans_map <-
+  gdhi_abs_net_map %>%
+  filter(nuts_code %in% lnd_nuts3_codes)
+
+```
+
+```{r}
+
+map_abs_net_trans <-
+gdhi_abs_net_map %>%
+  ggplot() +
+    geom_sf(color = "#FFFFFF", aes(fill = legend), size = 0.25) +
+    geom_sf(data = ireland, color = "#FFFFFF", fill = "#D3D3D3" , size = 0.25) +
+    coord_sf() +
+    scale_fill_manual(values = palette) +
+    guides(fill = guide_legend(ncol = 1)) +
+    labs(fill = "Absolute Net Transfers Per Head",
+         caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
+    theme_void() +
+    theme(legend.title = element_text(face = "bold", size = 16),
+          legend.text = element_text(size = 12),
+          plot.caption = element_text(hjust = 0.84, vjust = 23, size = 10),
+          legend.position = c(0.10,0.65),
+          plot.margin = margin(0,0,0,0, unit = "cm"))
+
+# london zoom
+map_lns_abs_net <-
+lnd_abs_net_trans_map %>%
+  ggplot() +
+    geom_sf(color = "#FFFFFF", aes(fill = fill), size = 0.25, show.legend = FALSE) +
+    coord_sf() +
+    scale_fill_identity() +
+    labs(fill = FALSE) +
+    theme_void() 
+
+```
+
+```{r}
+library(cowplot)
+
+mappan_abs_net_trans <- 
+ggdraw() +
+  draw_plot(map_abs_net_trans) +
+  draw_plot(map_lns_abs_net, 
+            height = 0.2, width = 0.2,
+            x = 0.72, y = 0.30) +
+  draw_text("London", x = 0.82, y = 0.49, size = 14, fontface = "bold")
+
+# save
+ggsave(plot = mappan_abs_net_trans, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_panel_abs_trans.jpeg"), dpi = 360, height = 10, width = 9.5)
+
+```
+
+### Total or Per Head (switch to below import for total; default is per head)
+```{r}
+
+gdhi_tot_comp_raw <- read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_gdhi_97_18/ons_gdhi_components_97_18.csv")
+
+```
+
+```{r}
+
+gdhi_perhead_comp <-
+  uk_gdhi_raw  %>%
+  janitor::clean_names() %>%
+  filter(!is.na(nuts_code)) %>%
+  filter(nuts_level %in% c("UK", "NUTS1")) %>%
+  filter(transaction %in% c("Primary resources total", "Current taxes on income, wealth etc", "Social contributions/Social benefits paid", "Other current transfers, paid")) %>%
+  pivot_longer(cols = starts_with("x") , names_to = "year" , values_to = "value") %>%
+  mutate(year = str_remove(year , "x"),
+         year = as.numeric(year)) %>%
+  mutate(region_name = if_else(region_name == "Yorkshire and The Humber", "Yorkshire", region_name)) %>%
+  select(-transaction_code, -nuts_code, -nuts_level)
+
+# transformation
+gdhi_perhead_trans <-
+  gdhi_perhead_comp %>%
+  pivot_wider(id_cols  = c(region_name:year), names_from = "transaction", values_from = "value") %>%
+  # net taxes
+  mutate(`Total taxes` = `Current taxes on income, wealth etc` + `Social contributions/Social benefits paid` + `Other current transfers, paid`) %>%
+  mutate(pc_cur_tax    = `Current taxes on income, wealth etc` /  `Primary resources total`,
+         pc_soc_conts  = `Social contributions/Social benefits paid` /  `Primary resources total`,
+         pc_other      = `Other current transfers, paid` /  `Primary resources total`,
+         pc_total      = `Total taxes` / `Primary resources total`) %>%
+  janitor::clean_names() %>%
+  # correct order through factors
+  mutate(region_name = factor(region_name, levels = c("United Kingdom", region_order)))
+
+```
+
+```{r}
+library(gt)
+library(gtExtras)
+
+table_perhead_tax_types <-
+gdhi_perhead_trans %>%
+  filter(year == 2018) %>%
+  select(-year) %>%
+  arrange(region_name) %>%
+    gt() %>%
+    gt_theme_nytimes() %>%
+    #### column labels
+    cols_label(primary_resources_total                   = "Income",
+               current_taxes_on_income_wealth_etc        = "Income Taxes",
+               social_contributions_social_benefits_paid = "National Insurance",
+               other_current_transfers_paid              = "Other Transfers",
+               total_taxes                               = "Total Taxes",
+               pc_cur_tax                                = "% of income",
+               pc_soc_conts                              = "% of income",
+               pc_other                                  = "% of income",
+               pc_total                                  = "% Total Tax") %>%
+    #### column order
+    cols_move(columns = c(pc_cur_tax),   after = current_taxes_on_income_wealth_etc) %>%
+    cols_move(columns = c(pc_soc_conts), after = social_contributions_social_benefits_paid) %>%
+    cols_move(columns = c(pc_other),     after = other_current_transfers_paid) %>%
+    #### column width
+    cols_width(  1     ~ px(150),
+               c(2:6)  ~ px(95),
+               c(7:10) ~ px(80)) %>%
+    #### color scale
+    data_color(columns = c(pc_cur_tax:pc_total), 
+               # custom defined values - notice that order matters!
+               colors = scales::col_factor(palette = palette, domain = NULL), 
+               alpha = 0.4, autocolor_text = FALSE) %>% 
+    tab_style(style = list(cell_fill(color = "white")), locations = cells_body(rows = 1)) %>%
+    #### text format
+    tab_style(style = list(cell_text(align = "left", v_align = "top", size = 8)), 
+                           locations = cells_column_labels(everything())) %>%
+    cols_label(region_name = "") %>%
+    cols_align(align = "left",   columns = 1) %>%
+    cols_align(align = "right",  columns = c(2:6)) %>%
+    cols_align(align = "center", columns = c(7:10)) %>%
+    fmt_percent(columns  = c(pc_cur_tax, pc_soc_conts, pc_other, pc_total)) %>%
+    fmt_currency(columns = c(2,3,4,5,6), currency = "GBP", decimals = 0) %>%
+    #### cell borders
+      tab_style(style = list(cell_borders(sides = "top", color = "black", weight = px(2))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "grey", weight = px(1.75))),
+                locations = list(cells_body(columns = everything(), rows = 1))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(2))),
+                locations = list(cells_column_labels(columns = everything()))) %>%
+      tab_style(style = list(cell_borders(sides = "bottom", color = "black", weight = px(2))),
+                locations = list(cells_body(columns = everything(), rows = 13))) %>%
+    #### headers and notes
+    tab_source_note("Data: ONS | Table: @NearAndDistant") %>%
+    tab_header(title = md("**Types of Taxes as a Percentage of Income (2018), Per Head**"))
+
+```
+
+```{r}
+
+gtsave(table_perhead_tax_types , filename = here::here("projects/ons_region_gdhi_1997_2018/outputs/table_2018_perhead_tax_types.png"))
+
+```
