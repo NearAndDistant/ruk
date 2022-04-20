@@ -167,7 +167,7 @@ ons_gdhi_components_perhead_raw %>%
          region_name = factor(region_name, levels = c("United Kingdom" , region_order)))
 
 gdhi_regional_inc <-
-  gdhi_regional_inc %>%
+  gdhi_regional_inc_cln %>%
     filter(transaction %in% gdhi_income) # filter all unnecessary transactions for this analysis
 
 ```
@@ -570,7 +570,7 @@ draw_text("Data: ONS\nGraphic: @NearAndDistant",
 ```{r}
 
 # Writing to File
-ggsave(plot = map_uk_div, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_uk_div.png"), dpi = 360, height = 10, width = 8)
+ggsave(plot = map_uk_div, here::here("outputs/map_uk_div.png"), dpi = 360, height = 10, width = 8, bg = "white")
 
 ```
 

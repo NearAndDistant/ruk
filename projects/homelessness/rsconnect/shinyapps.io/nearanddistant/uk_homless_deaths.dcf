@@ -1,0 +1,14 @@
+name: uk_homless_deaths
+title: uk_homless_deaths
+username:
+account: nearanddistant
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5629795
+bundleId: 5566916
+url: https://nearanddistant.shinyapps.io/uk_homless_deaths/
+when: 1644539304.32523
+lastSyncTime: 1644539304.32525
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: homeless_deaths.Rmd

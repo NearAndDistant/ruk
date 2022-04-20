@@ -80,15 +80,20 @@ uk_gdhi_nuts1 %>%
 ```{r}
 
 # local authority boundaries
-uk_nuts3 <- 
-  readOGR( 
-  dsn = here::here("/Users/patrickcorby/Documents/Data/NUTS_Level_3_(January_2018)_Boundaries"), 
-  layer ="NUTS_Level_3_(January_2018)_Boundaries",
-  verbose=FALSE)
+# uk_nuts3 <- 
+#   readOGR( 
+#   dsn = here::here("XXX"), # personal pathway (first time only)
+#   layer ="NUTS_Level_3_(January_2018)_Boundaries",
+#   verbose=FALSE) %>%
+#   rgeos::gSimplify(tol = 0.01)
+
+#saveRDS(uk_nuts3, here::here("uk_nuts3"))
+# "=0" to "=1" to switch from read to edit
+uk_nuts3 <- readRDS(url("https://www.dropbox.com/s/aztcq1uvib0b8at/uk_nuts3?dl=1")) # personal dropbox
 
 uk_nuts3_simp <- 
   uk_nuts3 %>%
-  rmapshaper::ms_simplify() %>%
+  sf::st_as_sf() %>%
   janitor::clean_names() %>%
   rename(nuts_code = "nuts318cd",
          name      = "nuts318nm")
@@ -112,10 +117,10 @@ uk_nuts3_bens %>%
 filter(pc_type == "pc_tax") %>%
 arrange(desc(value)) %>%
 mutate(rown = row_number()) %>%
-mutate(value2 = if_else(rown %in% c(1:30), paste0(region_name.x, " (", scales::percent(value, accuracy = 0.01),")"), NA_character_))
+mutate(value2 = if_else(rown %in% c(1:30), paste0(region_name, " (", scales::percent(value, accuracy = 0.01),")"), NA_character_))
 #mutate(value2 = if_else(rown %in% c(1:30), paste0(region_name.x), NA_character_)) # for comparing lists
 
-nuts3_order <- unlist(map_trans %>% filter(!is.na(value2)) %>% select(value2) %>% st_drop_geometry())
+nuts3_order <- unlist(map_trans %>% filter(!is.na(value2)) %>% select(value2) %>% sf::st_drop_geometry())
 
 map_top <- # tax / bens
 map_trans %>%
@@ -126,7 +131,7 @@ mutate(value2 = factor(value2, levels = nuts3_order)) %>%
     coord_sf() +
     scale_fill_manual(values = rep("#990000" ,30), na.value = "#D3D3D3") + # tax = red: "#990000" / bens: "#51C56AFF"
     guides(fill = guide_legend(ncol = 1)) +
-    labs(fill = "Top 30 Benefit Sub-Regions as a % of Gross Income, highest to lowest rate",
+    labs(fill = "Top 30 Taxed Sub-Regions as a % of Gross Income, highest to lowest rate",
          caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
     theme_void() +
     theme(legend.title = element_text(face = "bold", size = 16),
@@ -149,9 +154,9 @@ map_trans %>%
     geom_sf(color = "#FFFFFF", aes(fill = value), size = 0.25) +
     geom_sf(data = ireland, color = "#FFFFFF", fill = "#D3D3D3" , size = 0.25) +
     coord_sf() +
-    rcartocolor::scale_fill_carto_c(palette = "Emrld", labels = scales::percent_format(accuracy = 1)) +
+    rcartocolor::scale_fill_carto_c(palette = "ag_Sunset", direction = -1, labels = scales::percent_format(accuracy = 1)) + # taxes: "ag_Sunset" / ben: "Emrld"
     guides(fill = guide_legend(ncol = 1)) +
-    labs(fill = "Welfare benefits\nas a % of Gross Income",
+    labs(fill = "Welfare taxes\nas a % of Gross Income",
          caption = "Data: ONS (GDHI) | Graphic: @NearAndDistant") +
     theme_void() +
     theme(legend.title = element_text(face = "bold"),
@@ -160,7 +165,7 @@ map_trans %>%
           plot.margin = margin(0,0,0,0, unit = "cm"))
 
 # save (don't forget to change the file name so as not to overwrite)
-ggsave(plot = map_ben, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_all_bens.jpeg"), 
+ggsave(plot = map_ben, here::here("projects/ons_region_gdhi_1997_2018/outputs/map_all_taxes.jpeg"), 
        dpi = 360, height = 10, width = 9)
 
 ```
@@ -230,7 +235,7 @@ net_changes_all <-
 ```{r}
 library(showtext); showtext_auto(); font_add_google("Roboto", "roboto")
 
-# pc net
+# % Net
 plot_pc_gross <-
 net_changes_all %>%
   ggplot(aes(year, pc_net, color = fill)) +
