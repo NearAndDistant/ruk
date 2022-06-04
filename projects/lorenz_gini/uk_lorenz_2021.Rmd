@@ -1,0 +1,540 @@
+---
+title: "UK Lorenz"
+author: "NearAndDistant"
+date: "19/05/2022"
+output: html_document
+---
+
+### STAGED CUMULATIVE DECILES TO LORENZ CURVE
+
+## Import
+```{r}
+library(tidyverse)
+
+#Download ONS data
+temp   <- tempfile()
+
+onsurl <- "https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpersonalandhouseholdfinances%2fincomeandwealth%2fdatasets%2fhouseholddisposableincomeandinequality%2ffinancialyearending2021/hdiireferencetables202021.xlsx"
+
+temp   <- curl::curl_download(url = onsurl, destfile = temp, quiet = FALSE, mode = "wb")
+
+decile_data <- 
+  readxl::read_xlsx(temp, sheet = "Table 14", range = "B69:K69", col_names = FALSE) %>% 
+  janitor::clean_names() %>%
+  pivot_longer(cols = everything(), names_to = "decile", values_to = "income") %>%
+  mutate(decile = str_remove(decile, "x")) %>%
+  mutate(decile = case_when(decile == 1  ~ "1st" ,
+                            decile == 2  ~ "2nd" ,
+                            decile == 3  ~ "3rd" ,
+                            decile == 4  ~ "4th" ,
+                            decile == 5  ~ "5th" ,
+                            decile == 6  ~ "6th" ,
+                            decile == 7  ~ "7th" ,
+                            decile == 8  ~ "8th" ,
+                            decile == 9  ~ "9th" ,
+                            decile == 10 ~ "10th")) %>%
+  mutate(decile = factor(decile, 
+                         levels = c("1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th"),
+                         ordered = TRUE))
+
+decile_cum <- decile_data %>% mutate(cumsum = cumsum(income),
+                                     equsum = max(cumsum/10),
+                                     equcum = cumsum(equsum),
+                                     pccum  = round(cumsum/max(cumsum),2),
+                                     equlor = seq(0.1, 1, 0.1))
+
+```
+
+### Cumulative Stacked Barchart
+```{r}
+
+# https://stackoverflow.com/questions/68203290/cumulative-stacked-bar-plot-with-the-same-variable-with-ggplot2
+
+plot_decile_dist <- 
+decile_data %>%
+  ggplot() +
+  geom_col(aes(decile, income, fill = decile)) +
+  scale_fill_viridis_d(option = "turbo", direction = 1, alpha = 0.95) +
+  scale_x_discrete("Income Decile Ranked", expand = c(0, 0)) +
+  scale_y_continuous("Average Income", 
+                     expand = c(0, 0), 
+                     labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,max(decile_data$income),10000),
+                     limits = c(0,max(decile_data$income))) +
+  guides(fill = guide_legend(nrow = 1, 
+                             title.position = "left", 
+                             title.vjust = 0.8,
+                             label.position = "bottom")) +
+  labs(title = "UK Decile Income Distribution (2021)",
+       fill = "Decile") +
+  theme_minimal() +
+  theme(plot.title = element_text(vjust = 2, size = 15),
+        legend.position = c(0.865,1.25),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(1.5,1.5,0.5,1, unit = "cm"))
+
+```
+
+### Overlaid with Equality and Lorenz Curves
+```{r}
+
+plot_decile_cum <- 
+decile_data %>%
+  crossing(decile2 = decile) %>%
+  filter(decile <= decile2) %>% # keep each decile to current decile
+  ggplot() +
+  geom_col(aes(decile2, income, fill = fct_rev(as_factor(decile)))) +
+  geom_line(data = decile_cum, aes(decile, cumsum), group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
+  geom_line(data = decile_cum, aes(decile, equcum), group = 1, linetype = "solid",  size = 0.7) +
+  scale_x_discrete("Cumulative Income Decile Ranked", expand = c(0, 0)) +
+  scale_y_continuous("Cumulative Average Income", 
+                     expand = c(0, 0), 
+                     labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,400000,25000),
+                     limits = c(0,max(decile_cum$cumsum))) +
+  scale_fill_viridis_d(option = "turbo", direction = -1, alpha = 0.95) +
+  labs(title = "... Stacked",
+       fill = "Decile") +
+  theme_minimal() +
+  theme(plot.title = element_text(vjust = 2, size = 15),
+        legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(1.5,1.5,0.5,1, unit = "cm"))
+
+```
+
+### Equality and Lorenz Curve only
+```{r}
+
+plot_decile_lorenz <- 
+decile_cum %>%
+  ggplot() +
+  geom_line(aes(decile, pccum), group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
+  geom_line(aes(decile, equlor), group = 1, linetype = "solid",  size = 0.7) +
+  scale_x_discrete("Cumulative Income Decile Ranked", expand = c(0.05, 0.05)) +
+  scale_y_continuous("Cumulative Normalised Income", 
+                     expand = c(0, 0), 
+                     #labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,1,0.1),
+                     limits = c(0,1)) +
+  labs(title = "... Lorenz Curve") +
+  theme_minimal() +
+  theme(plot.title = element_text(vjust = 2, size = 15),
+        legend.position = c(0.7,1.05),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(1.5,1.5,0.5,1, unit = "cm"))
+
+```
+
+### Staged Panels
+```{r}
+library(gridExtra)
+
+plot_final <-
+gridExtra::grid.arrange(plot_decile_dist, plot_decile_cum, plot_decile_lorenz, ncol = 3) 
+
+library(cowplot)
+
+plot_final <-
+ggdraw(plot_final) + draw_text("Data: ONS | Graphic: @NearAndDistant", angle = 90, size = 10, x = 0.64, y = 0.20)
+  
+```
+
+```{r}
+
+ggsave(plot = plot_final, here::here("ruk/projects/lorenz_gini/uk_lorenz.jpeg"), dpi = 360, height = 10, width = 16, bg = "white")
+
+```
+
+
+
+
+### MANIPULATING LORENZ 
+
+```{r}
+
+lorenz_facet <- 
+  decile_data %>%
+  mutate(group = as.numeric(decile),
+         col    = 1:10,
+         sub    = 1:10) %>%
+  select( group,  col, sub, everything()) %>%
+  expand( group, col, sub) %>%
+  arrange(group, col, sub) %>%
+  # adds in income
+  mutate(decile = rep(decile_data$decile,100),
+         income = rep(decile_data$income,100)) %>%
+  # transforms for lorenz
+  group_by(group, col) %>%
+  # donor
+  mutate(donor_split  = income[group == sub]*0.9) %>%
+  # additional transfer
+  mutate(trans_split  = income[group == sub]*0.1) %>%
+  # receipt
+  mutate(recpt_split  = if_else(col == sub & col != group, income + trans_split, income)) %>%
+  # final
+  mutate(lorenz_split = if_else(group == col & col == sub, income, recpt_split),
+         lorenz_split = if_else(group == sub & col != sub, donor_split, lorenz_split),
+         lorenz_split = round(lorenz_split)) %>%
+  ### checks ###
+      mutate(check = lorenz_split == income,
+             desc  = case_when(lorenz_split > income  ~ "Recepient", 
+                               lorenz_split < income  ~ "Donor",
+                               lorenz_split == income ~ NA_character_),) %>%
+      # group_by(group) %>%
+      # count(check) # should only be 9 false per group (1 donor & 9 receipts)
+  # cumsum and cumpop
+  mutate(cumsum = cumsum(lorenz_split),
+         equsum = max(cumsum/10),
+         equcum = cumsum(equsum),
+         pccum  = round(cumsum/max(cumsum),2),
+         equlor = seq(0.1, 1, 0.1)) %>%
+  mutate(meta   = paste0(str_pad(group, 2, pad = "0"), ".", str_pad(col, 2, pad = "0")),
+         gini   = Gini(lorenz_split),
+         ginilb = paste0(meta, "; g = ", str_pad(round(gini,4), 6, pad = "0", side = "right")),
+         fill   = if_else(group == col, NA_real_, gini)) %>%
+  ungroup()
+
+  
+```
+
+
+```{r}
+
+plot_lorenz_facet <-
+lorenz_facet %>%
+ggplot() +
+  geom_rect(aes(fill = fill), xmin = -Inf, xmax = Inf,  ymin = -Inf, ymax = Inf, alpha = 0.12, show.legend = FALSE) + 
+  geom_line(aes(decile, pccum),  group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
+  geom_line(aes(decile, equlor), group = 1, linetype = "solid",  size = 0.7) +
+  facet_wrap(~ginilb) +
+  scale_x_discrete(  "Regressive Distribution (Wealthier Recipients)", expand = c(0.05, 0.05)) +
+  scale_y_continuous("Progressive Distribution (Wealthier Donors)",  expand = c(0, 0),
+                     #labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,1,0.1),
+                     limits = c(0,1)) +
+  scale_fill_viridis_c(option = "turbo", direction = 1, na.value = NA, trans = "pseudo_log") +
+  guides(fill = guide_legend(nrow = 1, 
+                             title.position = "left", 
+                             title.vjust = 0.8,
+                             label.position = "bottom")) +
+  theme_minimal() +
+  theme(axis.title.x       = element_text(size = 13, vjust = -4, color = "grey40", hjust = 0),
+        axis.title.y       = element_text(size = 13, vjust =  4, color = "grey40", hjust = 1),
+        strip.text         = element_text(size = 10, color = "grey40"),
+        legend.position    = c(0.7,1.05),
+        axis.text          = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(3,1.5,1,1, unit = "cm"))
+
+### facade
+
+explan  <- expression(paste(~bold("How to Read this Chart: "), "Each plot is labeled `x.y; g` where `x` = donor decile, `y` = receiptient decile and `g` = Gini Index."))
+explan2 <- "Transfers between all deciles and their resultant index values are plotted. All transfers are 10% of donors income."
+
+plot_gini_trans <-
+ggdraw(plot_lorenz_facet) +
+  annotate("text", label = explan,  x = 0.02,  y = 0.95, color = "grey40", hjust = 0, size = 6.5) +
+  annotate("text", label = explan2, x = 0.025, y = 0.92, color = "grey40", hjust = 0, size = 6.5) +
+  annotate("segment", x = 0.024, xend = 0.024, y = 0.46, yend = 0.075,
+           arrow = grid::arrow(length = unit(0.3, "cm")), color = "grey40") +
+  annotate("segment", x = 0.30, xend = 0.95, y = 0.0295, yend = 0.0295,
+           arrow = grid::arrow(length = unit(0.3, "cm")), color = "grey40") +
+  annotate("text", label = "Graphic: @NearAndDistant | Data: ONS",  x = 0.97, y = 0.85, color = "grey40", hjust = 0, size = 4, angle = 270)
+
+plot_gini_trans
+
+```
+
+```{r}
+
+ggsave(plot = plot_gini_trans, here::here("ruk/projects/lorenz_gini/uk_gini.jpeg"), dpi = 360, height = 10, width = 16)
+
+ragg::agg_png(here::here("ruk/projects/lorenz_gini/uk_gini.jpeg"), height = 15, width = 22.5, units = "in", res = 300, scaling = 1.5)
+plot_gini_trans
+dev.off()
+
+```
+
+
+
+### lORENZASAURUS
+
+```{r}
+
+tot_inc <- sum(decile_data$income)
+
+cycles <- 1000
+
+lor_sim <-
+tibble(group  = rep(1:cycles, each = 10)) %>%
+  group_by(group) %>%
+  mutate(rand_inc = diff(c(0, sort(runif(9)), 1))*tot_inc) %>%
+  mutate(gini = round(Gini(rand_inc),4)) %>%
+  arrange(group, rand_inc) %>% 
+  mutate(decile = decile_data$decile) %>%
+  mutate(label  = paste0(group, ";", gini)) %>%
+  # group_by(group) %>%
+  # summarise(gini = Gini(rand_inc)) %>% 
+  mutate(cumsum = cumsum(rand_inc),
+       equsum = max(cumsum/10),
+       equcum = cumsum(equsum),
+       pccum  = round(cumsum/max(cumsum),2),
+       equlor = seq(0.1, 1, 0.1)) %>%
+  ungroup()
+
+################################### lorenz
+plot_sim <-
+lor_sim %>%
+#filter(gini > 0.30 & gini <= 0.3274) %>%
+filter(gini %in% c(0.3047, 0.3274)) %>% view()
+ggplot() +
+  geom_line(aes(decile, pccum),  group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
+  geom_line(aes(decile, equlor), group = 1, linetype = "solid",  size = 0.7) +
+  geom_text(aes(label = gini), x = "1st", y = 0.9, size = 10, hjust = 0) +
+  facet_wrap(~label) +
+  scale_x_discrete("Cumulative Income Decile Ranked", expand = c(0.05, 0.05)) +
+  scale_y_continuous("Cumulative Normalised Income", 
+                     expand = c(0, 0), 
+                     #labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,1,0.1),
+                     limits = c(0,1)) +
+  labs(caption = "Graphic: @NearAndDistant | Data: ONS") +
+  theme_minimal() +
+  theme(plot.caption       = element_text(size =  9, vjust =  1, color = "grey40"),
+        axis.title.x       = element_text(size = 13, vjust = -4, color = "grey40"),
+        axis.title.y       = element_text(size = 13, vjust =  4, color = "grey40"),
+        strip.text         = element_blank(),
+        panel.spacing = unit(2, "lines"),
+        legend.position    = c(0.7,1.05),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        plot.margin = margin(1.5,1.5,1,1, unit = "cm"))
+
+plot_sim_ann <- 
+ggdraw(plot_sim) + 
+  annotate("segment", x = 0.165, xend = 0.165, y = 0.105, yend = 0.935, size = 1, color = "#DE4968FF") +
+  annotate("segment", x = 0.63, xend = 0.63, y = 0.105, yend = 0.935, size = 1, color = "#DE4968FF")
+
+ggsave(plot = plot_sim_ann, here::here("ruk/projects/lorenz_gini/uk_gini_sim.jpeg"), dpi = 360, height = 10, width = 16, bg = "white")
+
+```
+
+
+
+
+### INCOME PERCENTILE 1 to 99 (BEFORE AND AFTER TAX)
+
+```{r}
+
+#Download ONS data
+temp   <- tempfile()
+
+onsurl <- "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1059906/Table_3.1a_1920.ods"
+
+temp   <- curl::curl_download(url = onsurl, destfile = temp, quiet = FALSE, mode = "wb")
+
+percentile_raw <-
+  readODS::read_ods(temp, sheet = "Table_3_1a_before_tax", range = "A5:V104", col_names = TRUE) %>%
+  janitor::clean_names() %>%
+  rename(percentile = "percentile_point_for_total_income_before_tax") %>%
+  select(percentile, x2019_20) %>%
+  mutate(percentile = percentile/100) %>%
+  mutate(cumsum = cumsum(x2019_20),
+         equsum = max(cumsum/99),
+         equcum = cumsum(equsum),
+         pccum  = cumsum/max(cumsum),
+         equlor = equcum/max(equcum),
+         ymin   = if_else(percentile < 0.90, percentile_raw$pccum[which(percentile_raw$percentile == 0.90)], pccum))
+
+### plot
+#plot_percentile <-
+percentile_raw %>%
+  ggplot() +
+  geom_line(aes(percentile, pccum), group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
+  geom_line(aes(percentile, equlor), group = 1, linetype = "solid",  size = 0.7) +
+  # geom_ribbon(aes(percentile, ymin = pccum, ymax = equlor), fill = "#3487A6FF", alpha = 0.4) +
+  # other inequality metrics
+  ## 99 percentile
+  geom_area(data = percentile_raw %>% filter(percentile >=0.98), aes(percentile, pccum), fill = "#35264CFF", alpha = 0.4) +
+  # 95 percentile
+  geom_area(data = percentile_raw %>% filter(percentile >=0.95), aes(percentile, pccum), fill = "#366DA0FF", alpha = 0.4) +
+  # 90 percentile
+  geom_area(data   = percentile_raw %>% filter(percentile >=0.90), aes(percentile, pccum), fill = "#35A1ABFF", alpha = 0.4) +
+  geom_ribbon(data = percentile_raw, aes(percentile, ymin = ymin, ymax = 1),
+              fill = "#DE4968FF", alpha = 0.4) +
+  annotate(geom  = "segment", 
+           color = "#DE4968FF",
+           size  = 1,
+           x     = 0.01, 
+           xend  = 0.90, 
+           y     = percentile_raw$pccum[which(percentile_raw$percentile == 0.90)],
+           yend  = percentile_raw$pccum[which(percentile_raw$percentile == 0.90)]) + 
+  # 10 percentile
+  geom_area(data   = percentile_raw %>% filter(percentile <=0.10), aes(percentile, pccum), fill = "#231526FF", alpha = 0.4) +
+  geom_ribbon(data = percentile_raw %>% filter(percentile <=0.10), aes(percentile, ymin = pccum, ymax = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)]), 
+              fill = "#DE4968FF", alpha = 0.4) +
+  annotate(geom  = "segment", 
+           color = "#DE4968FF",
+           size  = 1,
+           x     = 0.01, 
+           xend  = 0.10, 
+           y     = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)],
+           yend  = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)]) + 
+  geom_text(x = 0.03, y = 0.45, hjust = .12, color = "#DE4968FF",
+            label = paste0("10:90 Decile Ratio: ", 
+                           round(percentile_raw$x2019_20[which(percentile_raw$percentile == 0.90)] / percentile_raw$x2019_20[which(percentile_raw$percentile == 0.10)],4))) +
+  geom_text(x = 0.94, y = 1.02, label = paste0("Gini: ", round(ineq::Gini(percentile_raw$x2019_20),4)), hjust = .17) +
+  scale_x_continuous("Cumulative Income Percentile Ranked", 
+                     expand = c(0.01, 0),
+                     breaks = c(0.01, seq(0,0.95,0.05), 0.99),
+                     limits = c(0.01,1)) +
+  scale_y_continuous("Cumulative Normalised Income", 
+                     expand = c(0, 0), 
+                     breaks = seq(0,1,0.05),
+                     limits = c(0,1)) +
+  coord_cartesian(clip = "off") +
+  labs(title = "Percentile (1-99) Lorenz Curve, Before Tax (2019/20)") +
+  theme_minimal() +
+  theme(plot.title = element_text(vjust = 2, size = 15),
+        legend.position = c(0.7,1.05),
+        axis.title.x = element_text(vjust = -4, color = "grey40"),
+        axis.title.y = element_text(vjust =  4, color = "grey40"),
+        panel.grid = element_line(color = "grey97"),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(1.5,2,1.5,1.5, unit = "cm"))
+
+```
+
+```{r}
+
+ggsave(plot = plot_percentile, here::here("ruk/projects/lorenz_gini/uk_percentile_lorenz.jpeg"), dpi = 360, height = 9.90, width = 16.1)
+
+```
+
+### COMPARING NON-RETIREES WITH RETIREES
+
+## Importing Data
+```{r}
+
+### RETIRED
+retired_decile_data <- 
+  readxl::read_xlsx(temp, sheet = "Table 22", range = "B68:K68", col_names = FALSE) %>% 
+  janitor::clean_names() %>%
+  pivot_longer(cols = everything(), names_to = "decile", values_to = "income") %>%
+  mutate(decile = str_remove(decile, "x")) %>%
+  mutate(decile = case_when(decile == 1  ~ "1st" ,
+                            decile == 2  ~ "2nd" ,
+                            decile == 3  ~ "3rd" ,
+                            decile == 4  ~ "4th" ,
+                            decile == 5  ~ "5th" ,
+                            decile == 6  ~ "6th" ,
+                            decile == 7  ~ "7th" ,
+                            decile == 8  ~ "8th" ,
+                            decile == 9  ~ "9th" ,
+                            decile == 10 ~ "10th")) %>%
+  mutate(decile = factor(decile, 
+                         levels = c("1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th"),
+                         ordered = TRUE)) %>%
+  mutate(type = "retired",
+         cumsum = cumsum(income),
+         equsum = max(cumsum/10),
+         equcum = cumsum(equsum),
+         pccum  = round(cumsum/max(cumsum),2),
+         equlor = seq(0.1, 1, 0.1))
+
+### NON-RETIRED
+non_retired_decile_data <- 
+  readxl::read_xlsx(temp, sheet = "Table 18", range = "B68:K68", col_names = FALSE) %>% 
+  janitor::clean_names() %>%
+  pivot_longer(cols = everything(), names_to = "decile", values_to = "income") %>%
+  mutate(decile = str_remove(decile, "x")) %>%
+  mutate(decile = case_when(decile == 1  ~ "1st" ,
+                            decile == 2  ~ "2nd" ,
+                            decile == 3  ~ "3rd" ,
+                            decile == 4  ~ "4th" ,
+                            decile == 5  ~ "5th" ,
+                            decile == 6  ~ "6th" ,
+                            decile == 7  ~ "7th" ,
+                            decile == 8  ~ "8th" ,
+                            decile == 9  ~ "9th" ,
+                            decile == 10 ~ "10th")) %>%
+  mutate(decile = factor(decile, 
+                         levels = c("1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th"),
+                         ordered = TRUE)) %>%
+  mutate(type = "non-retired",
+         cumsum = cumsum(income),
+         equsum = max(cumsum/10),
+         equcum = cumsum(equsum),
+         pccum  = round(cumsum/max(cumsum),2),
+         equlor = seq(0.1, 1, 0.1))
+
+### bind retired and non-retired 
+nr_r_deciles <- rbind(retired_decile_data, non_retired_decile_data)
+
+```
+
+### Retired and Non-Retired Overlaid
+```{r}
+library(ineq)
+
+sec_breaks <- c(max(retired_decile_data$cumsum), 
+                max(decile_cum$cumsum),
+                max(non_retired_decile_data$cumsum))
+
+sec_labels <- c(paste0("Gini Index: ", round(Gini(retired_decile_data$income),4)), 
+                paste0("Gini Index\n(total pop): ", round(Gini(decile_data$income),4)),
+                paste0("Gini Index: ", round(Gini(non_retired_decile_data$income),4)))
+
+plot_rnr <- 
+nr_r_deciles %>%
+  select(decile, type, cumsum, equcum) %>%
+  pivot_longer(cols = c(cumsum, equcum), names_to = "curve", values_to = "income") %>%
+  mutate(curve = factor(curve, levels = c("equcum", "cumsum")),
+         curve = str_to_title(curve),
+         type  = str_to_title(type)) %>%
+  ggplot(aes(x = decile, y = income, color = type,linetype = curve, group = interaction(type, curve))) +
+  geom_line(size = 1.1) +
+  scale_linetype() +
+  scale_x_discrete("Cumulative Income Decile Ranked", expand = c(0.05, 0.05)) +
+  scale_y_continuous("Cumulative Normalised Income", 
+                     expand = c(0, 0), 
+                     labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,400000,50000),
+                     limits = c(0,400000),
+                     sec.axis = dup_axis(breaks = sec_breaks,
+                                         labels = sec_labels)) +
+  scale_fill_viridis_d(option = "mako", direction = -1, alpha = 0.95) +
+  guides(fill = guide_legend(nrow = 1, 
+                             title.position = "left", 
+                             title.vjust = 0.8,
+                             label.position = "bottom")) +
+  labs(title = "Lorenz & Equality Curve Stratified by Retired / Non-Retired",
+       color = NULL,
+       linetype = NULL) +
+  theme_minimal() +
+  theme(plot.title = element_text(vjust = 5, size = 15),
+        legend.position = c(0.09,0.935),
+        legend.text = element_text(size = 12),
+        legend.direction = "horizontal",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        axis.title.x = element_text(size = 12, vjust = -3),
+        axis.title.y = element_text(size = 12, vjust =  3),
+        axis.title.y.right = element_blank(),
+        axis.text.y.right = element_text(face = "bold", size = 12, color = c("#00c2c6", "#555555", "#ff6c67"), hjust = 0),
+        plot.margin = margin(1.5,0.5,0.5,1, unit = "cm"))
+
+### finalise and save
+plot_rnr_final <-
+ggdraw(plot_rnr) + draw_text("Data: ONS | Graphic: @NearAndDistant", size = 12, x = 0.80, y = 0.15)
+  
+ggsave(plot = plot_rnr_final, here::here("ruk/projects/lorenz_gini/uk_rnr_lorenz.jpeg"), height = 9.90, width = 16.1)
+
+```
