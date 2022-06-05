@@ -156,6 +156,8 @@ ggsave(plot = plot_final, here::here("ruk/projects/lorenz_gini/uk_lorenz.jpeg"),
 
 ```{r}
 
+library(ineq)
+
 lorenz_facet <- 
   decile_data %>%
   mutate(group = as.numeric(decile),
@@ -231,6 +233,8 @@ ggplot() +
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         plot.margin = margin(3,1.5,1,1, unit = "cm"))
+
+plot_lorenz_facet
 
 ### facade
 
@@ -349,47 +353,59 @@ percentile_raw <-
          equsum = max(cumsum/99),
          equcum = cumsum(equsum),
          pccum  = cumsum/max(cumsum),
-         equlor = equcum/max(equcum),
-         ymin   = if_else(percentile < 0.90, percentile_raw$pccum[which(percentile_raw$percentile == 0.90)], pccum))
+         equlor = equcum/max(equcum))
+
+percentile_trans <- 
+  percentile_raw %>% 
+  mutate(ymin  = if_else(percentile < 0.90, percentile_raw$pccum[which(percentile_raw$percentile == 0.90)], pccum)) %>%
+  mutate(share = round(pccum - lag(pccum), 4),
+         check = x2019_20/sum(x2019_20))
+
+# library(ggside)
 
 ### plot
-#plot_percentile <-
-percentile_raw %>%
+plot_percentile <-
+percentile_trans %>%
   ggplot() +
   geom_line(aes(percentile, pccum), group = 1, linetype = "dashed", size = 0.7, color = "grey20") +
   geom_line(aes(percentile, equlor), group = 1, linetype = "solid",  size = 0.7) +
   # geom_ribbon(aes(percentile, ymin = pccum, ymax = equlor), fill = "#3487A6FF", alpha = 0.4) +
   # other inequality metrics
   ## 99 percentile
-  geom_area(data = percentile_raw %>% filter(percentile >=0.98), aes(percentile, pccum), fill = "#35264CFF", alpha = 0.4) +
+  geom_area(data = percentile_trans %>% filter(percentile >=0.98), aes(percentile, pccum), fill = "#35264CFF", alpha = 0.4) +
+  geom_text(x = 1, y = 0.99, label = paste0("  1% (", round(max(percentile_trans$share, na.rm = TRUE),2)*100, "% of wealth)"), hjust = 0) +
   # 95 percentile
-  geom_area(data = percentile_raw %>% filter(percentile >=0.95), aes(percentile, pccum), fill = "#366DA0FF", alpha = 0.4) +
+  geom_area(data = percentile_trans %>% filter(percentile >=0.95), aes(percentile, pccum), fill = "#366DA0FF", alpha = 0.4) +
+  geom_text(x = 1, y = 0.95, label = paste0("  5% (", round(percentile_trans$share[which(percentile_trans$percentile == 0.95)],2)*100, "% of wealth)"), hjust = 0) +
   # 90 percentile
-  geom_area(data   = percentile_raw %>% filter(percentile >=0.90), aes(percentile, pccum), fill = "#35A1ABFF", alpha = 0.4) +
-  geom_ribbon(data = percentile_raw, aes(percentile, ymin = ymin, ymax = 1),
+  geom_area(data   = percentile_trans %>% filter(percentile >=0.90), aes(percentile, pccum), fill = "#35A1ABFF", alpha = 0.4) +
+  geom_text(x = 1, y = 0.90, label = paste0("10% (", round(percentile_trans$share[which(percentile_trans$percentile == 0.90)],2)*100, "% of wealth)"), hjust = 0) +
+  geom_ribbon(data = percentile_trans, aes(percentile, ymin = ymin, ymax = 1),
               fill = "#DE4968FF", alpha = 0.4) +
   annotate(geom  = "segment", 
            color = "#DE4968FF",
            size  = 1,
            x     = 0.01, 
            xend  = 0.90, 
-           y     = percentile_raw$pccum[which(percentile_raw$percentile == 0.90)],
-           yend  = percentile_raw$pccum[which(percentile_raw$percentile == 0.90)]) + 
+           y     = percentile_trans$pccum[which(percentile_trans$percentile == 0.90)],
+           yend  = percentile_trans$pccum[which(percentile_trans$percentile == 0.90)]) + 
   # 10 percentile
-  geom_area(data   = percentile_raw %>% filter(percentile <=0.10), aes(percentile, pccum), fill = "#231526FF", alpha = 0.4) +
-  geom_ribbon(data = percentile_raw %>% filter(percentile <=0.10), aes(percentile, ymin = pccum, ymax = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)]), 
+  geom_area(data   = percentile_trans %>% filter(percentile <=0.10), aes(percentile, pccum), fill = "#231526FF", alpha = 0.4) +
+  geom_text(x = 1, y = 0.02, label = paste0("10% (", round(percentile_trans$share[which(percentile_trans$percentile == 0.10)],4)*100, "% of wealth)"), hjust = 0) +
+  geom_ribbon(data = percentile_trans %>% filter(percentile <=0.10), aes(percentile, ymin = pccum, ymax = percentile_trans$pccum[which(percentile_trans$percentile == 0.10)]), 
               fill = "#DE4968FF", alpha = 0.4) +
   annotate(geom  = "segment", 
            color = "#DE4968FF",
            size  = 1,
            x     = 0.01, 
            xend  = 0.10, 
-           y     = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)],
-           yend  = percentile_raw$pccum[which(percentile_raw$percentile == 0.10)]) + 
+           y     = percentile_trans$pccum[which(percentile_trans$percentile == 0.10)],
+           yend  = percentile_trans$pccum[which(percentile_trans$percentile == 0.10)]) + 
   geom_text(x = 0.03, y = 0.45, hjust = .12, color = "#DE4968FF",
             label = paste0("10:90 Decile Ratio: ", 
-                           round(percentile_raw$x2019_20[which(percentile_raw$percentile == 0.90)] / percentile_raw$x2019_20[which(percentile_raw$percentile == 0.10)],4))) +
-  geom_text(x = 0.94, y = 1.02, label = paste0("Gini: ", round(ineq::Gini(percentile_raw$x2019_20),4)), hjust = .17) +
+                           round(percentile_trans$x2019_20[which(percentile_trans$percentile == 0.90)] / percentile_trans$x2019_20[which(percentile_trans$percentile == 0.10)],4))) +
+  # Gini index
+  geom_text(x = 0.94, y = 1.02, label = paste0("Gini: ", round(ineq::Gini(percentile_trans$x2019_20),4)), hjust = .17) +
   scale_x_continuous("Cumulative Income Percentile Ranked", 
                      expand = c(0.01, 0),
                      breaks = c(0.01, seq(0,0.95,0.05), 0.99),
@@ -398,23 +414,29 @@ percentile_raw %>%
                      expand = c(0, 0), 
                      breaks = seq(0,1,0.05),
                      limits = c(0,1)) +
+  ## ggside
+  # geom_xsideline(aes(x = percentile, y = share)) +
+  # ggside(x.pos = "bottom") +
+  # scale_xsidey_continuous(limits = c(0, round(max(percentile_trans$share, na.rm = TRUE),2))) +
   coord_cartesian(clip = "off") +
-  labs(title = "Percentile (1-99) Lorenz Curve, Before Tax (2019/20)") +
+  labs(title = "Percentile (1-99) Lorenz Curve, Before Tax (2019/20)", 
+       caption = "Graphic: @NearAndDistant | Data: ONS")+
   theme_minimal() +
   theme(plot.title = element_text(vjust = 2, size = 15),
+        plot.caption = element_text(size = 10, color = "grey40", hjust = 0),
         legend.position = c(0.7,1.05),
-        axis.title.x = element_text(vjust = -4, color = "grey40"),
-        axis.title.y = element_text(vjust =  4, color = "grey40"),
+        axis.title.x = element_text(vjust = -6, color = "grey40"),
+        axis.title.y = element_text(vjust =  6, color = "grey40"),
         panel.grid = element_line(color = "grey97"),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
-        plot.margin = margin(1.5,2,1.5,1.5, unit = "cm"))
+        plot.margin = margin(1.5,3.75,1.5,1.5, unit = "cm"))
 
 ```
 
 ```{r}
 
-ggsave(plot = plot_percentile, here::here("ruk/projects/lorenz_gini/uk_percentile_lorenz.jpeg"), dpi = 360, height = 9.90, width = 16.1)
+ggsave(plot = plot_percentile, here::here("ruk/projects/lorenz_gini/uk_percentile_lorenz.jpeg"), dpi = 360, height = 10, width = 16, bg = "white")
 
 ```
 
