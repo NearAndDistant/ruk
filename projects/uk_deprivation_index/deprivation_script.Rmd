@@ -6,7 +6,11 @@ output: html_document
 ---
 
 ```{r}
-dir.create(here::here("projects/uk_deprivation_index"))
+dir.create(here::here("uk_deprivation_index"))
+
+# temp file to be used throughout
+temp   <- tempfile()
+
 ```
 
 # DEPRIVATION DATA
@@ -24,11 +28,10 @@ E_expanded_decile     - the English deciles, with scores for other nations fitte
 UK_IMD_E_pop_decile   - A new set of deciles for the whole dataset, so that 10% of the population is in each decile (uneven number of areas).
 UK_IMD_E_pop_quintile - A new set of quintiles for the whole dataset, so that 20% of the population is in each quintile (uneven number of areas).
 
-The ONS do a subset of this analysis for England and Wales only, see here:
+The ONS do a subset of this analysis for England and Wales **only**. We want all UK nations (inc. Scotland & N. Ireland), see here:
 https://commonslibrary.parliament.uk/research-briefings/cbp-7327/
 
 ```{r}
-
 library(tidyverse)
 
 ukdi_raw <- 
@@ -38,10 +41,9 @@ ukdi_raw <-
 
 ```
 
-
 # CONSTITUENCY POPULATION
 
-Constituencies:
+### Constituencies:
 
 533 in England
 40  in Wales
@@ -54,12 +56,11 @@ https://commonslibrary.parliament.uk/constituency-statistics-population-by-age/
 # POPULATION ESTIMATES
 
 ```{r}
-
 # Constituencies
 onsurl <- "https://data.parliament.uk/resources/constituencystatistics/PowerBIData/Demography/Population.xlsx"
 temp   <- curl::curl_download(url = onsurl, destfile = temp, quiet = FALSE, mode = "wb")
 
-all_pop_raw <- 
+con_pop_raw <- 
   readxl::read_xlsx(temp, sheet = "Age by year data" , range = "A1:E59151") %>% 
   janitor::clean_names() %>%
   distinct(pcon11cd, .keep_all = TRUE) %>%
@@ -77,7 +78,7 @@ all_pop_raw <-
 curl <- "https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2020sape23dt2/sape23dt2mid2020lsoasyoaestimatesunformatted.xlsx"
 temp   <- curl::curl_download(url = curl, destfile = temp, quiet = FALSE, mode = "wb")
 
-sloa_pop_eng <- 
+lsoa_pop_eng <- 
   readxl::read_xlsx(temp, sheet = "Mid-2020 Persons", skip = 4) %>% 
   janitor::clean_names() %>%
   distinct(lsoa_code, .keep_all = TRUE) %>%
@@ -85,8 +86,8 @@ sloa_pop_eng <-
 
 # Scotland
 # source: https://www.opendata.nhs.scot/dataset/population-estimates/resource/c505f490-c201-44bd-abd1-1bd7a64285ee?inner_span=True
-sloa_pop_scot <- 
-  read_csv("projects/uk_deprivation_index/c505f490-c201-44bd-abd1-1bd7a64285ee.csv") %>%
+lsoa_pop_scot <- 
+  read_csv("uk_deprivation_index/c505f490-c201-44bd-abd1-1bd7a64285ee.csv") %>%
   janitor::clean_names() %>%
   filter(year == 2020) %>%
   distinct(data_zone, .keep_all = TRUE) %>%
@@ -94,7 +95,7 @@ sloa_pop_scot <-
 
 # N. Ireland
 # source: https://data.gov.uk/dataset/2135b9bf-eb38-4c81-b614-7b07e8fdfc82/population-estimates-for-super-output-areas-soas-and-former-electoral-wards-northern-ireland/datafile/fc3f91dd-a0c7-488a-9996-bd057a7cfffe/preview
-sloa_pop_nire <-
+lsoa_pop_nire <-
   read_csv("https://www.opendatani.gov.uk/dataset/2135b9bf-eb38-4c81-b614-7b07e8fdfc82/resource/fc3f91dd-a0c7-488a-9996-bd057a7cfffe/download/super-output-areas-soas-by-gender-and-broad-age-bands-mid-2001-to-mid-2020.csv") %>%
   janitor::clean_names() %>%
   filter(mid_year_ending == 2020 & gender == "All persons" & age_group == "All ages") %>%
@@ -106,33 +107,38 @@ sloa_pop_nire <-
 ```{r}
 
 # bind all SLOA dfs together
-sloa_pop_all <- rbind(sloa_pop_eng, sloa_pop_scot, sloa_pop_nire)
+lsoa_pop_all <- rbind(lsoa_pop_eng, lsoa_pop_scot, lsoa_pop_nire)
 
 ```
 
+# MAPPING LSOA TO CONSTITUENCIES
 
-We need to join the constituency to the deprivation index which is in Lower Super Output Areas (LSOA)
+We need to join the deprivation index data - which is in Lower Super Output Areas (LSOA) - to their respective constituencies.
 
-England & Wales data, here: 
+England & Wales data, here: https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_WPC)
 Scottish data, here: https://statistics.gov.scot/data/data-zone-lookup
 N. Ireland data, here: https://www.nisra.gov.uk/support/geography/northern-ireland-small-areas
 
-SLOA:
+### LSOAs:
 
 32,844  in England
  1,909  in Wales
  6,976  in Scotland
    890  in Northern Ireland.
    
-42,619  Total
+42,619  Total LSOAs
 
 ```{r}
 
-# England
-con_ward  <- read_csv(here::here("projects/uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_to_Upper_Tier_Local_Authority__December_2020__Lookup_in_the_United_Kingdom_V2.csv"))
+# England - lsoas and constituency geo-areas are removed by degrees from each other. We use Wards to map them across to each other.
+
+## constituencies to wards
+con_ward  <- read_csv(here::here("uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_to_Upper_Tier_Local_Authority__December_2020__Lookup_in_the_United_Kingdom_V2.csv"))
 # there are some missing lsoa to cons which we need to bring in for Leeds (only) from the last year (2019)
-con_ward2 <- read_csv(here::here("projects/uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_(December_2019)_Lookup_in_the_United_Kingdom.csv"))
-ward_lsoa <- read_csv(here::here("projects/uk_deprivation_index/Lower_Layer_Super_Output_Area__2011__to_Ward__2020__Lookup_in_England_and_Wales.csv"))
+con_ward2 <- read_csv(here::here("uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_(December_2019)_Lookup_in_the_United_Kingdom.csv"))
+
+## wards to lsoa
+ward_lsoa <- read_csv(here::here("uk_deprivation_index/Lower_Layer_Super_Output_Area__2011__to_Ward__2020__Lookup_in_England_and_Wales.csv"))
 
 lsoa_eng  <- 
   ward_lsoa %>% 
@@ -150,13 +156,29 @@ lsoa_eng  <-
 # Scotland
 lsoa_scot <- read_csv("https://scottish-government-files.s3.amazonaws.com/13360f3a-ca68-4f3e-8b7f-caffed8712eb/DataZone2011lookup_2022-05-31.csv")
 
-#N. Ireland
+# N. Ireland
+## missing names (codes only, we need names for graphics) so download seperate table to join
+
+# lsoa codes
 nisurl <- "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/Look-up%20Tables_0.xlsx"
 temp   <- curl::curl_download(url = nisurl, destfile = temp, quiet = FALSE, mode = "wb")
-lsoa_nire <-readxl::read_xlsx(temp, sheet = "COA2001") %>% 
+
+lsoa_nire_cd <- readxl::read_xlsx(temp, sheet = "COA2001") %>% 
   janitor::clean_names() %>%
   distinct(soa2001, .keep_all = TRUE) %>%
   select(soa2001, aa2008)
+
+# lsoa names, source, here: https://data.nicva.org/dataset/geographical-names-and-codes-tables/resource/f072a627-5e70-4647-8b55-e5cdc1ba6b9a
+lsoa_nire_nm <- read_csv("https://data.nicva.org/sites/default/files/ni_geography_names_codes_all_types_Mar2017.csv")
+
+# join nire codes to names
+lsoa_nire <-
+  lsoa_nire_cd %>%
+  left_join(lsoa_nire_nm, by = c(soa2001 = "code")) %>%
+  rename(soa2001nm = name) %>%
+  left_join(lsoa_nire_nm, by = c(aa2008 = "code")) %>%
+  rename(aa2008nm = name) %>%
+  select(-unit.x, -unit.y, -source.x, -source.y)
 
 ```
 
@@ -175,23 +197,18 @@ ukdi_raw %>%
   select(nation, lsoa, LSOA11NM, PCON20CD, PCON20NM, uk_imd_e_rank, uk_imd_e_score) %>%
   # N. Ireland
   left_join(lsoa_nire, by = c(lsoa = "soa2001")) %>%
-  mutate(PCON20CD = if_else(is.na(PCON20CD), aa2008, PCON20CD)) %>%
-  select(-aa2008) %>%
+  mutate(LSOA11NM = if_else(is.na(LSOA11NM), soa2001nm, LSOA11NM),
+         PCON20CD = if_else(is.na(PCON20CD), aa2008, PCON20CD),
+         PCON20NM = if_else(is.na(PCON20NM), aa2008nm, PCON20NM)) %>%
+  select(-aa2008, -aa2008nm, -soa2001nm) %>%
   # add sloa pop
-  left_join(sloa_pop_all, by = c(lsoa = "lsoa_code"))
+  left_join(lsoa_pop_all, by = c(lsoa = "lsoa_code"))
 
 ```
 
 ```{r}
-
-# check all constituencies caught
-# all_pop_raw %>%
-#   left_join(ukdi_index %>% distinct(PCON20CD), by = c(con_code = "PCON20CD")) %>%
-#   view()
-
-ukdi_cons %>% anti_join(all_pop_raw, by = c(PCON20CD = "con_code")) %>% view()
-
-
+# checks no missing values
+ukdi_cons %>% anti_join(con_pop_raw, by = c(PCON20CD = "con_code")) %>% count(PCON20CD)
 ```
 
 ```{r}
@@ -206,17 +223,23 @@ ukdi_cons %>%
          cons_index    = sum(ukdi_weighted)) %>%
   ungroup() %>%
   arrange(desc(cons_index)) %>%
-  group_by(cons_index) %>%
+  group_by(fct_inorder(PCON20CD)) %>%
   mutate(cons_rank     = cur_group_id())
 
+# summary
+ukdi_index_summary <- ukdi_index %>% distinct(cons_index, .keep_all = TRUE)
+
+```
+
+```{r}
+# checks all constituencies caught
+con_pop_raw %>%
+  left_join(ukdi_index %>% distinct(PCON20CD), by = c(con_code = "PCON20CD"))
 ```
 
 # ELECTION DATA
 
 ```{r}
-
-# temp file to be used throughout
-temp   <- tempfile()
 
 # 2021 elections
 curl <- "https://commonslibrary.parliament.uk/content/uploads/2022/04/LEH-2021-datafile.xlsx"
