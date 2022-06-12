@@ -10,7 +10,6 @@ dir.create(here::here("uk_deprivation_index"))
 
 # temp file to be used throughout
 temp   <- tempfile()
-
 ```
 
 # DEPRIVATION DATA
@@ -43,12 +42,12 @@ ukdi_raw <-
 
 # CONSTITUENCY POPULATION
 
-### Constituencies:
+### Constituencies (LSOA):
 
-533 in England
-40  in Wales
-59  in Scotland
-18  in Northern Ireland.
+533 in England (32,844)
+40  in Wales (1,909)
+59  in Scotland (6,976)
+18  in Northern Ireland (890)
 
 Here we will be using the joined dataset, for this project and filtering to what we need for all 650 constituencies, here:
 https://commonslibrary.parliament.uk/constituency-statistics-population-by-age/
@@ -56,7 +55,8 @@ https://commonslibrary.parliament.uk/constituency-statistics-population-by-age/
 # POPULATION ESTIMATES
 
 ```{r}
-# Constituencies
+# Constituencies population
+
 onsurl <- "https://data.parliament.uk/resources/constituencystatistics/PowerBIData/Demography/Population.xlsx"
 temp   <- curl::curl_download(url = onsurl, destfile = temp, quiet = FALSE, mode = "wb")
 
@@ -70,10 +70,9 @@ con_pop_raw <-
 ```
 
 ```{r}
+# SLOA population
 
-# SLOAs
-
-# England and Wales
+# England and Wales (34,753 = does not match IMD file)
 # source: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimatesnationalstatistics
 curl <- "https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2020sape23dt2/sape23dt2mid2020lsoasyoaestimatesunformatted.xlsx"
 temp   <- curl::curl_download(url = curl, destfile = temp, quiet = FALSE, mode = "wb")
@@ -84,7 +83,7 @@ lsoa_pop_eng <-
   distinct(lsoa_code, .keep_all = TRUE) %>%
   select(lsoa_code, pop_est = "all_ages")
 
-# Scotland
+# Scotland (6,976 = the IMD file)
 # source: https://www.opendata.nhs.scot/dataset/population-estimates/resource/c505f490-c201-44bd-abd1-1bd7a64285ee?inner_span=True
 lsoa_pop_scot <- 
   read_csv("uk_deprivation_index/c505f490-c201-44bd-abd1-1bd7a64285ee.csv") %>%
@@ -93,7 +92,7 @@ lsoa_pop_scot <-
   distinct(data_zone, .keep_all = TRUE) %>%
   select(lsoa_code = "data_zone", pop_est = "all_ages")
 
-# N. Ireland
+# N. Ireland (890 = the IMD file)
 # source: https://data.gov.uk/dataset/2135b9bf-eb38-4c81-b614-7b07e8fdfc82/population-estimates-for-super-output-areas-soas-and-former-electoral-wards-northern-ireland/datafile/fc3f91dd-a0c7-488a-9996-bd057a7cfffe/preview
 lsoa_pop_nire <-
   read_csv("https://www.opendatani.gov.uk/dataset/2135b9bf-eb38-4c81-b614-7b07e8fdfc82/resource/fc3f91dd-a0c7-488a-9996-bd057a7cfffe/download/super-output-areas-soas-by-gender-and-broad-age-bands-mid-2001-to-mid-2020.csv") %>%
@@ -105,19 +104,18 @@ lsoa_pop_nire <-
 ```
 
 ```{r}
-
 # bind all SLOA dfs together
 lsoa_pop_all <- rbind(lsoa_pop_eng, lsoa_pop_scot, lsoa_pop_nire)
-
 ```
 
 # MAPPING LSOA TO CONSTITUENCIES
 
 We need to join the deprivation index data - which is in Lower Super Output Areas (LSOA) - to their respective constituencies.
 
-England & Wales data, here: https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_WPC)
 Scottish data, here: https://statistics.gov.scot/data/data-zone-lookup
 N. Ireland data, here: https://www.nisra.gov.uk/support/geography/northern-ireland-small-areas
+England & Wales data, here: https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_WPC) 
+**English & Wales data is not 1:1 therefore centroid methodology used**
 
 ### LSOAs:
 
@@ -130,31 +128,19 @@ N. Ireland data, here: https://www.nisra.gov.uk/support/geography/northern-irela
 
 ```{r}
 
-# England - lsoas and constituency geo-areas are removed by degrees from each other. We use Wards to map them across to each other.
-
-## constituencies to wards
-con_ward  <- read_csv(here::here("uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_to_Upper_Tier_Local_Authority__December_2020__Lookup_in_the_United_Kingdom_V2.csv"))
-# there are some missing lsoa to cons which we need to bring in for Leeds (only) from the last year (2019)
-con_ward2 <- read_csv(here::here("uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_(December_2019)_Lookup_in_the_United_Kingdom.csv"))
-
-## wards to lsoa
-ward_lsoa <- read_csv(here::here("uk_deprivation_index/Lower_Layer_Super_Output_Area__2011__to_Ward__2020__Lookup_in_England_and_Wales.csv"))
-
-lsoa_eng  <- 
-  ward_lsoa %>% 
-  left_join(con_ward, by = "WD20CD") %>% 
-  mutate(LSOA11NM = str_sub(LSOA11NM, start = 0, end = str_length(LSOA11NM)-4)) %>%
-  distinct(LSOA11CD, .keep_all = TRUE) %>%
-  left_join(con_ward2, by = c(WD20CD = "WD19CD")) %>%
-  # there have been some changes and some fallouts which we need, we will keep the latest changes and add fallouts
-  mutate(check = PCON19CD == PCON20CD) %>%
-  mutate(PCON20CD = if_else(is.na(PCON20CD), PCON19CD, PCON20CD), 
-         PCON20NM = if_else(is.na(PCON20NM), PCON19NM, PCON20NM)) %>% 
-  select(LSOA11CD, LSOA11NM, PCON20CD, PCON20NM)
-
-
 # Scotland
-lsoa_scot <- read_csv("https://scottish-government-files.s3.amazonaws.com/13360f3a-ca68-4f3e-8b7f-caffed8712eb/DataZone2011lookup_2022-05-31.csv")
+lsoa_scot_raw <- read_csv("https://scottish-government-files.s3.amazonaws.com/13360f3a-ca68-4f3e-8b7f-caffed8712eb/DataZone2011lookup_2022-05-31.csv")
+
+# ukdi Scotland
+lsoa_scot <- 
+ukdi_raw %>%
+  filter(nation == "S") %>%
+  left_join(lsoa_scot_raw, by = c(lsoa = "DZ2011_Code")) %>%
+  select(nation, lsoa, lsoa_nm = IZ2011_Name, con_code = UKPC_Code, con_name = UKPC_Name, uk_imd_e_rank, uk_imd_e_score)
+
+```
+
+```{r}
 
 # N. Ireland
 ## missing names (codes only, we need names for graphics) so download seperate table to join
@@ -172,7 +158,7 @@ lsoa_nire_cd <- readxl::read_xlsx(temp, sheet = "COA2001") %>%
 lsoa_nire_nm <- read_csv("https://data.nicva.org/sites/default/files/ni_geography_names_codes_all_types_Mar2017.csv")
 
 # join nire codes to names
-lsoa_nire <-
+lsoa_nire_cd_nm <-
   lsoa_nire_cd %>%
   left_join(lsoa_nire_nm, by = c(soa2001 = "code")) %>%
   rename(soa2001nm = name) %>%
@@ -180,85 +166,327 @@ lsoa_nire <-
   rename(aa2008nm = name) %>%
   select(-unit.x, -unit.y, -source.x, -source.y)
 
+# ukdi N. IRE
+lsoa_nire <- 
+  ukdi_raw %>%
+  filter(nation == "N") %>%
+  left_join(lsoa_nire_cd_nm, by = c(lsoa = "soa2001")) %>%
+  select(nation, lsoa, lsoa_nm = soa2001nm, con_code = aa2008, con_name = aa2008nm, uk_imd_e_rank, uk_imd_e_score)
+
+```
+
+### ENGLAND LSOAs to Constituencies
+
+For joining LSOAs to Constituencies there is not a 1:1 relationship within *England only* i.e. a LSOA is 1:1 in Wards but a Ward != 1:1 with Constituencies. We therefore need to use a geo-join to establish which LSOAs are within which Constituency using a fuzzy methodology.
+
+Alasdair Rae has created a single shapefile that covers the different sets of small area that will be helpful in cross-border mapping.
+Source: https://drive.google.com/drive/folders/1L-C-Ym7VTwRhIRDQUMHPxFvOznMrKfy3
+
+Joining points intersections of polygons:
+https://ryanpeek.org/2019-04-29-spatial-joins-in-r/
+
+```{r}
+library(sf)
+
+# constituency areas
+cons_shp <- readRDS(url("https://www.dropbox.com/s/XXX/uk_cons_shp?dl=1")) # personal dropbox
+
+# convert to simple features (sf)
+cons_sf <- 
+  cons_shp %>% 
+  st_as_sf() %>% 
+  select(pcon19cd, pcon19nm)
+
+
+# lsoa area centroids (32,844)
+
+# December 2011 is latest data held by ONS - not perfect given our lsoa data is from 2020.
+# source: https://geoportal.statistics.gov.uk/maps/b7c49538f0464f748dd7137247bbc41c/about
+lsoa_cent_raw   <- read_csv(here::here("uk_deprivation_index/Lower_Layer_Super_Output_Areas_(December_2011)_Population_Weighted_Centroids.csv"))
+
+lsoa_ukdi_centr <- 
+  ukdi_raw %>% 
+  filter(nation %in% c("E", "W")) %>% 
+  left_join(lsoa_cent_raw, by = c(lsoa = "lsoa11cd")) %>% 
+  st_as_sf(coords = c("X", "Y"), crs = st_crs(cons_sf))
+
+# Overlay points and extract just the code column: 
+lsoa_geoj <- lsoa_ukdi_centr %>% st_join(cons_sf, left = TRUE, largest = TRUE)
+
 ```
 
 ```{r}
-# Joining
+
+# England - lsoa's and constituency geo-areas are removed by degrees from each other. We use Wards to map them across to each other.
+
+## constituencies to wards
+con_ward  <- read_csv(here::here("uk_deprivation_index/Ward_to_Westminster_Parliamentary_Constituency_to_Local_Authority_District_to_Upper_Tier_Local_Authority__December_2020__Lookup_in_the_United_Kingdom_V2.csv"))
+
+## wards to lsoa
+ward_lsoa <- read_csv(here::here("uk_deprivation_index/Lower_Layer_Super_Output_Area__2011__to_Ward__2020__Lookup_in_England_and_Wales.csv"))
+
+# lsoa_eng  <- 
+#   ward_lsoa %>% 
+#   left_join(con_ward, by = c("WD20CD", "LAD20CD")) %>% 
+#   mutate(LSOA11NM = str_sub(LSOA11NM, start = 0, end = str_length(LSOA11NM)-4)) %>%
+#   distinct(LSOA11CD, .keep_all = TRUE) %>%
+#   left_join(con_ward2, by = c(WD20CD = "WD19CD")) %>%
+#   # there have been some changes and some fallouts which we need, we will keep the latest changes and add fallouts
+#   mutate(check = PCON19CD == PCON20CD) %>%
+#   mutate(PCON20CD = if_else(is.na(PCON20CD), PCON19CD, PCON20CD), 
+#          PCON20NM = if_else(is.na(PCON20NM), PCON19NM, PCON20NM)) %>% 
+#   select(LSOA11CD, LSOA11NM, PCON20CD, PCON20NM)
+
+lsoa_geoj_miss <- 
+lsoa_geoj %>%
+  filter(is.na(pcon19cd)) %>%
+  left_join(ward_lsoa, by = c(lsoa = "LSOA11CD")) %>% 
+  left_join(con_ward, by = c("WD20CD", "LAD20CD")) %>%
+  mutate(pcon19cd = if_else(is.na(pcon19cd), PCON20CD, pcon19cd),
+         pcon19nm = if_else(is.na(pcon19nm), PCON20NM, pcon19nm)) %>%
+  select(names(lsoa_geoj))
+
+# final for England & Wales
+lsoa_eng <-
+lsoa_geoj %>%
+  filter(!is.na(pcon19cd)) %>%
+  mutate(lsoa11nm = str_sub(lsoa11nm, start = 0, end = str_length(lsoa11nm)-4)) %>%
+  mutate(pcon19nm = if_else(pcon19nm == "Ynys Mon", "Ynys Môn", pcon19nm)) %>%
+  rbind(lsoa_geoj_miss) %>%
+  select(-objectid, nation, lsoa, lsoa_nm = lsoa11nm, con_code = pcon19cd, con_name = pcon19nm, uk_imd_e_rank, uk_imd_e_score) %>%
+  st_drop_geometry()
+
+```
+
+```{r}
+# joins lsoas
+
 ukdi_cons <- 
-ukdi_raw %>% 
-  # England : 28 missing lsoa-to-pc (sort later)
-  left_join(lsoa_eng, by = c(lsoa = "LSOA11CD")) %>%
-  select(nation, lsoa, LSOA11NM, PCON20CD, PCON20NM, uk_imd_e_rank, uk_imd_e_score) %>%
-  # Scotland
-  left_join(lsoa_scot, by = c(lsoa = "DZ2011_Code")) %>%
-  mutate(LSOA11NM = if_else(is.na(LSOA11NM), IZ2011_Name, LSOA11NM),
-         PCON20CD = if_else(is.na(UKPC_Code), PCON20CD, UKPC_Code),
-         PCON20NM = if_else(is.na(UKPC_Name), PCON20NM, UKPC_Name)) %>%
-  select(nation, lsoa, LSOA11NM, PCON20CD, PCON20NM, uk_imd_e_rank, uk_imd_e_score) %>%
-  # N. Ireland
-  left_join(lsoa_nire, by = c(lsoa = "soa2001")) %>%
-  mutate(LSOA11NM = if_else(is.na(LSOA11NM), soa2001nm, LSOA11NM),
-         PCON20CD = if_else(is.na(PCON20CD), aa2008, PCON20CD),
-         PCON20NM = if_else(is.na(PCON20NM), aa2008nm, PCON20NM)) %>%
-  select(-aa2008, -aa2008nm, -soa2001nm) %>%
+  rbind(lsoa_eng, lsoa_scot, lsoa_nire) %>%
   # add sloa pop
-  left_join(lsoa_pop_all, by = c(lsoa = "lsoa_code"))
+  left_join(lsoa_pop_all, by = c(lsoa = "lsoa_code")) %>%
+  # add constituency pop for weights
+  left_join(con_pop_raw) %>%
+  select(names(lsoa_eng), lsoa_pop = pop_est, con_pop = pop)
 
 ```
 
 ```{r}
 # checks no missing values
-ukdi_cons %>% anti_join(con_pop_raw, by = c(PCON20CD = "con_code")) %>% count(PCON20CD)
+ukdi_cons %>% anti_join(con_pop_raw, by = "con_code") %>% count(con_name)
+# checks by how much lsoa pop is from con pop
+ukdi_cons %>% group_by(con_code) %>% mutate(lsoa_con_pop = sum(lsoa_pop), check = abs(con_pop - lsoa_con_pop)) %>% view()
 ```
 
 ```{r}
+# creates weights and reindexes for constituencies
 
-ukdi_index <- 
+ukdi_index <-
 ukdi_cons %>%
-  # trans sloa pop weight
-  group_by(PCON20CD) %>%
-  mutate(sloa_weight = pop_est/sum(pop_est)) %>%
-  # index weighted by pop for constituency
-  mutate(ukdi_weighted = uk_imd_e_score*sloa_weight,
-         cons_index    = sum(ukdi_weighted)) %>%
+  group_by(con_code, con_name) %>%
+  mutate(lsoa_weight = lsoa_pop / con_pop,
+         ukdi_weight = uk_imd_e_score * lsoa_weight) %>%
+  summarise(uk_imd_con_score = sum(ukdi_weight)) %>%
   ungroup() %>%
-  arrange(desc(cons_index)) %>%
-  group_by(fct_inorder(PCON20CD)) %>%
-  mutate(cons_rank     = cur_group_id())
-
-# summary
-ukdi_index_summary <- ukdi_index %>% distinct(cons_index, .keep_all = TRUE)
+  arrange(desc(uk_imd_con_score)) %>%
+  group_by(fct_inorder(con_code)) %>%
+  mutate(cons_rank     = cur_group_id()) %>%
+  ungroup()
 
 ```
 
 ```{r}
-# checks all constituencies caught
-con_pop_raw %>%
-  left_join(ukdi_index %>% distinct(PCON20CD), by = c(con_code = "PCON20CD"))
+# checks all 650 constituencies caught
+con_pop_raw %>% left_join(ukdi_index, by = "con_code") %>% count() %>% mutate(check = n == 650)
 ```
 
 # ELECTION DATA
 
 ```{r}
 
-# 2021 elections
-curl <- "https://commonslibrary.parliament.uk/content/uploads/2022/04/LEH-2021-datafile.xlsx"
+# Constituency election data, here: https://www.theyworkforyou.com/mps/
+curl <- "https://www.theyworkforyou.com/mps/?f=csv"
 temp   <- curl::curl_download(url = curl, destfile = temp, quiet = FALSE, mode = "wb")
 
-election21_raw <- readxl::read_xlsx(temp) %>% janitor::clean_names()
+election21_raw <- read_csv(temp) %>% janitor::clean_names()
 
-# 2022 elections
-curl <- "https://researchbriefings.files.parliament.uk/documents/CBP-9545/CBP9545-detailed-results-for-download.xlsx"
-temp   <- curl::curl_download(url = curl, destfile = temp, quiet = FALSE, mode = "wb")
+# checks we can join by constituency name as the MySociety data does not have the codes
+election21_raw %>% anti_join(ukdi_index_summary, by = c(constituency = "PCON20NM"))
 
-election22_raw <- readxl::read_xlsx(temp, skip = 1) %>% janitor::clean_names() %>%
-  select(ons_code, council_name, region, party_control_21 = "control_14", party_control_22 = "control_22")
+# Weston-Super-Mare is the only disjoin due to "Super" and "super" spelling
+election21_cln <- 
+  election21_raw %>% 
+  mutate(constituency = if_else(constituency == "Weston-super-Mare", "Weston-Super-Mare", constituency)) %>%
+  mutate(abb = case_when(
+  party == "Conservative"                       ~ "CON"   ,
+  party == "Labour"                             ~ "LAB"   ,
+  party == "Labour/Co-operative"                ~ "LAB"   ,    # Labor/Co-Op normally included in Labor totals
+  party == "Scottish National Party"            ~ "SNP"   ,
+  party == "Liberal Democrat"                   ~ "LD"   ,
+  party == "DUP"                                ~ "DUP"   , 
+  party == "Sinn Féin"                          ~ "SF"    , 
+  party == "Plaid Cymru"                        ~ "PLAID" ,
+  party == "Social Democratic and Labour Party" ~ "SDLP"  , 
+  party == "Alba"                               ~ "ALB"   ,
+  party == "Independent"                        ~ "IND"   , 
+  party == "Alliance"                           ~ "A"     , 
+  party == "Green"                              ~ "GRN"   ,
+  party == "Speaker"                            ~ "ORDER!")) %>%
+  mutate(fill = case_when(
+  party == "Conservative"                       ~ "#0087DC",
+  party == "Labour"                             ~ "#E4003B",
+  party == "Labour/Co-operative"                ~ "#E4003B",    # Labor/Co-Op normally included in Labor totals
+  party == "Scottish National Party"            ~ "#fff481",
+  party == "Liberal Democrat"                   ~ "#FDBB30",
+  party == "DUP"                                ~ "#a3033b", 
+  party == "Sinn Féin"                          ~ "#258c45", 
+  party == "Plaid Cymru"                        ~ "#8ab47b",
+  party == "Social Democratic and Labour Party" ~ "#1b3a19", 
+  party == "Alba"                               ~ "#005db8",
+  party == "Independent"                        ~ "#808080", 
+  party == "Alliance"                           ~ "#FDD017", 
+  party == "Green"                              ~ "#78B943",
+  party == "Speaker"                            ~ "#363151"))
+
+# there are two other constituencies (Tiverton and Wakefield) without data due to resignations. Their by-elections are due 23 June (at time of writing). 
+# See here: https://www.parliament.uk/about/how/elections-and-voting/by-elections/by-elections-2019/
+
+# order of parties
+order  <- election21_cln %>% count(abb, fill)  %>% arrange(desc(n)) %>% mutate(abb  = factor(abb,  ordered = TRUE),
+                                                                               fill = factor(fill, ordered = TRUE))
+```
+
+```{r}
+# joins constituency and election data
+
+ukdi_cons_mps <-
+  ukdi_index %>%
+  left_join(election21_cln, by = c(con_name = "constituency")) %>%
+  mutate(con_name = if_else(con_name == "East Kilbride, Strathaven and Lesmahagow", "East Kilbride & Strathaven", con_name),
+         con_name = if_else(con_name == "Runnymede and Weybridge", "Runnymede", con_name),
+         con_name = if_else(con_name == "Dumfriesshire, Clydesdale and Tweeddale", "Dumfriesshire & Clydesdale", con_name)) %>%
+  mutate(abb  = factor(abb,  levels = order$abb, ordered = TRUE),
+         fill = factor(fill, levels = order$fill, ordered = TRUE))
+
+```
+
+# CREATING THE PLOT
+
+The map is essentially a giant tile map, filled by party.
+
+```{r}
+# we want to record the making of this plot so this is a setup
+library(camcorder)
+
+gg_record(
+  dir    = here::here("uk_deprivation_index/recording"), # where to save the recording
+  device = "png", # device to use to save images
+  width  = 10, # width of saved image
+  height = 16, # height of saved image
+  units  = "in", # units for width and height
+  dpi    = 300 # dpi to use when saving image
+)
+
+# to chnage any of the formats going forward use the below
+gg_resize_film(
+  height = 16,
+  width  = 11.5,
+  units  = "in",
+  dpi    = 360
+)
 
 ```
 
 ```{r}
+# text
 
-election21_raw %>% 
-  count(wardname)
+what  <- "There are 650 constituencies in the UK, which we rank by deprivation from top left (most deprived) to bottom right (least deprived)."
+what2 <- "The first column contains the 65 most deprived constituencies, the second one has the next 65 most deprived, and so on. The numbers along the top indicate which decile each constituency is in. The UK-wide deprivation data used is published by Alex Parsons (@alexparsons) of mySociety, following earlier work by Abel et al. (2016). It uses the most recent deprivation indices for all parts of the UK and there are a number of different datasets available."
+what3 <- "The original graphic was created by Alasdair Rae (@undertheradar) and any errors here are strictly my own."
+
+note <- "This graphic is up date as of 3 March 2022, following the result of the Birmingham, Erdington by-election."
+
+meth  <- "Deprivation scores are taken from mySociety data which uses lower super output areas (lsoa)."
+meth2 <- "The constituency deprivation ranks are created by aggregating lsoa by constituency. For Scotland and N. Ireland this is complete through their respective lsoa lookup tables as they have a 1:1 relationship to constituencies. For England and Wales lsoa do not have a 1:1 relationship to constituencies therefore (following Alasdair Rae's method) ranks were created using population weighted centroids to establish the constituency 'best-fit'."
+meth3 <- "Once grouped by constituency deprivation scores were weighted by their population contribution to that constituency to give a constituency score which we then rank."
+meth4 <- "There is a great deal of variation within each constituency but those showing as most deprived have the UKs largest share of deprived neighbourhoods. From a methodological point of view the exact positioning of each constituency would change dependent on which dataset / method chosen (this is evidenced by the differences shown between Alasdair's and my own graphic) but the decile positioning is mostly the same."
+
+source1 <- "Deprivation data: githubusercontent.com/mysociety/composite_uk_imd/master/uk_index/UK_IMD_E"
+source2 <- "Pop weighted centroids (england): data.gov.uk/dataset/a40f54f7-b123-4185-952f-da90c56b0564/"
+source3 <- "Election reults: theyworkforyou.com/mps/"
+  
+```
+
+
+```{r}
+library(ggh4x) # https://teunbrand.github.io/ggh4x/articles/Miscellaneous.html#string-legends-1
+# font_add_google("Special Elite", "type")
+
+plot_ukdi <- 
+ukdi_cons_mps %>%
+  # formatting
+  mutate(color = if_else(party == "Scottish National Party", "grey", "white")) %>% # snp yellow has little contrast with white so change text color
+  mutate(color = if_else(is.na(party), "grey",  color)) %>% # any cons without MPs (at by-election)
+  mutate(con_name = str_replace(con_name, " and ", " & ")) %>% # reduce long text
+  mutate(x_pos  = rep(1:10, each = 65),
+         y_pos  = rep(1:65, time = 10)) %>%
+  # plot
+  ggplot(aes(x_pos, y_pos, fill = fill, label = str_wrap(con_name,21))) + # control wrapping strings to fit into tile
+  geom_tile(color = "white", width = 0.95, height = 0.98, alpha = 0.95) +
+  geom_text(aes(color = color), size = 1.50, hjust = 0, nudge_x = -0.455, show.legend = FALSE) + 
+  scale_fill_identity(NULL, guide = "stringlegend", labels = levels(ukdi_cons_mps$abb)) +
+  scale_color_manual(values = c("#A7AFB2", "white"), na.value = "white") +
+  guides(fill  = guide_stringlegend(nrow = 1, face = "bold")) +
+  scale_x_continuous(breaks = c(1:10), expand = c(0.01,0.01), position = "top") +
+  scale_y_reverse(breaks = c(1:65), expand = c(0.01,0.01), sec.axis = sec_axis(~., breaks = c(1:65), labels = c(586:650))) +
+  coord_cartesian(clip = "off", ylim = c(65, 0)) +
+  labs(title   = "UK CONSTITUENCIES BY\nDEPRIVATION, 2022", 
+       caption = "@NearAndDistant") +
+  annotate("text", label = "MORE DEPRIVED",  x =  1, y = 66.5, hjust = 0.3, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = "LEAST DEPRIVED", x = 10, y = 66.5, hjust = 0.7, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = "DATA SOURCES",   x =  1, y = 71, hjust = 0.30, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = source1, x =  1, y = 72, hjust = 0.06,   family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = source2, x =  1, y = 73, hjust = 0.0625, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = source3, x =  1, y = 74, hjust = 0.145,  family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  theme_void() +
+  theme(plot.title   = element_text(size = 40, hjust = 0.5,  vjust =   3, family = "Montserrat Semibold", color = "#454545"),
+        plot.caption = element_text(size = 15, hjust = 1.345, vjust = -32, family = "Montserrat Bold",     color = "#a7a7a7"),
+        legend.position  = c(0.525, -0.045),
+        legend.direction = "horizontal",
+        legend.key       = element_blank(),
+        legend.text      = element_text(size = 16, family = "Montserrat"),
+        axis.text.x       = element_text(size = 8, family = "Montserrat Semibold", color = "#e5eaed", vjust = -6),
+        axis.text.y.left  = element_text(size = 6, family = "Montserrat Semibold", color = "#e5eaed"),
+        axis.text.y.right = element_text(size = 6, family = "Montserrat Semibold", color = "#e5eaed"),
+        plot.margin = margin(2, 5, 4.5, 5, unit = "cm"),
+        panel.background = element_rect(fill = "white", color = "white"),
+        plot.background  = element_rect(fill = "white", color = "#d7d7d7", size = 8))
+
+ggsave(plot = plot_ukdi, here::here("uk_deprivation_index/graphic_no_ann.png"), width = 11.5, height = 16, dpi = 360)
+
+```
+
+```{r}
+library(cowplot)
+
+plot_final <-
+ggdraw() +
+  draw_image(here::here("uk_deprivation_index/graphic_no_ann.png")) +
+  # explainer
+  annotate("text", label = "WHAT IS THIS?",     x = 0.16, y = 0.85,  hjust = 1, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = str_wrap(what , 24), x = 0.16, y = 0.805, hjust = 1, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = str_wrap(what2, 24), x = 0.16, y = 0.61,  hjust = 1, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = str_wrap(what3, 24), x = 0.16, y = 0.45,  hjust = 1, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  # note
+  annotate("text", label = "NOTE",              x = 0.84, y = 0.85,  hjust = 0, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = str_wrap(note , 24), x = 0.84, y = 0.815, hjust = 0, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  # methodology
+  annotate("text", label = "METHODOLOGY",        x = 0.84, y = 0.725, hjust = 0, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = str_wrap(meth ,  24), x = 0.84, y = 0.69, hjust = 0, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = str_wrap(meth2 , 24), x = 0.84, y = 0.53, hjust = 0, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = str_wrap(meth3 , 24), x = 0.84, y = 0.35, hjust = 0, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = str_wrap(meth4 , 24), x = 0.84, y = 0.19, hjust = 0, family = "Montserrat Semibold", color = "#bebebe", size = 3)
+
+ggsave(plot = plot_final, here::here("uk_deprivation_index/final_graphic.png"), width = 11.5, height = 16, dpi = 360)
 
 ```
