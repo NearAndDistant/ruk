@@ -490,3 +490,54 @@ ggdraw() +
 ggsave(plot = plot_final, here::here("uk_deprivation_index/final_graphic.png"), width = 11.5, height = 16, dpi = 360)
 
 ```
+
+```{r}
+# individual plots
+
+ind <- "SNP"
+
+plot_ukdi_ind <- 
+ukdi_cons_mps %>%
+  # formatting
+  mutate(color = if_else(party == "Scottish National Party", "grey", "white")) %>% # snp yellow has little contrast with white so change text color
+  mutate(color = if_else(is.na(party), "grey",  color)) %>% # any cons without MPs (at by-election)
+  mutate(con_name = str_replace(con_name, " and ", " & ")) %>% # reduce long text
+  mutate(x_pos  = rep(1:10, each = 65),
+         y_pos  = rep(1:65, time = 10)) %>%
+  filter(abb == ind) %>% # change to flter parties
+  # plot
+  ggplot(aes(x_pos, y_pos, fill = fill, label = str_wrap(con_name,21))) + # control wrapping strings to fit into tile
+  geom_tile(color = "white", width = 0.95, height = 0.98, alpha = 0.95) +
+  geom_text(color = "#A7AFB2", size = 1.50, hjust = 0, nudge_x = -0.455, show.legend = FALSE) + # "white" if CON or LAB
+  scale_fill_identity(NULL, guide = "stringlegend", labels = ind) +
+  scale_color_manual(values = c("#A7AFB2", "white"), na.value = "white") +
+  guides(fill  = guide_stringlegend(nrow = 1, face = "bold")) +
+  scale_x_continuous(breaks = c(1:10), expand = c(0.01,0.01), position = "top") +
+  scale_y_reverse(breaks = c(1:65), expand = c(0.01,0.01), sec.axis = sec_axis(~., breaks = c(1:65), labels = c(586:650))) +
+  coord_cartesian(clip = "off", ylim = c(65, 0)) +
+  labs(title   = "UK CONSTITUENCIES BY\nDEPRIVATION, 2022", 
+       caption = "@NearAndDistant") +
+  annotate("text", label = "MORE DEPRIVED",  x =  1, y = 66.5, hjust = 0.3, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = "LEAST DEPRIVED", x = 10, y = 66.5, hjust = 0.7, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = "DATA SOURCES",   x =  1, y = 71, hjust = 0.30, family = "Montserrat Semibold", color = "#696969") +
+  annotate("text", label = source1, x =  1, y = 72, hjust = 0.06,   family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = source2, x =  1, y = 73, hjust = 0.0625, family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  annotate("text", label = source3, x =  1, y = 74, hjust = 0.145,  family = "Montserrat Semibold", color = "#bebebe", size = 3) +
+  theme_void() +
+  theme(plot.title   = element_text(size = 40, hjust = 0.5,  vjust =   3, family = "Montserrat Semibold", color = "#454545"),
+        plot.caption = element_text(size = 15, hjust = 1.345, vjust = -32, family = "Montserrat Bold",     color = "#a7a7a7"),
+        legend.position  = c(0.525, -0.045),
+        legend.direction = "horizontal",
+        legend.key       = element_blank(),
+        legend.text      = element_text(size = 16, family = "Montserrat"),
+        axis.text.x       = element_text(size = 8, family = "Montserrat Semibold", color = "#e5eaed", vjust = -6),
+        axis.text.y.left  = element_text(size = 6, family = "Montserrat Semibold", color = "#e5eaed"),
+        axis.text.y.right = element_text(size = 6, family = "Montserrat Semibold", color = "#e5eaed"),
+        plot.margin = margin(2, 5, 4.5, 5, unit = "cm"),
+        panel.background = element_rect(fill = "white", color = "white"),
+        plot.background  = element_rect(fill = "white", color = "#d7d7d7", size = 8))
+
+ggsave(plot = plot_ukdi_ind, here::here("uk_deprivation_index/ukdi_snp.png"), width = 11.5, height = 16, dpi = 360)
+
+```
+
