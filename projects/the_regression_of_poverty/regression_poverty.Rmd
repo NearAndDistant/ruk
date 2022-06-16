@@ -1,0 +1,511 @@
+---
+title: "Tidy Template"
+author: "NearAndDistant"
+date: "29/09/2021"
+output: html_document
+---
+
+##  The Regression of Poverty
+
+all data from, here: https://data.oecd.org/society.htm#profile-Inequality
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Setup & Import
+```{r}
+library(tidyverse)
+
+# create driectory for new project
+dir.create(here::here("the_regression_of_poverty"))
+dir.create(here::here("the_regression_of_poverty/oecd_data"))
+
+# import data for project
+```
+
+
+```{r}
+
+# poverty rate, 18-65 year-olds, Ratio, 2011 – 2019, 
+# source: https://data.oecd.org/inequality/poverty-rate.htm
+pov_raw        <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022230151283.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# income inequality, gini coefficient, 0 = complete equality; 1 = complete inequality, 2011 – 2019, 
+# source: https://data.oecd.org/inequality/income-inequality.htm#indicator-chart
+gini_raw       <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022231527801.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# gross national income, total, US dollars/capita, 2011 – 2019
+# source: https://data.oecd.org/natincome/gross-national-income.htm
+gni_raw        <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022231846301.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# social spending, public, % of GDP, 2011 – 2019
+# source: https://data.oecd.org/socialexp/social-spending.htm
+pub_spend_raw  <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022232254535.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# Household disposable income, gross, per capita, percentage change, previous period, 2011 – 2019
+# source: https://data.oecd.org/hha/household-disposable-income.htm
+#dis_inc_raw    <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022232127910.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# working age population, total, % of population, 2011 – 2019
+# source: https://data.oecd.org/pop/working-age-population.htm#indicator-chart
+wrk_age_pc_raw <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022232724973.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+# adult education level, tertiary, % of 25-64 year-olds, 2011 – 2019
+# source: https://data.oecd.org/eduatt/adult-education-level.htm
+adl_pc_edu_raw <- read_csv("the_regression_of_poverty/oecd_data/DP_LIVE_10052022232527613.csv") %>% janitor::clean_names() %>% select(-measure, -frequency, -flag_codes, -subject)
+
+```
+
+#### Clean & Wrangle
+```{r}
+library(countrycode)
+
+# not in
+`%!in%` <- Negate(`%in%`)
+
+pov_indicators <-
+  pov_raw %>%
+  bind_rows(gini_raw, gni_raw, pub_spend_raw, wrk_age_pc_raw, adl_pc_edu_raw) %>%
+  filter(location %!in% c("OECD", "OAVG")) %>%
+  mutate(location  = countrycode(location, "iso3c", "country.name")) %>%
+  mutate(indicator = case_when(indicator == "POVERTY"    ~ "pc_poverty",
+                               indicator == "EDUADULT"   ~ "pc_higher_edu",
+                               indicator == "GNI"        ~ "gni_per_capita",
+                               indicator == "INCOMEINEQ" ~ "gini_inequality",
+                               indicator == "SOCEXP"     ~ "pc_public_exp_of_gdp",
+                               indicator == "WKGPOP"     ~ "pc_working_age_pop"))
+
+# year filters
+pov_indicators_2018 <-
+  pov_indicators %>%
+  filter(time == 2018) %>%
+  select(-time) %>%
+  pivot_wider(id_cols = location, names_from = "indicator", values_from = "value")  %>%
+  mutate(across(.cols = c(pc_public_exp_of_gdp:pc_higher_edu), ~ .x / 100))
+
+```
+
+#### Analysis
+
+```{r}
+library(gridExtra)
+
+dist_pov <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_poverty)) +
+  geom_histogram(fill = "#1F456E" , color = "white") +
+  labs(
+    x = "Poverty Rate (%)",
+    y = "Number of Counties"
+  )
+
+dist_edu <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_higher_edu)) +
+  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+  labs(
+    x = "Higher Education Rate (%)",
+    y = "Number of Counties"
+  )
+
+dist_gni <-
+pov_indicators_2018 %>%
+  ggplot(aes(gni_per_capita)) +
+  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+  labs(
+    x = "GNI / Capita (USD)",
+    y = "Number of Counties"
+  )
+
+#dist_hhdi <-
+#pov_indicators_2018 %>%
+#  ggplot(aes(household_disp_inc)) +
+#  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+#  labs(
+#    x = "Household Disposable Income / Capita (Annual Chnage %)",
+#    y = "Number of Counties"
+#  )
+
+# removed as too many missing datapoints
+
+dist_gini <-
+pov_indicators_2018 %>%
+  ggplot(aes(gini_inequality)) +
+  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+  labs(
+    x = "Gini Coefficient (0 = complete equality; 1 = complete inequality)",
+    y = "Number of Counties"
+  )
+
+dist_pub <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_public_exp_of_gdp)) +
+  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+  labs(
+    x = "Public Expenditure / GDP (%)",
+    y = "Number of Counties"
+  )
+
+dist_wrk_age <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_working_age_pop)) +
+  geom_histogram(fill = "#1F456E" , color = "white", na.rm = TRUE) +
+  labs(
+    x = "Working Age Population (% total pop)",
+    y = "Number of Counties"
+  )
+
+
+# arrange
+gridExtra::grid.arrange(dist_pov , dist_edu , dist_gini, dist_gni, dist_pub, dist_wrk_age, 
+                        ncol = 2 , nrow = 3,
+                        padding = unit(5,"line"))
+
+```
+
+```{r descriptive statistics , echo = FALSE , message = TRUE , warning = FALSE}
+library(tableone)
+
+hiv_table <-
+tableone::CreateTableOne(data = pov_indicators_2018, 
+                         vars = c("pc_poverty",
+                                  "pc_higher_edu",
+                                  "gni_per_capita",
+                                  "gini_inequality",
+                                  "pc_public_exp_of_gdp",
+                                  "pc_working_age_pop"))
+
+```
+
+We can use QQ plots to establish how normal / non-normal the above plots actually are.
+
+```{r}
+
+# poverty
+#dist_qq <-
+pov_indicators_2018 %>%
+  drop_na(pc_poverty) %>%
+  ggplot(aes(sample = pc_poverty)) +
+    stat_qq(aes(color = "Country"), size= 2, alpha = .5) + 
+    scale_color_manual(values = "#1F456E" , name = "") +
+    geom_abline(aes(intercept = mean(x = pc_poverty), 
+                    slope     = sd(x = pc_poverty), 
+                    linetype  = "Normally distributed"), color = "gray60", size = 1)  +
+    scale_linetype_manual(values = "solid" , name = "") +
+  labs(
+    x = "Theoretical Normal Distribution",
+    y = "Actual Poverty (%)"
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = c(0,0)
+  )
+
+# gini
+#dist_qq <-
+pov_indicators_2018 %>%
+  drop_na(gini_inequality) %>%
+  ggplot(aes(sample = gini_inequality)) +
+    stat_qq(aes(color = "Country"), size= 2, alpha = .5) + 
+    scale_color_manual(values = "#1F456E" , name = "") +
+    geom_abline(aes(intercept = mean(x = gini_inequality), 
+                    slope     = sd(x = gini_inequality), 
+                    linetype  = "Normally distributed"), color = "gray60", size = 1)  +
+    scale_linetype_manual(values = "solid" , name = "") +
+  labs(
+    x = "Theoretical Normal Distribution",
+    y = "Actual Gini (0-1)"
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = c(0,0)
+  )
+
+# pun exp
+#dist_qq <-
+pov_indicators_2018 %>%
+  drop_na(pc_public_exp_of_gdp) %>%
+  ggplot(aes(sample = pc_public_exp_of_gdp)) +
+    stat_qq(aes(color = "Country"), size= 2, alpha = .5) + 
+    scale_color_manual(values = "#1F456E" , name = "") +
+    geom_abline(aes(intercept = mean(x = pc_public_exp_of_gdp), 
+                    slope     = sd(x = pc_public_exp_of_gdp), 
+                    linetype  = "Normally distributed"), color = "gray60", size = 1)  +
+    scale_linetype_manual(values = "solid" , name = "") +
+  labs(
+    x = "Theoretical Normal Distribution",
+    y = "Actual Public Exp. (% GDP)"
+  ) +
+  theme(
+    legend.position = "top",
+    legend.justification = c(0,0)
+  )
+
+```
+
+## Correlation
+Using exploratory data analysis (EDA) and a simple linear model we can discover the trend between the y ~ x variables (here poverty ~ et. al).
+
+```{r}
+font_size <- 3
+clr <- "#f68f46ff"
+
+# theme
+theme_reg <- function(){
+      theme(
+      legend.position = "none",
+      legend.spacing.y = unit(-0.5, "mm"),
+      panel.grid.minor = element_blank(),
+      legend.title = element_blank(),
+      legend.text = element_text(size = 10),
+      axis.line.x = element_line(color="black", size = 0.5),
+      axis.line.y = element_line(color="black", size = 0.5),
+      plot.margin = margin(0.5, 1, 0.5, 0.5, unit = "cm")
+    )
+}
+  
+```
+
+At this point we've done a few things:
+
+1. Used Histograms to visually look at kurtosis (skew)
+2. Used Q plots to visually determine is the distribution is normal (an assumption of regression)
+3. Used scatterplots to show the relation ship between our outcome (poverty rate) and explanatory variables 
+4. Plotted a regression line (line of best fit)
+
+Now we can detail the trends directly using correlation coefficients for all variables.
+
+```{r detail trend , echo = FALSE , warning=FALSE}
+
+pov_cor_2018 <- 
+pov_indicators_2018 %>%
+  drop_na() %>%
+  summarise(pc_pov_vs_pc_he       = cor(pc_poverty, pc_higher_edu        ) ~round(),
+            pc_pov_vs_gni_per_cap = cor(pc_poverty, gni_per_capita       ) ~round(),
+            pc_pov_vs_gini        = cor(pc_poverty, gini_inequality      ) ~round(),
+            pc_pov_vs_pc_pub      = cor(pc_poverty, pc_public_exp_of_gdp ) ~round(),  
+            pc_pov_vs_pc_wrk_age  = cor(pc_poverty, pc_working_age_pop   ) ~round(),  
+            sample_n              = n())
+
+```
+
+```{r}
+
+# pov
+corr_edu <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_higher_edu, pc_poverty)) +
+    ggrepel::geom_text_repel(aes(size = "country", label = location), 
+                             color = "#1F456E", alpha = 1, size = font_size, force = 1) +
+    geom_smooth(aes(linetype = "Linear fit line") , method = "lm" , se = FALSE , color = clr , size = 0.5) +
+    geom_text(label = paste0("cor: ", round(pov_cor_2018$pc_pov_vs_pc_he, digits = 4)), x = Inf, y = 0.025,
+             hjust = 1, vjust = 0, size = font_size, color = clr) +
+      guides(linetype = guide_legend(override.aes = list(size = 0.75 , alpha = 0.6))) +
+      guides(size = guide_legend(override.aes = list(size = 6 , alpha = 0.5))) +
+        scale_shape_manual (values = 17, name = "") + 
+        scale_size_manual (values = 4, name = "") +
+  scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = seq(0,0.6,0.1), limits = c(0.15,0.6), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+    labs(x = "Population with Higher Education (%)", y = "Poverty Rate (%)") + 
+  theme_reg() +
+  theme(legend.position = c(0.9 , 0.9))
+
+
+# gni
+corr_gni <- 
+pov_indicators_2018 %>%
+  ggplot(aes(gni_per_capita, pc_poverty)) +
+    ggrepel::geom_text_repel(aes(size = "country", label = location), 
+                             color = "#1F456E", alpha = 1, size = font_size, force = 1) +
+    geom_smooth(aes(linetype = "Linear fit line") , method = "lm" , se = FALSE , color = clr , size = 0.5) +
+    geom_text(label = paste0("cor: ", round(pov_cor_2018$pc_pov_vs_gni_per_cap, digits = 4)), x = Inf, y = 0.025,
+             hjust = 1, vjust = 0, size = font_size, color = clr) +
+      guides(linetype = guide_legend(override.aes = list(size = 0.75 , alpha = 0.6))) +
+      guides(size = guide_legend(override.aes = list(size = 6 , alpha = 0.5))) +
+        scale_shape_manual (values = 17, name = "") + 
+        scale_size_manual (values = 4, name = "") +
+  scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(expand = c(0,0), labels = scales::dollar_format()) +
+    labs(x = "GNI / Capita (USD)", y = "Poverty Rate (%)") +
+    theme_reg()
+
+# gini
+corr_gini <- 
+pov_indicators_2018 %>%
+  ggplot(aes(gini_inequality, pc_poverty)) +
+    ggrepel::geom_text_repel(aes(size = "country", label = location), 
+                             color = "#1F456E", alpha = 1, size = font_size, force = 1) +
+    geom_smooth(aes(linetype = "Linear fit line") , method = "lm" , se = FALSE , color = clr , size = 0.5) +
+    geom_text(label = paste0("cor: ", round(pov_cor_2018$pc_pov_vs_gini, digits = 4)), x = Inf, y = 0.025,
+             hjust = 1, vjust = 0, size = font_size, color = clr) +
+      guides(linetype = guide_legend(override.aes = list(size = 0.75 , alpha = 0.6))) +
+      guides(size = guide_legend(override.aes = list(size = 6 , alpha = 0.5))) +
+        scale_shape_manual (values = 17, name = "") + 
+        scale_size_manual (values = 4, name = "") +
+  scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = seq(0,0.5,0.1), limits = c(0.2,0.5), expand = c(0,0)) +
+    labs(x = "Gini Coefficient (0-1)", y = "Poverty Rate (%)") +
+    theme_reg()
+
+# public
+corr_pub <-
+pov_indicators_2018 %>%
+  ggplot(aes(pc_public_exp_of_gdp, pc_poverty)) +
+    ggrepel::geom_text_repel(aes(size = "country", label = location), 
+                             color = "#1F456E", alpha = 1, size = font_size, force = 1) +
+    geom_smooth(aes(linetype = "Linear fit line") , method = "lm" , se = FALSE , color = clr , size = 0.5) +
+    geom_text(label = paste0("cor: ", round(pov_cor_2018$pc_pov_vs_pc_pub, digits = 4)), x = Inf, y = 0.025,
+             hjust = 1, vjust = 0, size = font_size, color = clr) +
+      guides(linetype = guide_legend(override.aes = list(size = 0.75 , alpha = 0.6))) +
+      guides(size = guide_legend(override.aes = list(size = 6 , alpha = 0.5))) +
+        scale_shape_manual (values = 17, name = "") + 
+        scale_size_manual (values = 4, name = "") +
+  scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(expand = c(0,0), labels = scales::percent_format(accuracy = 1)) +
+    labs(x = "Public Exp. (% GDP)", y = "Poverty Rate (%)") +
+    theme_reg()
+
+# working age
+corr_wrk_age <- 
+pov_indicators_2018 %>%
+  ggplot(aes(pc_working_age_pop, pc_poverty)) +
+    ggrepel::geom_text_repel(aes(size = "country", label = location), 
+                             color = "#1F456E", alpha = 1, size = font_size, force = 1) +
+    geom_smooth(aes(linetype = "Linear fit line") , method = "lm" , se = FALSE , color = clr , size = 0.5) +
+    geom_text(label = paste0("cor: ", round(pov_cor_2018$pc_pov_vs_pc_wrk_age, digits = 4)), x = Inf, y = 0.025,
+             hjust = 1, vjust = 0, size = font_size, color = clr) +
+      guides(linetype = guide_legend(override.aes = list(size = 0.75 , alpha = 0.6))) +
+      guides(size = guide_legend(override.aes = list(size = 6 , alpha = 0.5))) +
+        scale_shape_manual (values = 17, name = "") + 
+        scale_size_manual (values = 4, name = "") +
+  scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                     labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(expand = c(0,0), labels = scales::percent_format(accuracy = 1)) +
+    labs(x = "Working Age Pop (% Total Pop)", y = "Poverty Rate (%)") +
+    theme_reg()
+
+# arrange
+gridExtra::grid.arrange(corr_edu , corr_gini, corr_gni, corr_pub, corr_wrk_age, 
+                        ncol = 2 , nrow = 3,
+                        padding = unit(5,"line"))
+
+```
+
+We can see that the Gini coefficient is 0.8322 which is considered strong positive relationship (Zou et al., 2003).
+
+## Modelling
+
+```{r prediction workflow , echo = FALSE} 
+
+# regression line of SSP distance per percentage point uninsured
+mdl_pov_gini <-
+lm(pc_poverty ~ gini_inequality , data = pov_indicators_2018 , na.action = na.exclude)
+
+summary(mdl_pov_gini)
+
+# confidence intervals (CI)
+confint(mdl_pov_gini)
+
+# prediction workflow
+explantory_var <- expand_grid(gini_inequality = seq(0 , 1, 0.01))
+
+prediction_data <-
+  pov_indicators_2018 %>%
+    mutate(
+      prediction = predict(mdl_pov_gini , pov_indicators_2018),
+      upper_ci   = predict(mdl_pov_gini , pov_indicators_2018 , interval = "confidence")[,2],
+      lower_ci   = predict(mdl_pov_gini , pov_indicators_2018 , interval = "confidence")[,3]
+    )
+
+```
+
+```{r}
+# map prediction data onto sample data
+residuals_mapped_lm <-
+prediction_data %>%
+  ggplot(aes(gini_inequality , pc_poverty, label = location)) +
+    #geom_point(aes(size = "Country") , color = "#1F456E", alpha = 0.5) +
+    scale_size_manual(values = 3, name = "") +
+    geom_text(check_overlap = TRUE) +
+    # manual calc of geom_smooth using lm() model
+    geom_line(aes(x = gini_inequality , y = prediction , color = "Linear Fit Line") , size = 1 , alpha = 0.60) + 
+    geom_smooth(color = "lightblue", linetype = "dashed", se = FALSE) +
+    scale_color_manual(values = clr) +
+    geom_segment(aes(xend = gini_inequality , yend = prediction , linetype = "Residual Error") , color = "grey75") +
+    scale_y_continuous(breaks = seq(0,0.2,0.05), limits = c(0,0.2), expand = c(0,0),
+                       labels = scales::percent_format(accuracy = 1)) +
+    scale_x_continuous(breaks = seq(0,0.5,0.1), limits = c(0.2,0.5), expand = c(0,0)) +
+    scale_linetype_manual(values = "dashed") +
+    labs(x = "Gini Coefficient (0-1) [0 = pure equality, 1 = pure inequality]",
+         y = "Poverty Rate (%)") +
+  theme_reg()
+
+residuals_mapped_lm
+
+```
+
+## NHST Step 1: Write the null and alternate hypotheses
+
+H0: A model including the gini coefficient of a county is no better at explaining the poverty rate than a baseline model of the mean gini.
+
+HA: A model including the gini coefficient in a county is better at explaining the poverty rate than a baseline model of the mean value of gini
+
+## NHST Step 2: Compute the test statistic
+
+The test statistic for this model is F and its value is F(1, 32) = 59.41.
+
+## NHST Step 3: Calculate the probability that your test statistic is at least as big as it is if there is no relationship (i.e., the null is true) 
+
+There is a tiny probability (p < .001) of an F as big as 59.41 or bigger if the null hypothesis were true.
+
+## NHST Steps 4 and 5: Interpret the probability and write a conclusion
+
+Given the tiny p-value, we reject the null hypothesis in favor of the alternate hypothesis that gini is helpful in explaining the poverty rate of a county.
+
+
+
+
+# Assumptions
+
+The calculations underlying the simple linear regression model of Pc_pov ~ gini are based on several assumptions about the data used in the model: 
+
+* Observations are independent.
+* The outcome is continuous.
+* The relationship between the two variables is linear (linearity). 
+
+
+* The variance is constant with the points distributed equally around the line (homoscedasticity). 
+
+lmtest::bptest(formula = pov_indicators_2018$pc_poverty ~ pov_indicators_2018$gini_inequality)
+
+BP = 0.84642, df = 1, p-value = 0.3576
+
+ASSUMPTION MET: The Breusch-Pagan test statistic has a large p-value (BP = 0.85; p < .5), indicating that the null hypothesis of constant variance would be accepted.
+
+* The residuals are independent. 
+
+lmtest::dwtest(formula = pov_indicators_2018$pc_poverty ~ pov_indicators_2018$gini_inequality)
+
+DW = 1.8166, p-value = 0.2667
+
+ASSUMPTION MET: The D-W statistic was near 2 and the p-value was high, so we concluded that the null hypothesis is retained.
+
+* The residuals are normally distributed.
+
+ASSUMPTION MET: The Q-Q plot suggests the residuals are the same from the values you’d expect from a normal distribution.
+
+
+
+***
+
+R markdown allows to easily format your text. You can add [links](www.r-graph-gallery.com), write in **bold** or *italic*.
+
+Further formatting can be found [here](https://holtzy.github.io/Pimp-my-rmd/)
+
+***

@@ -1,0 +1,128 @@
+---
+title: "UK Lorenz Over TIme"
+author: "NearAndDistant"
+date: '2022-06-15'
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+# data, here: https://www.gov.uk/government/statistics/percentile-points-from-1-to-99-for-total-income-before-and-after-tax
+
+temp   <- tempfile()
+onsurl <- "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1059906/Table_3.1a_1920.ods"
+temp   <- curl::curl_download(url = onsurl, destfile = temp, quiet = FALSE, mode = "wb")
+
+# pre tax
+pctl_pre_tax_raw <- readODS::read_ods(temp, sheet = "Table_3_1a_before_tax", range = "A5:V104", col_names = TRUE)
+
+# post tax
+pctl_pst_tax_raw <- readODS::read_ods(temp, sheet = "Table_3_1a_after_tax", range = "A5:V104", col_names = TRUE)
+
+```
+
+```{r}
+# clean
+
+pctl_pst_tax_cln <- 
+  pctl_pst_tax_raw %>% 
+  janitor::clean_names() %>% 
+  rename(percentile = 1) %>% 
+  mutate(x2008_09 = NA) %>% 
+  pivot_longer(cols = 2:22, names_to = "year", values_to = "post_tax")
+
+# create Lorenz framework
+pctl_tax_pre_pst <- 
+  pctl_pre_tax_raw %>% 
+  janitor::clean_names() %>% 
+  rename(percentile = 1) %>% 
+  mutate(x2008_09 = NA) %>% 
+  pivot_longer(cols = 2:22, names_to = "year", values_to = "pre_tax") %>%
+  # join together
+  left_join(pctl_pst_tax_cln) %>%
+  # clean year names
+  mutate(year = paste0(20, str_sub(year, start = 7, end = 8))) %>%
+  # create Lorenz data
+  group_by(year) %>%
+    # pre tax
+  mutate(pre_cumsum = cumsum(pre_tax),
+         pre_equsum = max(pre_cumsum/99),
+         pre_equcum = cumsum(pre_equsum),
+         pre_pccum  = round(pre_cumsum/max(pre_cumsum),4),
+         pre_equlor = seq(0.01, 0.99, 0.01)) %>%
+    # post tax
+  mutate(post_cumsum = cumsum(post_tax),
+         post_equsum = max(post_cumsum/99),
+         post_equcum = cumsum(post_equsum),
+         post_pccum  = round(post_cumsum/max(post_cumsum),4),
+         post_equlor = seq(0.01, 0.99, 0.01)) %>%
+  ungroup() %>%
+  # take what we need, give nothing back
+  select(percentile, year, 
+         pre_tax.1    = pre_tax   , post_tax.1    = post_tax, 
+         pre_pccum.2  = pre_pccum , post_pccum.2  = post_pccum, 
+         pre_equlor.3 = pre_equlor, post_equlor.3 = post_equlor) %>%
+  # pivot longer on tax type
+  pivot_longer(cols = c(3:8), 
+               names_to  = c("type", ".value"), 
+               names_sep = "_") %>%
+  # tag on gini coefficients
+  group_by(year, type) %>%
+  mutate(gini = paste0(type, "-tax gini: ", round(ineq::Gini(tax.1),4))) %>%
+  ungroup() %>%
+  # filter out 2008/09 as no data
+  filter(!is.na(tax.1)) 
+
+```
+
+```{r}
+library(gganimate)
+
+gif_lorenz <- 
+pctl_tax_pre_pst %>%
+  #filter(year == 2020) %>%
+  ggplot() +
+  geom_line(aes(percentile, pccum.2,  color = type)   , linetype = "dashed", size = 1, show.legend = FALSE) +
+  geom_line(aes(percentile, equlor.3),color = "grey20", linetype = "solid" , size = 1, show.legend = FALSE) +
+  geom_text(data = pctl_tax_pre_pst[pctl_tax_pre_pst$type == "pre",],  aes(label = gini), x = 5, y = 0.9, hjust = 0,    vjust =-1, color = "#F66B19FF", check_overlap = TRUE) + 
+  geom_text(data = pctl_tax_pre_pst[pctl_tax_pre_pst$type == "post",], aes(label = gini), x = 5, y = 0.9, hjust = 0.04, vjust = 2, color = "#4662D7FF", check_overlap = TRUE) +
+  transition_manual(year) +
+  scale_x_continuous("Cumulative Income Percentile Ranked", 
+                     expand = c(0, 0),
+                     breaks = seq(0,100,10),
+                     limits = c(0,100)) +
+  scale_y_continuous("Cumulative Normalised Income", 
+                     expand = c(0, 0), 
+                     #labels = scales::dollar_format(prefix = "£"),
+                     breaks = seq(0,1,0.1),
+                     limits = c(0,1)) +
+  scale_color_manual(NULL, values = c("#4662D7FF", "#F66B19FF")) +
+  labs(title    = "UK Inequality Curves (Pre & Post Taxation)",
+       subtitle = "{current_frame}",
+       caption  = "GIF: @NearAndDistant | Data: ONS") +
+  theme_minimal() +
+  theme(plot.title    = element_text(vjust = 2,  size = 18, family = "Montserrat SemiBold", hjust = 0.5),
+        plot.subtitle = element_text(size  = 15,            family = "Montserrat", hjust = 0.5),
+        plot.caption  = element_text(vjust = -3, size = 10, family = "Montserrat", hjust = 0.5),
+        axis.title.x  = element_text(vjust = -3, size = 14, family = "Montserrat"),
+        axis.title.y  = element_text(vjust =  4, size = 14, family = "Montserrat"),
+        legend.position = "bottom",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = margin(1.5,1.5,0.5,1, unit = "cm"))
+  
+```
+
+```{r}
+# gganimate save
+library(gifski)
+
+gif_lorenz %>%
+animate(fps = 2 , nframe = 20 , 
+        height = 600 , width = 600,
+        start_pause = 1, end_pause = 2,
+        renderer = gifski_renderer(here::here("uk_lorenz_timeseries/uk_lorenz.gif")))
+
+```
