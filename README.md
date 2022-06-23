@@ -18,7 +18,11 @@ OAs are the base unit for Census data releases. Census output areas (OA) are the
 
 #### SOA
 
-Super Output Areas (SOAs) are a set of geographical with the aim to produce a set of areas of consistent size, whose boundaries would not change (unlike electoral wards). They are an aggregation of adjacent OAs with similar social characteristics. Lower Layer Super Output Areas (LSOAs) typically contain 4 to 6 OAs with a population of around 1500. Middle Layer Super Output Areas (MSOAs) on average have a population of 7,200.
+Super Output Areas (SOAs) are a set of geographical areas developed following the 2001 census, initially to facilitate the calculation of the Indices of Deprivation 2004. The aim was to produce a set of areas of consistent size, whose boundaries would not change (unlike electoral wards). They are an aggregation of adjacent Output Areas with similar social characteristics. 
+
+Middle Layer Super Output Areas (MSOAs) on average have a population of 7,200.
+
+Lower Layer Super Output Areas (LSOAs) typically contain 4 to 6 OAs with a population of around 1500. 
 
 ### Administrative
 
