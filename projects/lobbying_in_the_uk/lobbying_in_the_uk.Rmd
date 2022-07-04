@@ -1,0 +1,176 @@
+---
+title: "Tidy Template"
+author: "NearAndDistant"
+date: "29/09/2021"
+output: html_document
+---
+
+##  Lobbying in the UK
+
+# data here: https://openaccess.transparency.org.uk
+
+#### Setup & Import
+```{r}
+library(tidyverse)
+
+# create driectory for new project
+dir.create(here::here())
+
+# import data for project
+transparency_raw <- read_csv("https://openaccess.transparency.org.uk/data/iw_uk.csv")
+
+```
+
+#### Clean & Wrangle
+```{r}
+library(lubridate)
+
+transparency_cln <-
+  transparency_raw %>%
+  mutate(date = as.Date(date, format = "%d/%m/%Y")) %>%
+  mutate(organisation)
+
+month_meetings <-
+  transparency_cln %>%
+  mutate(date = floor_date(date, "month")) %>%
+  count(date, organisation)
+
+```
+
+#### Analysis
+```{r}
+
+transparency_raw %>%
+count(organisation, Year) %>%
+  arrange(desc(n)) %>%
+  view()
+
+```
+
+#### Palette
+```{r}
+library(showtext); showtext_auto()
+font_add_google("", "")
+font_add_google("", "")
+
+background <- 
+palette    <- 
+
+```
+
+```{r}
+
+big6 <- "\\bEDF\\b|\\bBritish Gas\\b|\\bScottish Power\\b|\\bE.ON\\b|\\bNpower\\b|\\bSSE\\b"
+
+```
+
+#### Plotting
+```{r, fig.align="center", fig.width=6, fig.height=6, fig.cap="Figure: Here is a really important caption."}
+ggplot2::theme_set(theme_minimal())
+
+# not in
+`%!in%` <- Negate(`%in%`)
+
+transparency_cln %>%
+  count(Year, department) %>%
+  filter(department %!in% c("Office of the Advocate General for Scotland",
+                            "Department for Exiting the European Union",
+                            "Whips' Office",
+                            "Whips' office",
+                            "Northern Ireland Office",
+                            "Office of the Secretary of State for Scotland",
+                            "Office of the Secretary of State for Wales",
+                            "Deputy Prime Minister's Office")) %>%
+  ggplot() +
+  geom_col(aes(Year, n, fill = department), position = "stack", show.legend = FALSE) +
+  scale_fill_viridis_d(option = "mako") +
+  scale_x_continuous(breaks = seq(2012,2022,1), expand = c(0.01,0)) +
+  scale_y_continuous(breaks = seq(0,20000,500), expand = c(0,0)) +
+  facet_wrap(~department) +
+  theme(
+    plot.title = element_text(size = 30, hjust = 0.05),
+    axis.title  = element_blank(),
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(vjust = -6, face = "bold", size = 6),
+    plot.margin = margin(1, 0.5,1,0.5, unit = "cm")
+  )
+  
+
+transparency_count <- 
+transparency_cln %>%
+  mutate(big6_count = str_count(organisation, big6)) %>% 
+  mutate(big6_tidy  = str_extract(organisation, big6)) %>%
+  mutate(big6 = case_when(big6_count == 0 ~ "Other",
+                          big6_count == 1 ~ big6_tidy,
+                          big6_count >  1 ~ "Multiple")) %>%
+  mutate(big6 = if_else(big6 == "E-ON", "E.ON", big6))
+
+# graphic Big 6
+transparency_count %>%
+  filter(big6 != "Other") %>% # Big 6 energy companies
+  count(Year, big6, policy_level) %>%
+  ggplot() +
+  geom_col(aes(Year, n, fill = big6), position = "stack") +
+  labs(title = "The Energy to Lobby",
+       subtitle = "The Big6 Energy Lobby Meetings",
+       fill = NULL) +
+  scale_fill_viridis_d(option = "mako") +
+  scale_x_continuous(breaks = seq(2012,2022,1), expand = c(0.01,0)) +
+  scale_y_continuous(breaks = seq(0,150,5), expand = c(0,0)) +
+  theme(
+    plot.title = element_text(size = 30, hjust = 0.05),
+    axis.title  = element_blank(),
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(vjust = -6, face = "bold", size = 12),
+    legend.position = c(0.07,0.7),
+    plot.margin = margin(1,12,1,0.5, unit = "cm")
+  )
+
+# graphic
+transparency_count %>%
+  count(Year, big6, policy_level) %>%
+  ggplot() +
+  geom_col(aes(Year, n, fill = big6), position = "stack") +
+  labs(title = "The Energy to Lobby",
+       subtitle = "The Big6 Energy Lobby Meetings",
+       fill = NULL) +
+  scale_fill_viridis_d(option = "mako") +
+  scale_x_continuous(breaks = seq(2012,2022,1), expand = c(0.01,0)) +
+  scale_y_continuous(breaks = seq(0,150,5), expand = c(0,0)) +
+  theme(
+    plot.title = element_text(size = 30, hjust = 0.05),
+    axis.title  = element_blank(),
+    panel.grid  = element_blank(),
+    axis.text.x = element_text(vjust = -6, face = "bold", size = 12),
+    legend.position = c(0.07,0.7),
+    plot.margin = margin(1,12,1,0.5, unit = "cm")
+  )
+
+```
+
+#### Panel
+```{r}
+library(cowplot)
+
+# finalise panel with layered plotting or annotation
+ggdraw() +
+  draw_plot() +
+  draw_text() +
+  draw_text()
+
+```
+
+#### Saving
+```{r}
+
+ggsave(here::here(".png"), dpi = 360, height = 10, width = 15)
+
+```
+
+***
+
+R markdown allows to easily format your text. You can add [links](www.r-graph-gallery.com), write in **bold** or *italic*.
+
+Further formatting can be found [here](https://holtzy.github.io/Pimp-my-rmd/)
+
+***
