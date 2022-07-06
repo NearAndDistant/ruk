@@ -8,6 +8,12 @@
 ![ukdi_con](https://user-images.githubusercontent.com/79040885/177617275-443166e7-f3d2-45fd-9bbf-27507deb5920.png)
 ![ukdi_lab](https://user-images.githubusercontent.com/79040885/177617277-19e8fde0-2179-4d2b-b80b-f88ba2575bbe.png)
 
+# Homeless Deaths
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/homelessness)
+[Shiny Application](https://nearanddistant.shinyapps.io/uk_homless_deaths/)
+
+![hld_lad](https://user-images.githubusercontent.com/79040885/177622757-49d82582-7f3f-439b-b3f0-3002f3991f55.png)
+
 ## Race and Arrests
 [Project](https://github.com/NearAndDistant/ruk/tree/main/projects/Arrests%20%26%20Ethnicity%20Data)
 
