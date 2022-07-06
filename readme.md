@@ -8,6 +8,17 @@
 ![ukdi_con](https://user-images.githubusercontent.com/79040885/177617275-443166e7-f3d2-45fd-9bbf-27507deb5920.png)
 ![ukdi_lab](https://user-images.githubusercontent.com/79040885/177617277-19e8fde0-2179-4d2b-b80b-f88ba2575bbe.png)
 
+# Regional Gross Domestic Household Income (GHDI)
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/ons_region_gdhi_1997_2018)
+
+![map_panel_abs_trans](https://user-images.githubusercontent.com/79040885/177624539-aa858569-97bd-4ce0-968c-d5a8aab49dd0.jpeg)
+![map_top_bens](https://user-images.githubusercontent.com/79040885/177624554-9d3f0e53-f3e3-468e-a77b-7ae10d4d61ad.jpeg)
+![map_top_tax](https://user-images.githubusercontent.com/79040885/177624561-ebedc53c-db76-46dc-b7a6-8f90cc11e320.jpeg)
+![pc_gross](https://user-images.githubusercontent.com/79040885/177624577-81b06cc8-f8f1-418d-915e-8c9ac2a7cbdc.jpeg)
+![table_2![2019_gva_table](https://user-images.githubusercontent.com/79040885/177624699-47395daf-360e-4f8d-ab24-314b0001d73c.png)
+018_perhead_tax_types](https://user-images.githubusercontent.com/79040885/177624674-aacd7bef-e347-40b3-a353-31f2297eadc5.png)
+
+
 # Homeless Deaths
 [Project](https://github.com/NearAndDistant/ruk/tree/main/projects/homelessness)
 
