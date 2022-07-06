@@ -8,6 +8,13 @@
 ![ukdi_con](https://user-images.githubusercontent.com/79040885/177617275-443166e7-f3d2-45fd-9bbf-27507deb5920.png)
 ![ukdi_lab](https://user-images.githubusercontent.com/79040885/177617277-19e8fde0-2179-4d2b-b80b-f88ba2575bbe.png)
 
+# The Lorenz Curve and Gini Coefficient
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/lorenz_gini)
+
+Part of a wider piece found on Medium, here: [@NearAndDistant](https://nearanddistant.medium.com/phenomenal-cosmic-powers-6663865c62f7)
+
+![uk_percentile_lorenz](https://user-images.githubusercontent.com/79040885/177651081-566a66d8-c645-40ff-9728-7d95c41d9ba3.jpeg)
+
 # Regional Gross Domestic Household Income (GHDI)
 [Project](https://github.com/NearAndDistant/ruk/tree/main/projects/ons_region_gdhi_1997_2018)
 
