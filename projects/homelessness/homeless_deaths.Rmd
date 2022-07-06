@@ -11,7 +11,7 @@ library(tidyverse)
 hld_tidy <- read_csv("https://raw.githubusercontent.com/NearAndDistant/ruk/main/data_scripts/ons_homeless_deaths/hdl_tidy.csv")
 
 # filter
-hld_flt <- hld_tidy %>% filter(year == 2019)
+hld_flt <- hld_tidy %>% filter(year == 2020)
 
 ```
 
@@ -24,7 +24,7 @@ library(rgdal)
 # Counties and Unitary Authorities (Northamponshire, Buckinghamshire, Dorset)
 lad <- 
   readOGR( 
-  dsn     = "/Users/patrickcorby/Documents/Data/Local_Authority_Districts_(May_2021)_UK_BFE_V3", 
+  dsn     = here::here("projects/homelessness/raw_data/Local_Authority_Districts_(May_2021)_UK_BFE_V3"), 
   layer   = "LAD_MAY_2021_UK_BFE_V2",
   verbose = FALSE) 
 
@@ -47,7 +47,9 @@ hld_lad <-
 ```
 
 ```{r}
+library(extrafont); font_import(pattern = "Montserrat")
 
+plot_lad <- 
 hld_lad %>%
   ggplot(aes(geometry = geometry)) +
   geom_sf(aes(fill = deaths), color = "#b4b3b4") +
@@ -55,14 +57,22 @@ hld_lad %>%
   #geom_sf_label(aes(x = long, y = lat, label = label),
   #              color = "grey10", size = 2.5, nudge_x = 50000, nudge_y = 50000,
   #              segment = TRUE, segment.color = "grey80", segment.size = 0.5) +
-  labs(fill = "Homless Deaths") +
+  labs(title = str_wrap("Homelessness Deaths within each UK Local Authority District", 20),
+       fill  = "Homeless Deaths") +
   coord_sf() +
   theme_void() +
-  theme(legend.position = c(0.3,0.69),
-        legend.direction = "vertical",
-        legend.title.align = c(0.5),
-        legend.title = element_text(),
-        legend.key.width = unit(0.75, "cm"))
+  theme(plot.title   = element_text(family = "Montserrat SemiBold", color = "#454545", vjust = -20, hjust = 0, size = 20),
+        legend.title = element_text(family = "Montserrat SemiBold", color = "#454545", vjust = 1,   hjust = 0, size = 8),
+        legend.position = c(0.19,0.83),
+        legend.direction = "horizontal",
+        legend.key.width  = unit(1  , units = "cm"),
+        legend.key.height = unit(0.2, units = "cm"))
+
+```
+
+```{r}
+# save
+ggsave(plot = plot_lad, here::here("projects/homelessness/hld_lad.png"), bg = "white", dpi = 360, height = 10, width = 10)
 
 ```
 
