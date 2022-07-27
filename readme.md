@@ -8,6 +8,31 @@
 ![ukdi_con](https://user-images.githubusercontent.com/79040885/177617275-443166e7-f3d2-45fd-9bbf-27507deb5920.png)
 ![ukdi_lab](https://user-images.githubusercontent.com/79040885/177617277-19e8fde0-2179-4d2b-b80b-f88ba2575bbe.png)
 
+# The Lorenz Curve and Gini Coefficient
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/lorenz_gini)
+
+Part of a wider piece found on Medium, here: [@NearAndDistant](https://nearanddistant.medium.com/phenomenal-cosmic-powers-6663865c62f7)
+
+![uk_percentile_lorenz](https://user-images.githubusercontent.com/79040885/177651081-566a66d8-c645-40ff-9728-7d95c41d9ba3.jpeg)
+
+# Regional Gross Domestic Household Income (GHDI)
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/ons_region_gdhi_1997_2018)
+
+![map_panel_abs_trans](https://user-images.githubusercontent.com/79040885/177624539-aa858569-97bd-4ce0-968c-d5a8aab49dd0.jpeg)
+![map_top_bens](https://user-images.githubusercontent.com/79040885/177624554-9d3f0e53-f3e3-468e-a77b-7ae10d4d61ad.jpeg)
+![map_top_tax](https://user-images.githubusercontent.com/79040885/177624561-ebedc53c-db76-46dc-b7a6-8f90cc11e320.jpeg)
+![pc_gross](https://user-images.githubusercontent.com/79040885/177624577-81b06cc8-f8f1-418d-915e-8c9ac2a7cbdc.jpeg)
+![table_2![2019_gva_table](https://user-images.githubusercontent.com/79040885/177624699-47395daf-360e-4f8d-ab24-314b0001d73c.png)
+018_perhead_tax_types](https://user-images.githubusercontent.com/79040885/177624674-aacd7bef-e347-40b3-a353-31f2297eadc5.png)
+
+
+# Homeless Deaths
+[Project](https://github.com/NearAndDistant/ruk/tree/main/projects/homelessness)
+
+[Shiny Application](https://nearanddistant.shinyapps.io/uk_homless_deaths/)
+
+![hld_lad](https://user-images.githubusercontent.com/79040885/177622757-49d82582-7f3f-439b-b3f0-3002f3991f55.png)
+
 ## Race and Arrests
 [Project](https://github.com/NearAndDistant/ruk/tree/main/projects/Arrests%20%26%20Ethnicity%20Data)
 
