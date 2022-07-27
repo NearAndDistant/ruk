@@ -1,0 +1,59 @@
+---
+title: "Unions"
+author: "NearAndDistant"
+date: "2022-07-27"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+temp       <- read_rds(here::here("trade_union_stats_may2022.rds"))
+unions_raw <- readODS::read_ods(temp, sheet = "A14", range = c("A5:AB272"), col_names = TRUE)
+
+```
+
+# clean
+```{r}
+`%!in%` <- negate(`%in%`)
+
+unions <- unions_raw |>
+  janitor::clean_names() |>
+  filter(industry %!in% c("All Employees", "Male", "Female")) |>
+  mutate(sex = str_extract(industry, "[^:]+"),
+         industry = str_remove( industry, "[^:]+"),
+         industry = str_remove( industry, ":"),
+         industry = str_trim(   industry, side = "both")) |>
+  select(industry, sex, everything()) |>
+  pivot_longer(cols = c(3:29), names_to = "year", values_to = "pc") |>
+  # clean values
+  mutate(pc = str_replace(pc, "[u]", NA_character_),
+         pc = as.numeric(pc),
+         pc = pc/100) |>
+  # clean years
+  mutate(year = str_sub(year, start = 2, end = 5),
+         year = as.numeric(year))
+
+```
+
+# visualise
+```{r}
+library(ggpol)
+
+unions |>
+  filter(sex      != "All Employees",
+         industry == "Education") |>
+  ggplot(aes(year, pc, fill = sex)) +
+  geom_col() +
+  coord_flip() +
+  facet_share(~sex, dir = "h", scales = "free", reverse_num = TRUE) +
+  scale_x_reverse()
+
+library(ggcharts)
+
+unions |>
+  filter(sex      != "All Employees",
+         industry == "Education") |>
+  pyramid_chart(year, pc, sex)
+
+```

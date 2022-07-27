@@ -1,0 +1,21 @@
+---
+title: "Get Data"
+author: "NearAndDistant"
+date: "2022-07-27"
+output: html_document
+---
+
+Source: https://www.gov.uk/government/statistics/trade-union-statistics-2021
+Report: Trade union membership statistics 2021: tables
+
+```{r}
+
+path <- "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1078005/Trade_Union_Membership_Statistics_Tables_May_2022.ods"
+temp <- tempfile(fileext = ".ods")
+
+download.file(url = path, destfile = temp)
+
+saveRDS(temp, file = here::here("trade_union_stats_may2022.rds"))
+
+```
+
