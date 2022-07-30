@@ -5,6 +5,8 @@ date: "2022-07-27"
 output: html_document
 ---
 
+Table A14: UK Trade union membership as a proportion of employees by SIC classification and gender, 1995 to 2021
+
 ```{r}
 library(tidyverse)
 
@@ -17,19 +19,20 @@ unions_raw <- readODS::read_ods(temp, sheet = "A14", range = c("A5:AB272"), col_
 ```{r}
 `%!in%` <- negate(`%in%`)
 
-unions <- unions_raw |>
+unions_ind <- unions_raw |>
   janitor::clean_names() |>
   filter(industry %!in% c("All Employees", "Male", "Female")) |>
   mutate(sex = str_extract(industry, "[^:]+"),
          industry = str_remove( industry, "[^:]+"),
          industry = str_remove( industry, ":"),
-         industry = str_trim(   industry, side = "both")) |>
+         industry = str_trim(   industry, side = "both"),
+         industry = str_to_title(industry)) |>
   select(industry, sex, everything()) |>
   pivot_longer(cols = c(3:29), names_to = "year", values_to = "pc") |>
   # clean values
   mutate(pc = str_replace(pc, "[u]", NA_character_),
          pc = as.numeric(pc),
-         pc = pc/100) |>
+         pc = pc) |>
   # clean years
   mutate(year = str_sub(year, start = 2, end = 5),
          year = as.numeric(year))
@@ -38,22 +41,78 @@ unions <- unions_raw |>
 
 # visualise
 ```{r}
-library(ggpol)
+library(ggpol) # https://www.trafforddatalab.io/recipes/data_visualisation/population_pyramids.html
+library(extrafont); font_import(pattern = "Montserrat")
 
-unions |>
-  filter(sex      != "All Employees",
-         industry == "Education") |>
-  ggplot(aes(year, pc, fill = sex)) +
-  geom_col() +
-  coord_flip() +
+# list to run formula over
+ind <- c("Construction Of Buildings", "Education", "Financial Ex Insurance And Pension", "Human Health Activities",       
+         "Land Transport Inc Via Pipelines", "Public Admin, Defence, Social Sec", "Postal And Courier Activities",      
+         "Retail Trade, Except Vehicles", "Social Work Without Accommodation", "Warehousing And Support For Transport")
+
+# formula
+ind_plots <- function(ind){
+
+plot_formula <-
+unions_ind |>
+  filter(sex != "All Employees") |>
+  filter(industry == ind) |>
+  mutate(pc = if_else(sex == "Female", pc *-1, pc)) |> 
+  ggplot(aes(year, pc, fill = fct_rev(sex))) +
+  geom_col() + 
+  scale_x_reverse(breaks = c(1995:2021), expand = c(0,0)) +
+  scale_fill_manual(NULL, values = c("#3a757b", "#fac55f")) +
   facet_share(~sex, dir = "h", scales = "free", reverse_num = TRUE) +
-  scale_x_reverse()
+  coord_flip() +
+  labs(x = NULL, y = NULL,
+       title    = "UK Trade Union Membership as a % of Total Employees by Industry and Sex, 1995 to 2021", 
+       subtitle = ind, 
+       caption  = "Graphic: @NearAndDistant | Source: Office for National Statistics") +
+  theme(plot.title         = element_text(size = 16, hjust = 0.5, vjust = 2, family = "Montserrat SemiBold"),
+        plot.subtitle      = element_text(size = 14, hjust = 0.5, vjust = -1, family = "Montserrat"),
+        plot.caption       = element_text(size = 9,  color = "grey50", hjust = 0.5, vjust = -8, family = "Montserrat"),
+        legend.position    = "none",
+        strip.text         = element_text(size = 12, family = "Montserrat SemiBold"),
+        strip.background   = element_blank(),
+        axis.text.x        = element_text(size = 9,  family = "Montserrat"),
+        axis.text.y        = element_text(size = 9,  family = "Montserrat"),
+        axis.ticks         = element_line(color = "white", size = 0),
+        panel.spacing      = unit(-1, "lines"),
+        panel.grid.major.x = element_line(color = "grey80", size = 0.1),
+        panel.grid.major.y = element_blank(),
+        panel.background   = element_blank(),
+        plot.margin        = margin(1,1,1,1, "cm"))
 
-library(ggcharts)
+ggsave(plot = plot_formula, here::here(paste0("Outputs/Industries/Trade Unions - ",ind, ".png")), width = 13, height = 10, dpi = 360, bg = "white")
+}
 
-unions |>
-  filter(sex      != "All Employees",
-         industry == "Education") |>
-  pyramid_chart(year, pc, sex)
+# apply function to list
+lapply(ind, ind_plots)
 
 ```
+
+# Grid
+```{r}
+library(magick)
+library(cowplot)
+library(png)
+library(grid)
+
+files  <- list.files(path = here::here("Outputs/Industries"), pattern = ".png", full.names = TRUE) # pull list of paths
+plots  <- map(files, readPNG) # pull pngs from paths
+grobs  <- map(plots, rasterGrob) # convert to grobs for grid
+
+gridExtra::grid.arrange()
+
+plot_grid(plotlist = grobs[1:4], ncol = 2, nrow = 2)
+
+```
+
+```{r}
+
+
+"UK Trade Union Membership as a % of Total Employees by Industry and Sex, 1995 to 2021"
+caption = "Graphic: @NearAndDistant | Source: Office for National Statistics"
+plot.caption       = element_text(size = 9, color = "grey50", hjust = 0.99, vjust = -6, family = "Montserrat")
+
+```
+

@@ -10,8 +10,8 @@ Table 2.1a: Trade Union Membership levels by sector and gender, 1995 to 2021
 ```{r}
 library(tidyverse)
 
-temp          <- read_rds(here::here("trade_union_stats_may2022.rds"))
-unions_pp_raw <- readODS::read_ods(temp, sheet = "2_1A", range = c("A4:G31"), col_names = TRUE)
+temp_file     <- read_rds(here::here("trade_union_stats_may2022.rds"))
+unions_pp_raw <- readODS::read_ods(temp_file, sheet = "2_1A", range = c("A4:G31"), col_names = TRUE)
 
 ```
 
@@ -23,21 +23,50 @@ unions_pp <- unions_pp_raw |>
   rename("private_all" = 2, "private_male" = 3, "private_female" = 4, "public_all" = 5, "public_male" = 6, "public_female" = 7) |>
   pivot_longer(cols = c(2:7)) |>
   mutate(sector = str_extract(name, "[^_]+"),
-         name   = str_remove(name, "[^_]+_")) |>
+         sector = str_to_title(paste0(sector, " sector")),
+         name   = str_remove(name, "[^_]+_"),
+         name   = str_to_title(name)) |>
   select(year, sector, name, value)
 
 ```
 
 ```{r}
+library(ggpol) # https://www.trafforddatalab.io/recipes/data_visualisation/population_pyramids.html
+library(extrafont); font_import(pattern = "Montserrat")
 
+plot_sector_sex <-
 unions_pp |>
-  filter(name != "all") |>
-  mutate(value = if_else(name == "male", value*-1, value)) |>
-  ggplot(aes(year, value, fill = name)) +
-  geom_bar(stat = "identity") + 
+  filter(name != "All") |>
+  mutate(value = case_when(sector == "Private Sector" ~ value *-1, TRUE ~ value)) |> 
+  ggplot(aes(year, value, fill = fct_rev(name))) +
+  geom_col() + 
   scale_x_reverse(breaks = c(1995:2021)) +
-  facet_share(~name, dir = "h", scales = "free", reverse_num = TRUE) +
-  coord_flip()
+  scale_fill_manual(NULL, values = c("#3a757b", "#fac55f")) +
+  facet_share(~sector, dir = "h", scales = "free", reverse_num = TRUE) +
+  coord_flip() +
+  labs(x = NULL, y = "('000)", 
+       title = "UK Trade Union Membership by Sector and Gender, 1995 to 2021",
+       caption = "Graphic: @NearAndDistant | Source: Office for National Statistics") +
+  theme(plot.title         = element_text(size = 16, face = "bold", hjust = 0, vjust = 4, family = "Montserrat SemiBold"),
+        plot.caption       = element_text(size = 9, color = "grey50", hjust = 0.99, vjust = -6, family = "Montserrat"),
+        legend.position    = c(0.025,0.5),
+        strip.text         = element_text(size = 11, vjust = 1, family = "Montserrat SemiBold"),
+        strip.background   = element_blank(),
+        axis.text.x        = element_text(size = 9, family = "Montserrat"),
+        axis.text.y        = element_text(size = 9, family = "Montserrat"),
+        axis.title.x       = element_text(size = 9, family = "Montserrat", vjust = -12),
+        axis.ticks         = element_line(color = "white", size = 0),
+        panel.spacing      = unit(-1, "lines"),
+        panel.grid.major.x = element_line(color = "grey80", size = 0.1),
+        panel.grid.major.y = element_blank(),
+        panel.background   = element_blank(),
+        plot.margin        = margin(1,1,1,1, "cm"))
+
+```
+
+```{r}
+
+ggsave(plot = plot_sector_sex, here::here("Outputs/Trade Unions - Sector and Sex.png"), width = 13, height = 10, dpi = 360, bg = "white")
 
 ```
 

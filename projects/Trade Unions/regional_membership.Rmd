@@ -1,0 +1,98 @@
+---
+title: "Regional Union Membership"
+author: "NearAndDistant"
+date: "2022-07-29"
+output: html_document
+---
+
+Table 4.1: Trade union membership as a proportion of employees by nation and region, 1995 to 2020
+
+```{r}
+library(tidyverse)
+
+temp       <- read_rds(here::here("trade_union_stats_may2022.rds"))
+unions_raw <- readODS::read_ods(temp, sheet = "4_1", range = c("A5:AB20"), col_names = TRUE)
+
+# clean
+union_reg <- unions_raw |>
+  janitor::clean_names() |>
+  select(region = regions, x1995_percent, x2021_percent) |>
+  pivot_longer(cols = c(2:3), names_to = "year", values_to = "percent") |>
+  filter(str_detect(region, c("Region|Wales|Scotland|Northern Ireland"))) |>
+  mutate(region   = str_remove(region, "Region: "),
+         region   = str_remove(region, "Nation: "),
+         region   = str_to_title(region),
+         year     = str_sub(year, start = 2, end = 5),
+         year     = as.numeric(year),
+         percent  = as.numeric(percent),
+         percent  = round(percent,0)/100)
+  
+```
+
+### Download Region JSON from ONS Boundaries
+```{r}
+library(sf)
+library(jsonlite)
+
+#load geojson from url
+uk_region_boundaries_raw <- st_read('https://opendata.arcgis.com/datasets/01fd6b2d7600446d8af768005992f76a_3.geojson')
+
+uk_regions_boundaries <- 
+  uk_region_boundaries_raw %>% 
+  rename(region = nuts118nm) %>% 
+  mutate(region = str_remove(region , " \\(England\\)"), 
+         region = str_to_title(region))
+
+# Ireland Outline
+library(rnaturalearth)
+
+uk      <- ne_countries(scale = "medium", returnclass = "sf", country = "United Kingdom")
+ireland <- ne_countries(scale = "medium", returnclass = "sf", country = "Ireland")
+
+```
+
+# Joining
+```{r}
+
+union_reg_map <- uk_regions_boundaries |> left_join(union_reg, by = "region")
+
+```
+
+# Mapping
+```{r}
+library(extrafont); font_import(pattern = "Montserrat")
+library(MetBrewer)
+
+scales::show_col(MetBrewer::met.brewer("Cross", 6))
+
+plot_unions_map <- 
+union_reg_map %>%
+  ggplot() +
+  geom_sf(data = ireland, fill = "white" , color = "grey80", size = 0.25) + # for outline of the island of ireland
+  geom_sf(aes(fill = percent), color = "white", size = 0.25) +
+  geom_text(aes(label = year), x = -4.5, y = 60, family = "Montserrat", size = 9) +
+  scale_fill_gradientn(colors = met.brewer("Isfahan1", direction = 1), labels = scales::percent_format(), limits = c(0,0.5)) +
+  coord_sf() +
+  facet_wrap(~year, nrow = 1, strip.position = "top") +
+  labs(fill    = "Union Membership (%)",
+       title   = "Trade Union Membership as a % of Employees by Region (1995 & 2020)",
+       caption = "Graphic: @NearAndDistant | Source: Office for National Statistics") +
+  ggthemes::theme_map() +
+  theme(plot.title           = element_text(size = 16, hjust = -0.1, family = "Montserrat SemiBold"),
+        plot.caption         = element_text(size = 9, color = "grey50", hjust = 1, vjust = -6, family = "Montserrat"),
+        legend.title         = element_text(size = 12, vjust = 0.75, family = "Montserrat"),
+        legend.position      = c(0.725, -0.02),
+        legend.direction     = "horizontal",
+        legend.justification = c(0.5,0),
+        legend.key.width     = unit(2.00, units = "cm"),
+        legend.key.height    = unit(0.50, units = "cm"),
+        strip.text           = element_blank(),
+        plot.margin          = margin(1,1,1,1, unit = "cm"))
+
+```
+
+```{r}
+
+ggsave(plot = plot_unions_map, here::here("Outputs/Trade Unions - Regional Membership.png"), width = 12, height = 10, dpi = 360, bg = "white")
+
+```

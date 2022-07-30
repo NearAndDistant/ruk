@@ -1,0 +1,66 @@
+---
+title: "Union Premium"
+author: "NearAndDistant"
+date: "2022-07-29"
+output: html_document
+---
+
+Table 1.9: Average hourly earnings (in £s) by union status, 2021
+
+```{r}
+library(tidyverse)
+
+temp       <- read_rds(here::here("trade_union_stats_may2022.rds"))
+unions_raw <- readODS::read_ods(temp, sheet = "1_9", range = c("A22:E40"), col_names = FALSE)
+
+# clean
+union_prem <- unions_raw |>
+  janitor::clean_names() |>
+  select(a,e) |>
+  rename(industry = a, percent = e) |>
+  filter(percent != "[u]") |>
+  mutate(industry = str_remove(industry, "Industry: "),
+         industry = str_to_title(industry),
+         percent  = as.numeric(percent),
+         percent  = round(percent,0)/100,
+         hjust    = if_else(percent < 0, 0, 1),
+         nudge    = if_else(percent < 0, 0.01, -0.01))
+
+```
+
+```{r}
+library(extrafont); font_import(pattern = "Montserrat")
+library(MetBrewer)
+
+scales::show_col(MetBrewer::met.brewer("Cross", 6))
+
+plot_prem <-
+union_prem |>
+  filter(percent != 0) |>
+  ggplot(aes(percent, fct_reorder(industry, percent), fill = fct_reorder(industry, percent))) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = industry, x = nudge, hjust = hjust), family = "Montserrat") +
+  scale_x_continuous(labels = scales::percent_format(), limits = c(-0.5,0.5), expand = c(0,0)) +
+  scale_fill_manual(values = met.brewer("Hiroshige", n = 16, type = "continuous")) +
+  coord_cartesian(clip = "off") +
+  labs(y = NULL, 
+       title   = "Average Hourly Premium or Discount to Earnings of UK Trade Union Membership Compared to Non-Members (2021)",
+       caption = "Graphic: @NearAndDistant | Source: Office for National Statistics") +
+  theme_minimal() +
+  theme(plot.title         = element_text(size = 16, hjust = 0.65, vjust = 9, family = "Montserrat SemiBold"),
+        plot.caption       = element_text(size = 9, color = "grey50", hjust = 1.02, vjust = -3, family = "Montserrat"),
+        axis.title         = element_blank(),
+        axis.text.x        = element_text(family = "Montserrat", size = 12),
+        axis.text.y        = element_blank(),
+        panel.grid         = element_blank(),
+        panel.grid.major.x = element_line(color = "grey90", size = 0.25),
+        plot.margin        = margin(2,2,0.5,2, unit = "cm"))
+
+```
+
+```{r}
+
+ggsave(plot = plot_prem, here::here("Outputs/Trade Unions - Membership Premium.png"), width = 14, height = 10, dpi = 360, bg = "white")
+
+```
+

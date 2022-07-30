@@ -9,9 +9,10 @@ Source: https://www.gov.uk/government/statistics/trade-union-statistics-2021
 Report: Trade union membership statistics 2021: tables
 
 ```{r}
+library(readr)
 
 path <- "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1078005/Trade_Union_Membership_Statistics_Tables_May_2022.ods"
-temp <- tempfile(fileext = ".ods")
+temp <- tempfile(fileext = ".rds")
 
 download.file(url = path, destfile = temp)
 
